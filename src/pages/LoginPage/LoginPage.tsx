@@ -1,7 +1,13 @@
-import { Field, Input, Label } from '@headlessui/react'
+import { Button, Field, Input, Label } from '@headlessui/react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import clsx from 'clsx'
 import { authProvider } from '../../authProvider'
+import useAuth from '../../hooks/useAuth'
+import { useLocation, useNavigate } from 'react-router'
+import { useState } from 'react'
+import Spin from '../../components/Spin/Spin'
+import FinisherBackground from '../../components/FinisherHeader/FinisherHeader'
+import toast from 'react-hot-toast'
 
 interface LoginFormInput {
   email: string
@@ -9,24 +15,49 @@ interface LoginFormInput {
 }
 
 const LoginPage = () => {
+  const { setAuth } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
+  const [loading, setLoading] = useState<boolean>(false);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormInput>()
+  } = useForm<LoginFormInput>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  })
   
   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
+    if (Object.keys(errors).length > 0) {
+      // Display the first error message
+      const firstError = Object.values(errors)[0]?.message || "Có lỗi xảy ra!";
+      toast.error(firstError);
+      return;
+    }
+
+    setLoading(true);
     try {
-      await authProvider.login(data);
-      window.location.href = "/trang-chu"; 
+      const userData = await authProvider.login(data);
+      setAuth({ token: userData.token })
+      navigate(from, {replace: true});
+      toast.success('Đăng nhập thành công!')
     }
     catch (error) {
-      alert(error);
+      toast.error((error as any)?.message || "Đăng nhập thất bại!");
+    } finally {
+      setLoading(false);
     }
   }
 
   return (
-    <div className="flex flex-col bg-[#FFFCD6] items-center h-[100vh] p-5 pl-15 pr-15">
+    <div className="flex flex-col items-center h-[100vh] w-[100vw] p-5 pl-15 pr-15">
+      <FinisherBackground />
       <svg
         className="h-7 w-auto self-start"
         viewBox="0 0 294 34"
@@ -41,45 +72,57 @@ const LoginPage = () => {
       <div className="flex h-[65%] w-[53%] drop-shadow-lg mt-25">
         <div className="flex-1 bg-[#FDFCF7] rounded-l-xl py-12 px-15">
           <div className="text-3xl font-semibold">Đăng nhập</div>
-          <form className="w-[88%] mt-8" onSubmit={handleSubmit(onSubmit)}>
+          <form className="w-[88%] mt-8">
             <Field>
               <Label className="text-base font-medium">Email</Label>
               <Input
                 className={clsx(
-                  'mt-2 block w-full rounded-lg outline outline-2 outline-gray-400 bg-white py-2 px-3 text-base',
+                  'mt-2 block w-full rounded-lg outline outline-gray-400 bg-white py-2 px-3 text-base',
                   'focus:outline-green-700 focus:ring-2 focus:ring-green-400 transition-all duration-200',
                   `${errors.email?.type === 'required' ? 'outline-red-400' : ''}`,
                 )}
                 type="text"
                 {...register('email', { required: 'true' })}
+                placeholder='name@example.com'
               />
+              {errors.email && 
+              <div className='text-red-500 mt-1'>Vui lòng nhập địa chỉ email</div>}
             </Field>
             <Field className="mt-5">
               <Label className="text-base font-medium">Mật khẩu</Label>
               <Input
                 className={clsx(
-                  'mt-2 block w-full rounded-lg outline outline-2 outline-gray-400 bg-white py-2 px-3 text-base',
+                  'mt-2 block w-full rounded-lg outline outline-gray-400 bg-white py-2 px-3 text-base',
                   'focus:outline-green-700 focus:ring-2 focus:ring-green-400 transition-all duration-200',
                   `${errors.password?.type === 'required' ? 'outline-red-400' : ''}`,
                 )}
                 type="password"
                 {...register('password', { required: 'true' })}
               />
+              {errors.password && <div className='text-red-500 mt-1'>Vui lòng nhập mật khẩu</div>}
             </Field>
             <a className="block mt-5 cursor-pointer font-medium text-green-700 hover:underline">
               Quên mật khẩu?
             </a>
-            <Input
-              type="submit"
+            <Button
               className={clsx(
-                'mt-10 w-full cursor-pointer',
+                'mt-10 w-full',
                 'rounded-xl py-2.5 px-4 text-lg text-white font-semibold',
-                'bg-[#48AB69]',
-                'hover:bg-green-500',
-                'active:bg-green-700',
+                loading ? 
+                  "bg-gray-400 cursor-not-allowed" 
+                  : 
+                  "bg-[#48AB69] hover:bg-green-500 active:bg-green-700 cursor-pointer"
               )}
-              value="Xác nhận"
-            />
+              onClick={handleSubmit(onSubmit)}
+              disabled={loading}
+            >
+              Xác nhận
+            </Button>
+            <div className={clsx(
+              "flex justify-center items-center w-full",
+            )}>
+              <Spin loading={loading}/>
+            </div>
           </form>
         </div>
         <div className="flex-1 rounded-r-xl bg-[url('/bgLogin.png')] bg-cover bg-center"></div>
