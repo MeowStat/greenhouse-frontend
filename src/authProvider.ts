@@ -1,7 +1,6 @@
 import axios from 'axios'
-import toast from 'react-hot-toast'
 
-const API_URL = 'http://localhost:3001/api/v1/auth/login'
+const API_URL = import.meta.env.VITE_API_URL; 
 
 interface LoginPayload {
   email: string
@@ -11,7 +10,7 @@ interface LoginPayload {
 export const authProvider = {
   login: async ({ email, password }: LoginPayload): Promise<{ token: string }>  => {
     try {
-      const response = await axios.post<{ token: string }>(API_URL, {
+      const response = await axios.post<{ token: string }>(`${API_URL}/auth/login`, {
         email,
         password,
       })
@@ -20,7 +19,6 @@ export const authProvider = {
         localStorage.setItem('accessToken', response.data.token)
         return { token: response.data.token }
       } else {
-        toast.error('Email hoặc mật khẩu không chính xác')
         throw new Error('Invalid credentials')
       }
     } catch (error: any) {
@@ -45,7 +43,7 @@ export const authProvider = {
 
     try {
       const response = await axios.get<{ id: string; email: string }>(
-        'http://localhost:3001/api/v1/auth/me',
+        `${API_URL}/auth/me`,
         {
           headers: { Authorization: `Bearer ${token}` },
         },
