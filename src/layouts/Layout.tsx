@@ -8,7 +8,7 @@ const Layout = () => {
       <header className="sticky top-0 left-0 right-0 z-10">
         <Header />
       </header>
-      <main className="flex-1 pt-10">
+      <main className="flex-1 pt-4">
         <Outlet />
       </main>
       <footer className="p-0 m-0">

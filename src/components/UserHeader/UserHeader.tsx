@@ -12,7 +12,7 @@ const UserHeader = () => {
     try {
       authProvider.logout()
       navigate("/login")
-      toast.success('Bạn đã đăng xuất thành công!')
+      toast.success('Đăng xuất thành công!')
     }
     catch (error) {
       toast.success("Có lỗi khi đăng xuất, vui lòng thử lại!")
