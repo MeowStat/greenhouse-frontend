@@ -69,8 +69,8 @@ const LoginPage = () => {
           fill="#086E31"
         />
       </svg>
-      <div className="flex h-[65%] w-[53%] drop-shadow-lg mt-25">
-        <div className="flex-1 bg-[#FDFCF7] rounded-l-xl py-12 px-15">
+      <div className="flex min-h-[65%] w-[53%] drop-shadow-lg mt-25">
+        <div className="flex-1 bg-[#FDFCF7] rounded-l-xl py-8 px-15">
           <div className="text-3xl font-semibold">Đăng nhập</div>
           <form className="w-[88%] mt-8">
             <Field>
@@ -101,12 +101,12 @@ const LoginPage = () => {
               />
               {errors.password && <div className='text-red-500 mt-1'>Vui lòng nhập mật khẩu</div>}
             </Field>
-            <a className="block mt-5 cursor-pointer font-medium text-green-700 hover:underline">
+            <a className="inline-block mt-5 cursor-pointer font-medium text-green-700 hover:underline">
               Quên mật khẩu?
             </a>
             <Button
               className={clsx(
-                'mt-10 w-full',
+                'mt-8 w-full',
                 'rounded-xl py-2.5 px-4 text-lg text-white font-semibold',
                 loading ? 
                   "bg-gray-400 cursor-not-allowed" 
