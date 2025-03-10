@@ -6,8 +6,10 @@ const ToastNofitication = () => {
       position="top-right"
       toastOptions={{
         style: {
-          padding: '24px 16px',
+          width: "15vw",
+          padding: '16px 8px',
           color: '#333',
+          textAlign: 'left',
         },
 
         success: {
