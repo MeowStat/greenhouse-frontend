@@ -1,5 +1,4 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
-import './App.css'
 import Layout from './layouts/Layout'
 import TrangChu from './pages/TrangChu/TrangChu'
 import DieuKhien from './pages/DieuKhien/DieuKhien'
@@ -15,14 +14,14 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route element={<RequiredAuth/>}> 
+        <Route element={<RequiredAuth />}>
           <Route path="/" element={<Layout />}>
             <Route index element={<Navigate to="/trang-chu" replace />} />
             <Route path="trang-chu" element={<TrangChu />} />
             <Route path="dieu-khien" element={<DieuKhien />} />
-            <Route path='du-lieu-quan-trac' element={<DuLieuQuanTrac/>}/>
-            <Route path='lich-su-quan-trac' element={<LichSuQuanTrac />}/>
-            <Route path='huong-dan' element={<GuidePage/>}/>
+            <Route path="du-lieu-quan-trac" element={<DuLieuQuanTrac />} />
+            <Route path="lich-su-quan-trac" element={<LichSuQuanTrac />} />
+            <Route path="huong-dan" element={<GuidePage />} />
           </Route>
         </Route>
       </Routes>

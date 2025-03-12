@@ -1,7 +1,5 @@
 const DuLieuQuanTrac = () => {
-  return (
-    <div>Du Lieu Quan Trac</div>
-  )
+  return <div>Du Lieu Quan Trac</div>
 }
 
 export default DuLieuQuanTrac
