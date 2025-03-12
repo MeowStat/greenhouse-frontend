@@ -1,7 +1,7 @@
 import { Button, Field, Input, Label } from '@headlessui/react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import clsx from 'clsx'
-import { authProvider } from '../../authProvider'
+import { authService } from '../../services/authService'
 import useAuth from '../../hooks/useAuth'
 import { useLocation, useNavigate } from 'react-router'
 import { useState } from 'react'
@@ -10,17 +10,17 @@ import FinisherBackground from '../../components/FinisherHeader/FinisherHeader'
 import toast from 'react-hot-toast'
 
 interface LoginFormInput {
-  email: string
+  username: string
   password: string
 }
 
 const LoginPage = () => {
-  const { setAuth } = useAuth();
+  const { setAuth } = useAuth()
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
-  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/'
+  const [loading, setLoading] = useState<boolean>(false)
 
   const {
     register,
@@ -28,30 +28,27 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<LoginFormInput>({
     defaultValues: {
-      email: "",
-      password: "",
+      username: '',
+      password: '',
     },
   })
-  
+
   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
     if (Object.keys(errors).length > 0) {
-      // Display the first error message
-      const firstError = Object.values(errors)[0]?.message || "Có lỗi xảy ra!";
-      toast.error(firstError);
-      return;
+      const firstError = Object.values(errors)[0]?.message || 'Có lỗi xảy ra!'
+      toast.error(firstError)
+      return
     }
-
-    setLoading(true);
+    setLoading(true)
     try {
-      const userData = await authProvider.login(data);
-      setAuth({ token: userData.token })
-      navigate(from, {replace: true});
+      const userData = await authService.login(data)
+      setAuth({ token: userData.username })
+      navigate(from, { replace: true })
       toast.success('Đăng nhập thành công!')
-    }
-    catch (error) {
-      toast.error((error as any)?.message || "Đăng nhập thất bại!");
+    } catch (error) {
+      toast.error((error as any)?.message || 'Đăng nhập thất bại!')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
@@ -74,19 +71,21 @@ const LoginPage = () => {
           <div className="text-3xl font-semibold">Đăng nhập</div>
           <form className="w-[88%] mt-8">
             <Field>
-              <Label className="text-base font-medium">Email</Label>
+              <Label className="text-base font-medium">Tên người dùng</Label>
               <Input
                 className={clsx(
                   'mt-2 block w-full rounded-lg outline outline-gray-400 bg-white py-2 px-3 text-base',
                   'focus:outline-green-700 focus:ring-2 focus:ring-green-400 transition-all duration-200',
-                  `${errors.email?.type === 'required' ? 'outline-red-400' : ''}`,
+                  `${errors.username?.type === 'required' ? 'outline-red-400' : ''}`,
                 )}
                 type="text"
-                {...register('email', { required: 'true' })}
-                placeholder='name@example.com'
+                {...register('username', { required: 'true' })}
               />
-              {errors.email && 
-              <div className='text-red-500 mt-1'>Vui lòng nhập địa chỉ email</div>}
+              {errors.username && (
+                <div className="text-red-500 mt-1">
+                  Vui lòng nhập tên người dùng
+                </div>
+              )}
             </Field>
             <Field className="mt-5">
               <Label className="text-base font-medium">Mật khẩu</Label>
@@ -99,7 +98,9 @@ const LoginPage = () => {
                 type="password"
                 {...register('password', { required: 'true' })}
               />
-              {errors.password && <div className='text-red-500 mt-1'>Vui lòng nhập mật khẩu</div>}
+              {errors.password && (
+                <div className="text-red-500 mt-1">Vui lòng nhập mật khẩu</div>
+              )}
             </Field>
             <a className="inline-block mt-5 cursor-pointer font-medium text-green-700 hover:underline">
               Quên mật khẩu?
@@ -108,20 +109,17 @@ const LoginPage = () => {
               className={clsx(
                 'mt-8 w-full',
                 'rounded-xl py-2.5 px-4 text-lg text-white font-semibold',
-                loading ? 
-                  "bg-gray-400 cursor-not-allowed" 
-                  : 
-                  "bg-[#48AB69] hover:bg-green-500 active:bg-green-700 cursor-pointer"
+                loading
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-[#48AB69] hover:bg-green-500 active:bg-green-700 cursor-pointer',
               )}
               onClick={handleSubmit(onSubmit)}
               disabled={loading}
             >
               Xác nhận
             </Button>
-            <div className={clsx(
-              "flex justify-center items-center w-full",
-            )}>
-              <Spin loading={loading}/>
+            <div className={clsx('flex justify-center items-center w-full')}>
+              <Spin loading={loading} />
             </div>
           </form>
         </div>

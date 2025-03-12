@@ -5,7 +5,7 @@ import { Header } from './Header'
 const Layout = () => {
   return (
     <div className="font-montserrat flex flex-col min-h-screen">
-      <header className="sticky top-0 left-0 right-0 z-10">
+      <header className="fixed top-0 left-0 right-0 z-10">
         <Header />
       </header>
       <main className="flex-1 pt-4">
