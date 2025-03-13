@@ -1,8 +1,8 @@
 # Greenhouse Frontend
 
 ![Node.js](https://img.shields.io/badge/Node.js-v20-green)
-![Yarn](https://img.shields.io/badge/Yarn-v1.22-blue)
-![Vite](https://img.shields.io/badge/Vite-4.0-purple)
+![Yarn](https://img.shields.io/badge/Yarn-v4.7-blue)
+![Vite](https://img.shields.io/badge/Vite-v6.2-purple)
 
 ## Table of Contents
 
@@ -36,6 +36,7 @@ Greenhouse Frontend is a modern web application built with Vite, React, and Type
 ├── assets/               # Static assets (e.g., images, icons)
 ├── components/           # Reusable UI components
 ├── config/               # Configuration files
+├── context/              # React context providers
 ├── helpers/              # Utility functions
 ├── hooks/                # Custom React hooks
 ├── index.css             # Main CSS file
@@ -43,6 +44,9 @@ Greenhouse Frontend is a modern web application built with Vite, React, and Type
 ├── libs/                 # External libraries
 ├── main.tsx              # Application entry point
 ├── pages/                # Application pages
+├── services/             # API services and client
+│   ├── apiClient.ts      # Axios API client
+│   ├── authService.ts    # Authentication service
 ├── styles/               # Additional styles
 ├── types/                # TypeScript type definitions
 ├── vite-env.d.ts         # Vite environment types
@@ -132,7 +136,7 @@ yarn format
 
 ## Preview
 
-![App Screenshot](assets/screenshot.png)
+![App Screenshot](public/screenshot.jpg)
 
 ## Additional Notes
 

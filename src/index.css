@@ -4,3 +4,9 @@
 @theme {
   --font-montserrat: 'Montserrat', sans-serif;
 }
+
+@layer base {
+  html {
+    overflow: auto !important;
+  }
+}

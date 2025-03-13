@@ -1,7 +1,5 @@
-const LichSuQuanTrac = () => {
-  return (
-    <div>LichSuQuanTrac</div>
-  )
+function LichSuQuanTrac() {
+  return <div>LichSuQuanTrac</div>
 }
 
 export default LichSuQuanTrac

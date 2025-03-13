@@ -1,7 +1,5 @@
-const GuidePage = () => {
-  return (
-    <div>Hướng dẫn</div>
-  )
+function GuidePage() {
+  return <div>Hướng dẫn</div>
 }
 
 export default GuidePage
