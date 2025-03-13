@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios'
+
 import { API_CONFIG } from '../config/config'
 
 export const apiClient: AxiosInstance = axios.create({

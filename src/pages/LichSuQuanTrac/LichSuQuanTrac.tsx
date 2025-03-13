@@ -1,4 +1,4 @@
-const LichSuQuanTrac = () => {
+function LichSuQuanTrac() {
   return <div>LichSuQuanTrac</div>
 }
 

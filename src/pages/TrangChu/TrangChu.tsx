@@ -1,7 +1,8 @@
 import { NavLink } from 'react-router'
+
 import image1 from '../../assets/The-Most-Important-Benefits-of-a-Greenhouse-GreenPro-Ventures 1.png'
 
-const TrangChu = () => {
+function TrangChu() {
   return (
     <div className="flex flex-col w-full items-center">
       <div className="flex px-30 py-5 gap-x-15 gap-y-5 flex-wrap">
@@ -29,7 +30,7 @@ const TrangChu = () => {
         <img src={image1} className="flex-3 max-w-3xl" />
       </div>
 
-      <div className="my-8 h-1 w-100 bg-gray-300"></div>
+      <div className="my-8 h-1 w-100 bg-gray-300" />
 
       <div className="flex flex-col my-2 items-center">
         <h1 className="text-green-800 text-4xl font-bold">
@@ -71,7 +72,7 @@ const TrangChu = () => {
         </div>
       </div>
 
-      <div className="mb-8 h-1 w-100 bg-gray-300"></div>
+      <div className="mb-8 h-1 w-100 bg-gray-300" />
 
       <div className="flex flex-col items-center">
         <h1 className="text-green-800 text-4xl font-bold mb-6">

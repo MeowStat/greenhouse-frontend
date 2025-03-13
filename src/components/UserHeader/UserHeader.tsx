@@ -1,3 +1,5 @@
+import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router'
 import {
   Button,
   Menu,
@@ -6,14 +8,13 @@ import {
   MenuItems,
   MenuSeparator,
 } from '@headlessui/react'
+
 import DropDownIcon from '@/assets/arrow_drop_down.svg?react'
 import NotiIcon from '@/assets/notification.svg?react'
-import { authService } from '../../services/authService'
-import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router'
-import { useEffect } from 'react'
 
-const UserHeader = () => {
+import { authService } from '../../services/authService'
+
+function UserHeader() {
   const navigate = useNavigate()
 
   const handleLogout = () => {
@@ -21,8 +22,8 @@ const UserHeader = () => {
       authService.logout()
       navigate('/login')
       toast.success('Đăng xuất thành công!')
-    } catch (error) {
-      toast.success('Có lỗi khi đăng xuất, vui lòng thử lại!')
+    } catch (error: any) {
+      toast.error(String(error))
     }
   }
 

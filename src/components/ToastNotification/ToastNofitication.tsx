@@ -1,6 +1,6 @@
 import { Toaster } from 'react-hot-toast'
 
-const ToastNofitication = () => {
+function ToastNofitication() {
   return (
     <Toaster
       position="top-right"

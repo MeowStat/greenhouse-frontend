@@ -1,20 +1,21 @@
-import { Button, Field, Input, Label } from '@headlessui/react'
-import { useForm, SubmitHandler } from 'react-hook-form'
-import clsx from 'clsx'
-import { authService } from '../../services/authService'
-import useAuth from '../../hooks/useAuth'
-import { useLocation, useNavigate } from 'react-router'
 import { useState } from 'react'
-import Spin from '../../components/Spin/Spin'
-import FinisherBackground from '../../components/FinisherHeader/FinisherHeader'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
+import { useLocation, useNavigate } from 'react-router'
+import { Button, Field, Input, Label } from '@headlessui/react'
+import clsx from 'clsx'
+
+import FinisherBackground from '../../components/FinisherHeader/FinisherHeader'
+import Spin from '../../components/Spin/Spin'
+import useAuth from '../../hooks/useAuth'
+import { authService } from '../../services/authService'
 
 interface LoginFormInput {
   username: string
   password: string
 }
 
-const LoginPage = () => {
+function LoginPage() {
   const { setAuth } = useAuth()
 
   const navigate = useNavigate()
@@ -123,7 +124,7 @@ const LoginPage = () => {
             </div>
           </form>
         </div>
-        <div className="flex-1 rounded-r-xl bg-[url('/bgLogin.png')] bg-cover bg-center"></div>
+        <div className="flex-1 rounded-r-xl bg-[url('/bgLogin.png')] bg-cover bg-center" />
       </div>
     </div>
   )

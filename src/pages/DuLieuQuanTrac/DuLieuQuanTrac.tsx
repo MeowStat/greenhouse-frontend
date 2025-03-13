@@ -1,4 +1,4 @@
-const DuLieuQuanTrac = () => {
+function DuLieuQuanTrac() {
   return <div>Du Lieu Quan Trac</div>
 }
 

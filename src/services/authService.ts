@@ -1,4 +1,5 @@
 import { API_CONFIG } from '../config/config'
+
 import { apiClient } from './apiClient'
 
 interface LoginPayload {
@@ -21,9 +22,8 @@ export const authService = {
         localStorage.setItem('username', response.data.data.username)
         localStorage.setItem('email', response.data.data.email)
         return response.data.data
-      } else {
-        throw new Error('Invalid credentials')
       }
+      throw new Error('Invalid credentials')
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Login failed')
     }

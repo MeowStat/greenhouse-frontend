@@ -1,13 +1,14 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
-import Layout from './layouts/Layout'
-import TrangChu from './pages/TrangChu/TrangChu'
-import DieuKhien from './pages/DieuKhien/DieuKhien'
-import LoginPage from './pages/LoginPage/LoginPage'
+
 import RequiredAuth from './components/RequiredAuth/RequiredAuth'
 import ToastNofitication from './components/ToastNotification/ToastNofitication'
+import Layout from './layouts/Layout'
+import DieuKhien from './pages/DieuKhien/DieuKhien'
 import DuLieuQuanTrac from './pages/DuLieuQuanTrac/DuLieuQuanTrac'
-import LichSuQuanTrac from './pages/LichSuQuanTrac/LichSuQuanTrac'
 import GuidePage from './pages/HuongDan/GuidePage'
+import LichSuQuanTrac from './pages/LichSuQuanTrac/LichSuQuanTrac'
+import LoginPage from './pages/LoginPage/LoginPage'
+import TrangChu from './pages/TrangChu/TrangChu'
 
 function App() {
   return (

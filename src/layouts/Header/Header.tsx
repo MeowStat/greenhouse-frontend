@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router'
+
 import UserHeader from '../../components/UserHeader/UserHeader'
 
 const navItems = [

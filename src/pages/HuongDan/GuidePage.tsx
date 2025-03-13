@@ -1,4 +1,4 @@
-const GuidePage = () => {
+function GuidePage() {
   return <div>Hướng dẫn</div>
 }
 

@@ -1,7 +1,7 @@
-import PhoneIcon from '@/assets/Phone.svg?react'
 import EmailIcon from '@/assets/mail.svg?react'
+import PhoneIcon from '@/assets/Phone.svg?react'
 
-export const Footer = () => {
+export function Footer() {
   return (
     <div className="bg-green-800 flex p-7 pl-20 pr-20 text-white flex-wrap">
       <div className="flex flex-3 flex-col items-baseline gap-1 justify-center">

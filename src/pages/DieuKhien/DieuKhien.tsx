@@ -1,4 +1,4 @@
-const DieuKhien = () => {
+function DieuKhien() {
   return <div>DieuKhien</div>
 }
 

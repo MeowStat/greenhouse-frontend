@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-const FinisherBackground = () => {
+function FinisherBackground() {
   useEffect(() => {
     const scriptId = 'finisher-header-script'
     let script = document.getElementById(scriptId) as HTMLScriptElement | null
