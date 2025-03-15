@@ -9,6 +9,7 @@ import GuidePage from './pages/HuongDan/GuidePage'
 import LichSuQuanTrac from './pages/LichSuQuanTrac/LichSuQuanTrac'
 import LoginPage from './pages/LoginPage/LoginPage'
 import TrangChu from './pages/TrangChu/TrangChu'
+import { QuanLyQuanTracEdit } from './pages/DuLieuQuanTrac/DuLieuQuanTracEdit'
 
 function App() {
   return (
@@ -23,6 +24,10 @@ function App() {
             <Route path="du-lieu-quan-trac" element={<DuLieuQuanTrac />} />
             <Route path="lich-su-quan-trac" element={<LichSuQuanTrac />} />
             <Route path="huong-dan" element={<GuidePage />} />
+            <Route
+              path="du-lieu-quan-trac/edit"
+              element={<QuanLyQuanTracEdit />}
+            ></Route>
           </Route>
         </Route>
       </Routes>
