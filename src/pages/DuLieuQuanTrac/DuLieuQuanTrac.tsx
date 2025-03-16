@@ -62,7 +62,7 @@ function DuLieuQuanTrac() {
   const navigate = useNavigate()
 
   return (
-    <div className="flex flex-col w-full items-center">
+    <div className="flex flex-col w-full items-center px-15">
       <div className="container mx-auto px-6 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-green-900">
@@ -110,7 +110,7 @@ function DuLieuQuanTrac() {
             <span>Previous</span>
           </button>
           <span className="text-sm text-gray-600">1/2</span>
-          <button className="flex items-center gap-1 px-3 py-1 text-sm border rounded-md hover:bg-gray-50 transition-colors bg-green-600 text-white hover:bg-green-700">
+          <button className="flex items-center gap-1 px-3 py-1 text-sm border rounded-md transition-colors bg-green-600 text-white hover:bg-green-700">
             <span>Next</span>
             <ArrowRight className="h-4 w-4" />
           </button>

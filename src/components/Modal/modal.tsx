@@ -36,7 +36,7 @@ export function Modal({
 
   return (
     <div
-      className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50"
+      className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50 px-5"
       onClick={onBackdropClick}
     >
       <div className="bg-white rounded-3xl p-8 w-full max-w-2xl mx-4 relative shadow-xl">

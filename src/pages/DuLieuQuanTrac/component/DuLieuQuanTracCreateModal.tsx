@@ -51,9 +51,9 @@ export function ThemMoiQuanTrac() {
         onBackdropClick={modal.handleBackdropClick}
         title="Thêm mới quan trắc"
       >
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-4 px-4">
           <div className="space-y-2">
-            <label className="block text-xl">
+            <label className="block text-lg">
               Tên <span className="text-red-500">*</span>
             </label>
             <input
@@ -63,7 +63,7 @@ export function ThemMoiQuanTrac() {
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
-              className="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-green-500"
+              className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-green-500"
             />
           </div>
 
@@ -80,56 +80,56 @@ export function ThemMoiQuanTrac() {
               }
               className="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
             />
-            <label htmlFor="idealCondition" className="text-xl">
+            <label htmlFor="idealCondition" className="text-lg">
               Điều kiện lý tưởng
             </label>
           </div>
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="block text-xl">Thông số thấp nhất</label>
+              <label className="block text-lg">Thông số thấp nhất</label>
               <input
                 type="number"
                 value={formData.minValue}
                 onChange={(e) =>
                   setFormData({ ...formData, minValue: e.target.value })
                 }
-                className="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-green-500"
+                className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-green-500"
               />
             </div>
             <div className="space-y-2">
-              <label className="block text-xl">Thông số cao nhất</label>
+              <label className="block text-lg">Thông số cao nhất</label>
               <input
                 type="number"
                 value={formData.maxValue}
                 onChange={(e) =>
                   setFormData({ ...formData, maxValue: e.target.value })
                 }
-                className="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-green-500"
+                className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-green-500"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <label className="block text-xl">Đơn vị</label>
+            <label className="block text-lg">Đơn vị</label>
             <input
               type="text"
               value={formData.unit}
               onChange={(e) =>
                 setFormData({ ...formData, unit: e.target.value })
               }
-              className="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-green-500"
+              className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-green-500"
             />
           </div>
 
           <div className="space-y-2">
-            <label className="block text-xl">Mô tả</label>
+            <label className="block text-lg">Mô tả</label>
             <textarea
               value={formData.description}
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
-              className="w-full border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-green-500 min-h-[100px]"
+              className="w-full border-2 border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:border-green-500 min-h-[100px]"
             />
           </div>
 
@@ -143,7 +143,7 @@ export function ThemMoiQuanTrac() {
               }
               className="w-5 h-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
             />
-            <label htmlFor="hideFromSummary" className="text-xl">
+            <label htmlFor="hideFromSummary" className="text-lg">
               Ẩn khỏi bảng tổng hợp dữ liệu quan trắc
             </label>
           </div>
@@ -151,7 +151,7 @@ export function ThemMoiQuanTrac() {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="px-8 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-xl"
+              className="px-8 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-lg"
             >
               Lưu
             </button>

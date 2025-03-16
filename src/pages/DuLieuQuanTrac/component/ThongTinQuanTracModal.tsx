@@ -27,7 +27,7 @@ export function ThongTinQuanTracModal({
       onBackdropClick={onClose}
       title="Thông tin quan trắc"
     >
-      <div className="space-y-6 text-lg">
+      <div className="space-y-4 text-lg">
         <div>
           <h3 className="text-2xl font-semibold">Tên: {data.id}</h3>
         </div>
