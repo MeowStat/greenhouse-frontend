@@ -10,6 +10,7 @@ import LichSuQuanTrac from './pages/LichSuQuanTrac/LichSuQuanTrac'
 import LoginPage from './pages/LoginPage/LoginPage'
 import TrangChu from './pages/TrangChu/TrangChu'
 import { QuanLyQuanTracEdit } from './pages/DuLieuQuanTrac/DuLieuQuanTracEdit'
+import DataMonitoringDashboard from './pages/DuLieuQuanTrac/DuLieuQuanTracVisualization'
 
 function App() {
   return (
@@ -27,6 +28,10 @@ function App() {
             <Route
               path="du-lieu-quan-trac/edit"
               element={<QuanLyQuanTracEdit />}
+            ></Route>
+            <Route
+              path="du-lieu-quan-trac/visualization"
+              element={<DataMonitoringDashboard></DataMonitoringDashboard>}
             ></Route>
           </Route>
         </Route>
