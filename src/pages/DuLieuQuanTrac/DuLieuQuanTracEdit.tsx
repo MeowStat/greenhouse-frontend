@@ -13,6 +13,10 @@ import {
 } from 'lucide-react'
 import { ThemMoiQuanTrac } from './component/DuLieuQuanTracCreateModal'
 import { useNavigate } from 'react-router'
+import { useEffect, useState } from 'react'
+import { sensorDataService } from '../../services/sensorDataService'
+import { EMPTY_STRING } from '../../utils/constants'
+
 interface SensorConfig {
   id: string
   description: string
@@ -21,41 +25,68 @@ interface SensorConfig {
   isHidden?: boolean
 }
 
+interface ISensor {
+  id: string
+  name: string
+  unit?: string
+  description: string
+  warning?: string
+  upperbound?: number
+  lowerbound?: number
+}
+
 export function QuanLyQuanTracEdit() {
-  const sensorConfigs: SensorConfig[] = [
-    {
-      id: 'DA_HUM_1',
-      description: 'Humid value from DHT20 1.',
-      idealRange: '50-60',
-      unit: '%',
-    },
-    {
-      id: 'DA_TEMP_2',
-      description: 'Temp value from DHT20 2.',
-      unit: '°C',
-      isHidden: true,
-    },
-    {
-      id: 'DA_LIGHT_1',
-      description: 'Lightness value from sensor 2.',
-      idealRange: '0-40',
-      unit: 'lux',
-    },
-    {
-      id: 'DA_SOIL_1',
-      description: 'Soil moisture from sensor 3.',
-    },
-    {
-      id: 'DA_SOIL_2',
-      description: 'Soil moisture from sensor 4.',
-    },
-    {
-      id: 'DA_TEMP_1',
-      description: 'Temp value from DHT20 1',
-      unit: '°C',
-      isHidden: true,
-    },
-  ]
+  const [allSensor, setAllSensor] = useState<ISensor[]>([])
+  
+  const [loading, setLoading] = useState(true)
+  
+  useEffect(() => {
+    const fetchAllSensor = async () => {
+      try {
+        const response = await sensorDataService.getAllSensor()
+        setAllSensor(response.data)
+      } catch (error: any) {
+        throw new Error(`Failed to fetch sensor data: ${error}`)
+      }
+    }
+
+    fetchAllSensor()
+  }, [])
+
+  // const sensorConfigs: SensorConfig[] = [
+  //   {
+  //     id: 'DA_HUM_1',
+  //     description: 'Humid value from DHT20 1.',
+  //     idealRange: '50-60',
+  //     unit: '%',
+  //   },
+  //   {
+  //     id: 'DA_TEMP_2',
+  //     description: 'Temp value from DHT20 2.',
+  //     unit: '°C',
+  //     isHidden: true,
+  //   },
+  //   {
+  //     id: 'DA_LIGHT_1',
+  //     description: 'Lightness value from sensor 2.',
+  //     idealRange: '0-40',
+  //     unit: 'lux',
+  //   },
+  //   {
+  //     id: 'DA_SOIL_1',
+  //     description: 'Soil moisture from sensor 3.',
+  //   },
+  //   {
+  //     id: 'DA_SOIL_2',
+  //     description: 'Soil moisture from sensor 4.',
+  //   },
+  //   {
+  //     id: 'DA_TEMP_1',
+  //     description: 'Temp value from DHT20 1',
+  //     unit: '°C',
+  //     isHidden: true,
+  //   },
+  // ]
 
   const navigate = useNavigate()
 
@@ -107,18 +138,22 @@ export function QuanLyQuanTracEdit() {
               </tr>
             </thead>
             <tbody>
-              {sensorConfigs.map((sensor) => (
+              {allSensor.map((sensor) => (
                 <tr
                   key={sensor.id}
                   className="border-b border-green-100 hover:bg-green-50"
                 >
-                  <td className="px-6 py-4">{sensor.id}</td>
+                  <td className="px-6 py-4">{sensor.name}</td>
                   <td className="px-6 py-4">{sensor.description}</td>
-                  <td className="px-6 py-4">{sensor.idealRange || '-'}</td>
-                  <td className="px-6 py-4">{sensor.unit || '-'}</td>
+                  <td className="px-6 py-4">
+                    {sensor.lowerbound && sensor.upperbound
+                      ? `${sensor.lowerbound}-${sensor.upperbound}`
+                      : EMPTY_STRING}
+                  </td>
+                  <td className="px-6 py-4">{sensor.unit || EMPTY_STRING}</td>
                   <td className="px-6 py-4">
                     <div className="flex justify-end gap-2">
-                      {sensor.isHidden ? (
+                      {/* {sensor.isHidden ? (
                         <button className="p-1 hover:bg-green-100 rounded">
                           <EyeOff className="h-5 w-5" />
                         </button>
@@ -126,7 +161,7 @@ export function QuanLyQuanTracEdit() {
                         <button className="p-1 hover:bg-green-100 rounded">
                           <Eye className="h-5 w-5" />
                         </button>
-                      )}
+                      )} */}
                       <button className="p-1 hover:bg-green-100 rounded">
                         <Trash2 className="h-5 w-5" />
                       </button>

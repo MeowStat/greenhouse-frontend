@@ -5,8 +5,9 @@ interface ThongTinQuanTracModalProps {
   onClose: () => void
   data: {
     id: string
+    name: string
     value: number
-    unit: string
+    unit?: string
     description: string
     timestamp: string
     warning?: string
@@ -29,7 +30,7 @@ export function ThongTinQuanTracModal({
     >
       <div className="space-y-4 text-lg">
         <div>
-          <h3 className="text-2xl font-semibold">Tên: {data.id}</h3>
+          <h3 className="text-2xl font-semibold">Tên: {data.name}</h3>
         </div>
 
         <div>
