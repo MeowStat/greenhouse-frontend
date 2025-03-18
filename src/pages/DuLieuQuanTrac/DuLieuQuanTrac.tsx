@@ -6,7 +6,7 @@ import {
   ArrowLeft,
   ArrowRight,
 } from 'lucide-react'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { SensorCard } from './component/SensorCard'
 import { useEffect, useState } from 'react'
 import { sensorDataService } from '../../services/sensorDataService'

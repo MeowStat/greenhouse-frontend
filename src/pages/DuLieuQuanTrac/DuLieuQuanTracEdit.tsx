@@ -1,4 +1,3 @@
-'use client'
 import {
   Search,
   Filter,
@@ -6,13 +5,11 @@ import {
   ChevronDown,
   ArrowLeft,
   ArrowRight,
-  Eye,
   Trash2,
   Info,
-  EyeOff,
 } from 'lucide-react'
 import { ThemMoiQuanTrac } from './component/DuLieuQuanTracCreateModal'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { sensorDataService } from '../../services/sensorDataService'
 import { EMPTY_STRING } from '../../utils/constants'
@@ -37,9 +34,9 @@ interface ISensor {
 
 export function QuanLyQuanTracEdit() {
   const [allSensor, setAllSensor] = useState<ISensor[]>([])
-  
+
   const [loading, setLoading] = useState(true)
-  
+
   useEffect(() => {
     const fetchAllSensor = async () => {
       try {
@@ -168,7 +165,14 @@ export function QuanLyQuanTracEdit() {
                       <button className="p-1 hover:bg-green-100 rounded">
                         <PenLine className="h-5 w-5" />
                       </button>
-                      <button className="p-1 hover:bg-green-100 rounded">
+                      <button
+                        className="p-1 hover:bg-green-100 rounded"
+                        onClick={() =>
+                          navigate(
+                            `/du-lieu-quan-trac/visualization?subject=${encodeURIComponent(sensor.name)}`,
+                          )
+                        }
+                      >
                         <Info className="h-5 w-5" />
                       </button>
                     </div>

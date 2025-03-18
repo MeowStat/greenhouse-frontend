@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 
 import RequiredAuth from './components/RequiredAuth/RequiredAuth'
 import ToastNofitication from './components/ToastNotification/ToastNofitication'

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
 import {
   Download,
@@ -26,23 +26,61 @@ import {
 import { Button } from '../../components/UI/button'
 import { Calendar } from '../../components/UI/calendar'
 import { Card } from '../../components/UI/card'
+import { sensorDataService } from '../../services/sensorDataService'
+import { useSearchParams } from 'react-router-dom'
+
+interface SensorData {
+  value: string
+  date: string
+}
+
+interface SensorDetails {
+  id: number
+  name: string
+  description: string
+  upperbound: number
+  lowerbound: number
+  Data: SensorData[]
+}
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function DataMonitoringDashboard() {
+  const [searchParams] = useSearchParams()
+  const subject = searchParams.get('subject') || 'Air Quality'
+
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined)
   const [toDate, setToDate] = useState<Date | undefined>(undefined)
   const [fromDateOpen, setFromDateOpen] = useState(false)
   const [toDateOpen, setToDateOpen] = useState(false)
+  const [sensorData, setSensorData] = useState<SensorDetails | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await sensorDataService.getSensorVisualData({
+          subject,
+          page: 1,
+          pageSize: 30,
+        })
+        setSensorData(response)
+        setLoading(false)
+      } catch (error) {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [subject])
 
   const chartData = {
-    labels: Array.from({ length: 30 }, (_, i) => i + 1),
+    labels:
+      sensorData?.Data.map((item) => format(new Date(item.date), 'HH:mm')) ||
+      [],
     datasets: [
       {
-        data: [
-          1, 1, 2, 3, 5, 6, 8, 12, 15, 18, 22, 20, 18, 15, 14, 12, 9, 7, 5, 3,
-          2, 1,
-        ],
+        data: sensorData?.Data.map((item) => Number(item.value)) || [],
         backgroundColor: 'rgb(0, 0, 200)',
         barPercentage: 0.9,
         categoryPercentage: 0.9,
@@ -67,7 +105,9 @@ export default function DataMonitoringDashboard() {
           color: 'rgba(0, 0, 0, 0.1)',
         },
         ticks: {
-          stepSize: 5,
+          stepSize: 50,
+          max: sensorData?.upperbound || 500,
+          min: sensorData?.lowerbound || 0,
         },
       },
       x: {
@@ -78,6 +118,19 @@ export default function DataMonitoringDashboard() {
     },
   }
 
+  const calculateStats = () => {
+    if (!sensorData?.Data.length) return { max: 0, min: 0, avg: 0 }
+
+    const values = sensorData.Data.map((item) => Number(item.value))
+    return {
+      max: Math.max(...values),
+      min: Math.min(...values),
+      avg: values.reduce((a, b) => a + b, 0) / values.length,
+    }
+  }
+
+  const stats = calculateStats()
+
   return (
     <div className="max-w-6xl mx-auto p-4 bg-[#f8f8f0]">
       <div className="mb-4">
@@ -85,7 +138,9 @@ export default function DataMonitoringDashboard() {
           <h1 className="text-3xl font-bold text-[#2c4c2c]">
             Dữ liệu quan trắc
           </h1>
-          <h2 className="text-xl text-[#2c4c2c]">DA_HUM_1</h2>
+          <h2 className="text-xl text-[#2c4c2c]">
+            {sensorData?.name || 'Loading...'}
+          </h2>
           <div className="flex items-center mt-1">
             <Settings className="h-5 w-5 mr-2 text-[#2c4c2c]" />
             <span className="text-sm text-[#2c4c2c]">Cài đặt cảnh báo</span>
@@ -186,18 +241,18 @@ export default function DataMonitoringDashboard() {
 
         <Card className="p-4 bg-white rounded-md flex flex-col items-center justify-center shadow-sm">
           <h3 className="text-lg font-semibold mb-3">Giá trị lớn nhất</h3>
-          <p className="text-5xl font-bold">30.2%</p>
+          <p className="text-5xl font-bold">{stats.max}</p>
         </Card>
 
         <Card className="p-4 bg-white rounded-md flex flex-col items-center justify-center shadow-sm">
           <h3 className="text-lg font-semibold mb-3">Giá trị nhỏ nhất</h3>
-          <p className="text-5xl font-bold">25%</p>
+          <p className="text-5xl font-bold">{stats.min}</p>
         </Card>
       </div>
 
       <div className="mb-4 text-center">
         <h3 className="text-lg font-semibold mb-1">Giá trị trung bình</h3>
-        <p className="text-5xl font-bold">29.8%</p>
+        <p className="text-5xl font-bold">{stats.avg.toFixed(1)}</p>
       </div>
 
       <div className="mb-4">
