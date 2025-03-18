@@ -1,4 +1,5 @@
 import { Modal } from '../../../components/Modal/modal'
+import { EMPTY_STRING } from '../../../utils/constants'
 
 interface ThongTinQuanTracModalProps {
   isOpen: boolean
@@ -11,8 +12,8 @@ interface ThongTinQuanTracModalProps {
     description: string
     timestamp: string
     warning?: string
-    minValue?: number
-    maxValue?: number
+    lowerbound?: number
+    upperbound?: number
   }
 }
 
@@ -38,8 +39,12 @@ export function ThongTinQuanTracModal({
             Kích hoạt cảnh báo khi vượt ngưỡng lý tưởng
           </h4>
           <div className="space-y-2 pl-6">
-            <p>+ Thông số lý tưởng thấp nhất: {data.minValue || 50}</p>
-            <p>+ Thông số lý tưởng cao nhất: {data.maxValue || 60}</p>
+            <p>
+              + Thông số lý tưởng thấp nhất: {data.lowerbound ?? EMPTY_STRING}
+            </p>
+            <p>
+              + Thông số lý tưởng cao nhất: {data.upperbound ?? EMPTY_STRING}
+            </p>
             <p>+ Mô tả cảnh báo: Độ ẩm ở mức báo động</p>
             <p>+ Nhận thông báo: website, email, telegram</p>
           </div>

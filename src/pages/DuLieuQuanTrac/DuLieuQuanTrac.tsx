@@ -188,7 +188,7 @@ function DuLieuQuanTrac() {
 
         <div className="space-y-4">
           {loading ? (
-            <Skeleton count={5} height={100} />
+            <Skeleton count={5} height={80} />
           ) : (
             sensorVisualData.map((visualData) => (
               <SensorCard key={visualData.id} data={visualData} />

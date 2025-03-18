@@ -143,7 +143,7 @@ export function QuanLyQuanTracEdit() {
                   <td className="px-6 py-4">{sensor.name}</td>
                   <td className="px-6 py-4">{sensor.description}</td>
                   <td className="px-6 py-4">
-                    {sensor.lowerbound && sensor.upperbound
+                    {sensor.lowerbound !== null && sensor.upperbound !== null
                       ? `${sensor.lowerbound}-${sensor.upperbound}`
                       : EMPTY_STRING}
                   </td>
