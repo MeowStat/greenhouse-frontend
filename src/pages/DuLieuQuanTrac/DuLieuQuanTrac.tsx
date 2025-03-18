@@ -8,58 +8,152 @@ import {
 } from 'lucide-react'
 import { useNavigate } from 'react-router'
 import { SensorCard } from './component/SensorCard'
+import { useEffect, useState } from 'react'
+import { sensorDataService } from '../../services/sensorDataService'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
-interface SensorData {
+// interface SensorData {
+//   id: string
+//   value: number
+//   unit?: string
+//   description: string
+//   timestamp: string
+//   warning?: string
+// }
+
+interface ISensorVisualData {
   id: string
-  value: number
-  unit: string
+  unit?: string
+  name: string
   description: string
-  timestamp: string
+  upperbound?: number
+  lowerbound?: number
   warning?: string
+  value: number
+  timestamp: string
+}
+
+interface ISensor {
+  id: string
+  name: string
+  unit?: string
+  description: string
+  warning?: string
+  upperbound?: number
+  lowerbound?: number
 }
 
 function DuLieuQuanTrac() {
-  const sensorData: SensorData[] = [
-    {
-      id: 'DA_HUM_1',
-      value: 10,
-      unit: '%',
-      description: 'Humid value from DHT20 1.',
-      timestamp: '04-02-2025 09:03:41',
-      warning: 'Cảnh báo khi thông số lớn hơn 50%',
-    },
-    {
-      id: 'DA_TEMP_1',
-      value: 25,
-      unit: '°C',
-      description: 'Temp value from DHT20 1.',
-      timestamp: '04-02-2025 09:03:41',
-    },
-    {
-      id: 'DA_SOIL_1',
-      value: 13,
-      unit: '',
-      description: 'Soil moisture from sensor 3.',
-      timestamp: '14-02-2025 09:03:41',
-    },
-    {
-      id: 'DA_LIGHT_1',
-      value: 12,
-      unit: 'lux',
-      description: 'Lightness value from sensor 2.',
-      timestamp: '06-02-2025 08:02:41',
-      warning: 'Cảnh báo khi thông số lớn hơn 40lux',
-    },
-    {
-      id: 'DA_SOIL_2',
-      value: 23,
-      unit: '',
-      description: 'Soil moisture from sensor 4.',
-      timestamp: '14-02-2025 09:03:41',
-    },
-  ]
+  // const sensorData: SensorData[] = [
+  //   {
+  //     id: 'DA_HUM_1',
+  //     value: 10,
+  //     unit: '%',
+  //     description: 'Humid value from DHT20 1.',
+  //     timestamp: '04-02-2025 09:03:41',
+  //     warning: 'Cảnh báo khi thông số lớn hơn 50%',
+  //   },
+  //   {
+  //     id: 'DA_TEMP_1',
+  //     value: 25,
+  //     unit: '°C',
+  //     description: 'Temp value from DHT20 1.',
+  //     timestamp: '04-02-2025 09:03:41',
+  //   },
+  //   {
+  //     id: 'DA_SOIL_1',
+  //     value: 13,
+  //     unit: '',
+  //     description: 'Soil moisture from sensor 3.',
+  //     timestamp: '14-02-2025 09:03:41',
+  //   },
+  //   {
+  //     id: 'DA_LIGHT_1',
+  //     value: 12,
+  //     unit: 'lux',
+  //     description: 'Lightness value from sensor 2.',
+  //     timestamp: '06-02-2025 08:02:41',
+  //     warning: 'Cảnh báo khi thông số lớn hơn 40lux',
+  //   },
+  //   {
+  //     id: 'DA_SOIL_2',
+  //     value: 23,
+  //     unit: '',
+  //     description: 'Soil moisture from sensor 4.',
+  //     timestamp: '14-02-2025 09:03:41',
+  //   },
+  // ]
 
   const navigate = useNavigate()
+
+  const [allSensor, setAllSensor] = useState<ISensor[]>([])
+  const [sensorVisualData, setSensorVisualData] = useState<ISensorVisualData[]>(
+    [],
+  )
+
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchAllSensor = async () => {
+      try {
+        const response = await sensorDataService.getAllSensor()
+        setAllSensor(response.data)
+      } catch (error: any) {
+        throw new Error(`Failed to fetch sensor data: ${error}`)
+      }
+    }
+
+    fetchAllSensor()
+  }, [])
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout
+
+    const fetchSensorVisualData = async () => {
+      if (allSensor && allSensor.length > 0) {
+        try {
+          const responses = await Promise.all(
+            allSensor.map((sensor) =>
+              sensorDataService.getSensorVisualData({
+                subject: sensor.name,
+                page: 1,
+                pageSize: 1,
+              }),
+            ),
+          )
+
+          const visualData = responses.map((response, index) => {
+            const { value, date } = response.Data[0]
+            return {
+              id: allSensor[index].id,
+              name: allSensor[index].name,
+              description: allSensor[index].description,
+              upperbound: allSensor[index].upperbound,
+              lowerbound: allSensor[index].lowerbound,
+              warning: allSensor[index].warning,
+              value,
+              timestamp: new Date(date).toLocaleString(),
+            }
+          })
+
+          setSensorVisualData(visualData)
+          setLoading(false)
+        } catch (error: any) {
+          throw new Error(`Failed to fetch sensor data: ${error}`)
+        }
+      }
+    }
+
+    if (allSensor && allSensor.length > 0) {
+      fetchSensorVisualData()
+      intervalId = setInterval(fetchSensorVisualData, 30000)
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId)
+    }
+  }, [allSensor])
 
   return (
     <div className="flex flex-col w-full items-center px-15">
@@ -93,9 +187,13 @@ function DuLieuQuanTrac() {
         </div>
 
         <div className="space-y-4">
-          {sensorData.map((sensor) => (
-            <SensorCard key={sensor.id} data={sensor} />
-          ))}
+          {loading ? (
+            <Skeleton count={5} height={100} />
+          ) : (
+            sensorVisualData.map((visualData) => (
+              <SensorCard key={visualData.id} data={visualData} />
+            ))
+          )}
         </div>
 
         <div className="flex justify-end items-center gap-4 mt-6">

@@ -5,8 +5,9 @@ import { ThongTinQuanTracModal } from './ThongTinQuanTracModal'
 
 interface SensorData {
   id: string
+  name: string
   value: number
-  unit: string
+  unit?: string
   description: string
   timestamp: string
   warning?: string
@@ -24,11 +25,11 @@ export function SensorCard({ data }: SensorCardProps) {
       <div className="bg-[#B4E8C5] rounded-lg py-4 px-6 mb-4 relative">
         <div className="flex items-center justify-between">
           <div className="flex flex-1 items-baseline justify-around">
-            <span className="text-8xl font-bold">{data.value}</span>
+            <span className="text-7xl font-bold">{data.value}</span>
             <span className="ml-1 text-xl">{data.unit}</span>
           </div>
           <div className="flex-7 ml-8">
-            <h2 className="text-2xl font-semibold mb-2">{data.id}</h2>
+            <h2 className="text-2xl font-semibold mb-2">{data.name}</h2>
             <p className="text-gray-600 mb-1">{data.description}</p>
             <p className="text-gray-500 text-sm">
               Thời gian cập nhật: {data.timestamp}
