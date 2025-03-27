@@ -1,8 +1,5 @@
 import {
-  Search,
-  Filter,
   PenLine,
-  ChevronDown,
   Trash2,
   Info,
 } from 'lucide-react'
@@ -54,20 +51,6 @@ export function QuanLyQuanTracEdit() {
             <h2 className="text-2xl text-green-800">Quản lý bảng quan trắc</h2>
           </div>
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <input
-                className="pl-10 pr-4 py-2 w-[300px] bg-[#e8f5e9] rounded-md border-none focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Tìm kiếm quan trắc"
-                type="text"
-              />
-            </div>
-            <button className="p-2 rounded-md hover:bg-gray-100 transition-colors">
-              <ChevronDown className="h-5 w-5" />
-            </button>
-            <button className="p-2 rounded-md hover:bg-gray-100 transition-colors">
-              <Filter className="h-5 w-5" />
-            </button>
             <button
               className="p-2 rounded-md hover:bg-gray-100 transition-colors hover:cursor-pointer"
               onClick={() => navigate('/du-lieu-quan-trac')}
@@ -79,7 +62,7 @@ export function QuanLyQuanTracEdit() {
 
         <ThemMoiQuanTrac />
 
-        <div className="bg-[#e8f5e9] rounded-lg overflow-hidden">
+        <div className="bg-[#e8f5e9] overflow-hidden">
           { 
             loading? 
               <Skeleton height={300} /> 
@@ -116,15 +99,6 @@ export function QuanLyQuanTracEdit() {
                         <td className="px-6 py-4">{sensor.unit || EMPTY_STRING}</td>
                         <td className="px-6 py-4">
                           <div className="flex justify-end gap-2">
-                            {/* {sensor.isHidden ? (
-                              <button className="p-1 hover:bg-green-100 rounded">
-                                <EyeOff className="h-5 w-5" />
-                              </button>
-                            ) : (
-                              <button className="p-1 hover:bg-green-100 rounded">
-                                <Eye className="h-5 w-5" />
-                              </button>
-                            )} */}
                             <button className="p-1 hover:bg-green-100 rounded">
                               <Trash2 className="h-5 w-5" />
                             </button>
@@ -133,11 +107,16 @@ export function QuanLyQuanTracEdit() {
                             </button>
                             <button
                               className="p-1 hover:bg-green-100 rounded"
-                              onClick={() =>
-                                navigate(
-                                  `/du-lieu-quan-trac/visualization?subject=${encodeURIComponent(sensor.name)}`,
-                                )
-                              }
+                              onClick={() => {
+                                const params = new URLSearchParams({
+                                  name: sensor.name,
+                                  feed: sensor.feed,
+                                  lowerbound: sensor.lowerbound !== null ? String(sensor.lowerbound) : '',
+                                  upperbound: sensor.upperbound !== null ? String(sensor.upperbound) : '',
+                                });
+
+                                navigate(`/du-lieu-quan-trac/visualization?${params.toString()}`);
+                              }}
                             >
                               <Info className="h-5 w-5" />
                             </button>

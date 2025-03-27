@@ -1,9 +1,4 @@
-import {
-  Search,
-  Filter,
-  PenLine,
-  ChevronDown,
-} from 'lucide-react'
+import { PenLine } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { SensorCard } from './component/SensorCard'
 import { useEffect, useState } from 'react'
@@ -87,20 +82,6 @@ function DuLieuQuanTrac() {
             Dữ liệu quan trắc
           </h1>
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <input
-                className="pl-10 pr-4 py-2 w-[300px] bg-[#e8f5e9] rounded-md border-none focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Tìm kiếm dữ liệu quan trắc"
-                type="text"
-              />
-            </div>
-            <button className="p-2 rounded-md hover:bg-gray-100 transition-colors">
-              <ChevronDown className="h-5 w-5" />
-            </button>
-            <button className="p-2 rounded-md hover:bg-gray-100 transition-colors">
-              <Filter className="h-5 w-5" />
-            </button>
             <button
               className="p-2 rounded-md hover:bg-gray-100 transition-colors"
               onClick={() => navigate('/du-lieu-quan-trac/edit')}
