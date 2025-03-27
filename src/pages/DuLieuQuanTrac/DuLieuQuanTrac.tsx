@@ -3,8 +3,6 @@ import {
   Filter,
   PenLine,
   ChevronDown,
-  ArrowLeft,
-  ArrowRight,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { SensorCard } from './component/SensorCard'
@@ -23,7 +21,6 @@ function DuLieuQuanTrac() {
   const [sensorVisualData, setSensorVisualData] = useState<ISensorVisualData[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch all sensors
   const fetchAllSensor = async () => {
     try {
       const data = await sensorDataService.getAllSensor();
@@ -34,7 +31,6 @@ function DuLieuQuanTrac() {
     }
   };
 
-  // Fetch sensor visual data
   const fetchSensorVisualData = async () => {
     if (allSensor.length === 0) return;
 
@@ -63,7 +59,6 @@ function DuLieuQuanTrac() {
     }
   };
 
-  // First useEffect: Fetch all sensors on mount
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -73,15 +68,14 @@ function DuLieuQuanTrac() {
     fetchData();
   }, []);
 
-  // Second useEffect: Fetch sensor visual data and set interval
   useEffect(() => {
     if (allSensor.length === 0) return;
 
-    fetchSensorVisualData(); // Fetch immediately
+    fetchSensorVisualData(); 
 
-    const intervalId = setInterval(fetchSensorVisualData, 30000); // Fetch every 30 seconds
+    const intervalId = setInterval(fetchSensorVisualData, 30000); 
 
-    return () => clearInterval(intervalId); // Cleanup interval on unmount
+    return () => clearInterval(intervalId); 
   }, [allSensor]);
 
 
@@ -124,24 +118,6 @@ function DuLieuQuanTrac() {
               <SensorCard key={visualData.id} data={visualData} />
             ))
           )}
-        </div>
-
-        <div className="flex justify-end items-center gap-4 mt-6">
-          <div className="flex items-center border rounded-md">
-            <button className="px-2 py-1 flex items-center gap-1 hover:bg-gray-50">
-              <span>5</span>
-              <ChevronDown className="h-4 w-4" />
-            </button>
-          </div>
-          <button className="flex items-center gap-1 px-3 py-1 text-sm border rounded-md hover:bg-gray-50 transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-            <span>Previous</span>
-          </button>
-          <span className="text-sm text-gray-600">1/2</span>
-          <button className="flex items-center gap-1 px-3 py-1 text-sm border rounded-md transition-colors bg-green-600 text-white hover:bg-green-700">
-            <span>Next</span>
-            <ArrowRight className="h-4 w-4" />
-          </button>
         </div>
       </div>
     </div>
