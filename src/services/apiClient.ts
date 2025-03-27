@@ -22,8 +22,12 @@ apiClient.interceptors.request.use(
 
 export const api = {
   get: async <T>(url: string, params?: Record<string, any>): Promise<T> => {
-    const response = await apiClient.get<T>(url, { params })
-    return response.data
+    try {
+      const response = await apiClient.get<T>(url, {params})
+      return response.data
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Failed to fetch data')
+    }
   },
 
   post: async <T>(url: string, data?: any): Promise<T> => {

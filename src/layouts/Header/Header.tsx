@@ -35,10 +35,12 @@ export const Header: React.FC = () => {
             <NavLink
               key={navItem.to}
               to={navItem.to}
-              className={({ isActive }) =>
-                isActive
-                  ? 'text-white font-semibold'
-                  : 'text-[#B4E8C5] hover:text-white'
+              className={({ isActive }: { isActive: boolean }) =>
+                `relative text-lg transition-all duration-300 ${
+                  isActive
+                    ? 'text-white font-semibold'
+                    : 'text-[#B4E8C5] hover:text-white'
+                }`
               }
             >
               {navItem.label}

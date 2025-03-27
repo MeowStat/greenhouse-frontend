@@ -6,8 +6,8 @@ function ToastNofitication() {
       position="top-right"
       toastOptions={{
         style: {
-          width: '15vw',
-          padding: '16px 8px',
+          width: '20vw',
+          padding: '16px',
           color: '#333',
           textAlign: 'left',
         },
