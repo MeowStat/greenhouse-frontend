@@ -11,6 +11,20 @@ export interface SensorVisualDataPayload {
   endDate?: string
 }
 
+export interface IMonitorCreatePayload {
+  name: string
+  feed: string
+  upperbound: number
+  lowerbound: number
+  unit: string
+  description: string
+}
+
+export interface IResponseApiPost {
+  status: boolean
+  message: string
+}
+
 export interface ISensor {
   id: string
   name: string
@@ -37,3 +51,5 @@ export interface IResponseSensorList extends ISensorServiceApiResponse<ISensor[]
 export interface IResponseSensorData extends ISensorServiceApiResponse<ISensorData[]>{}
 
 export interface ISensorVisualData extends ISensor, ISensorData {}
+
+export interface IResponseFeedList extends ISensorServiceApiResponse<string[]> {}

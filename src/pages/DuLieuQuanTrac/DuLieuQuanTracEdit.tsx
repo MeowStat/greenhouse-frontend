@@ -1,9 +1,8 @@
 import {
   PenLine,
-  Trash2,
   Info,
 } from 'lucide-react'
-import { ThemMoiQuanTrac } from './component/DuLieuQuanTracCreateModal'
+
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { sensorDataService } from '../../services/sensorDataService'
@@ -12,9 +11,19 @@ import { ISensor } from '../../types/SensorTypes'
 import toast from 'react-hot-toast'
 import ToastMessage from '../../components/ToastNotification/ToastMessage'
 import Skeleton from 'react-loading-skeleton'
+import { useModal } from '../../hooks/useModal'
+import EditQuanTrac from './component/DuLieuQuanTracEditModal'
+import ThemMoiQuanTrac from './component/DuLieuQuanTracCreateModal'
+import DeleteQuanTracButton from './component/DeleteQuanTracButton'
 
 export function QuanLyQuanTracEdit() {
+  const editModal = useModal()
+
   const [allSensor, setAllSensor] = useState<ISensor[]>([])
+
+  const [refresh, setRefresh] = useState(false)
+
+  const [selectedSensor, setSelectedSensor] = useState<ISensor | null>(null)
 
   const [loading, setLoading] = useState(false)
 
@@ -28,6 +37,12 @@ export function QuanLyQuanTracEdit() {
     }
   };
 
+  const handleEditSensor = (sensor: ISensor) => {
+    setSelectedSensor(sensor);
+    console.log(sensor)
+    editModal.open();
+  }
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -36,9 +51,8 @@ export function QuanLyQuanTracEdit() {
       await fetchAllSensor();
       setLoading(false)
     };
-
     fetchData();
-  }, []);
+  }, [refresh]);
 
   return (
     <div className="flex flex-col w-full items-center min-h-screen bg-[#fafdf9] px-15">
@@ -60,7 +74,7 @@ export function QuanLyQuanTracEdit() {
           </div>
         </div>
 
-        <ThemMoiQuanTrac />
+        <ThemMoiQuanTrac setRefresh={setRefresh} />
 
         <div className="bg-[#e8f5e9] overflow-hidden">
           { 
@@ -90,7 +104,7 @@ export function QuanLyQuanTracEdit() {
                         className="border-b border-green-100 hover:bg-green-50"
                       >
                         <td className="px-6 py-4">{sensor.name}</td>
-                        <td className="px-6 py-4">{sensor.description}</td>
+                        <td className="px-6 py-4" title={sensor.description}>{sensor.description}</td>
                         <td className="px-6 py-4">
                           {sensor.lowerbound !== null && sensor.upperbound !== null
                             ? `${sensor.lowerbound}-${sensor.upperbound}`
@@ -99,14 +113,17 @@ export function QuanLyQuanTracEdit() {
                         <td className="px-6 py-4">{sensor.unit || EMPTY_STRING}</td>
                         <td className="px-6 py-4">
                           <div className="flex justify-end gap-2">
-                            <button className="p-1 hover:bg-green-100 rounded">
-                              <Trash2 className="h-5 w-5" />
-                            </button>
-                            <button className="p-1 hover:bg-green-100 rounded">
+                            <DeleteQuanTracButton key={sensor.id} quanTracId={sensor.id} setRefresh={setRefresh}/>
+                            <button 
+                              className="p-1 hover:bg-green-100 rounded"
+                              title='Chỉnh sửa'
+                              onClick={() => handleEditSensor(sensor)}
+                            >
                               <PenLine className="h-5 w-5" />
                             </button>
                             <button
                               className="p-1 hover:bg-green-100 rounded"
+                              title='Xem biểu đồ'
                               onClick={() => {
                                 const params = new URLSearchParams({
                                   name: sensor.name,
@@ -126,6 +143,20 @@ export function QuanLyQuanTracEdit() {
                     ))}
                   </tbody>
                 </table>
+                <EditQuanTrac 
+                  key={selectedSensor?.id || 'default'}
+                  monitorId={selectedSensor?.id || EMPTY_STRING}
+                  modal={editModal} 
+                  data={{
+                    name: selectedSensor?.name || EMPTY_STRING,
+                    description: selectedSensor?.description || EMPTY_STRING,
+                    unit: selectedSensor?.unit || EMPTY_STRING,
+                    upperbound: selectedSensor?.upperbound || 0,
+                    lowerbound: selectedSensor?.lowerbound || 0,
+                    feed: selectedSensor?.feed || EMPTY_STRING,
+                  }}
+                  setRefresh={setRefresh}
+                />
               </>
           }
         </div>

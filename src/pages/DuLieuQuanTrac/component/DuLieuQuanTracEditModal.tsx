@@ -1,10 +1,7 @@
 import { useForm, Controller } from 'react-hook-form';
-import { Plus } from 'lucide-react';
 import { useModal } from '../../../hooks/useModal';
 import { Modal } from '../../../components/Modal/modal';
-import { useEffect, useState } from 'react';
 import { sensorDataService } from '../../../services/sensorDataService';
-import { ComboBox } from '../../../components/UI/combobox';
 import toast from 'react-hot-toast';
 import ToastMessage from '../../../components/ToastNotification/ToastMessage';
 
@@ -17,20 +14,27 @@ interface FormData {
   description: string;
 }
 
-const createNewMonitor = async (data: FormData) => {
+interface EditQuanTracProps {
+  monitorId: string;
+  modal: ReturnType<typeof useModal>;
+  data?: FormData;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const updateMonitor = async (id: string, data: FormData) => {
   try {
-    const response = await sensorDataService.createNewMonitor(data);
+    const response = await sensorDataService.updateMonitor(id,data);
     toast.success(
       <ToastMessage
-        mainMessage="Tạo mới thành công"
-        description="Đã tạo mới quan trắc thành công"
+        mainMessage="Cập nhật thành công"
+        description="Đã cập nhật quan trắc thành công"
       />,
     );
     return response;
   } catch (error) {
     toast.error(
       <ToastMessage
-        mainMessage="Tạo mới không thành công"
+        mainMessage="Cập nhật không thành công"
         description={(error as Error).message}
       />,
     );
@@ -38,15 +42,9 @@ const createNewMonitor = async (data: FormData) => {
   }
 }
 
-interface ThemMoiQuanTracProps {
-  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
-}
+const EditQuanTrac: React.FC<EditQuanTracProps> = (props) => {
+  const { monitorId, modal, data, setRefresh } = props;
 
-const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
-  const { setRefresh } = props
-
-  const modal = useModal();
-  
   const {
     handleSubmit,
     control,
@@ -54,64 +52,34 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
-      name: '',
-      feed: '',
-      upperbound: 0,
-      lowerbound: 0,
-      unit: '',
-      description: '',
+      name: data?.name || '',
+      feed: data?.feed || '',
+      upperbound: data?.upperbound || 0,
+      lowerbound: data?.lowerbound || 0,
+      unit: data?.unit || '',
+      description: data?.description || '',
     },
   });
-
-  const [feedList, setFeedList] = useState<string[]>([]);
-
-  useEffect(() => {
-    const fetchFeedList = async () => {
-      try {
-        const response = await sensorDataService.getAllFeed();
-        setFeedList(response.data);
-      } catch (error) {
-        console.error('Error fetching feed list:', error);
-      }
-    };
-    fetchFeedList();
-  }, []);
-
-  const handleCreateNewFeed = (newFeed: string) => {
-    setFeedList((prev) => [...prev, newFeed]); 
-  };
 
   const onSubmit = async (data: FormData) => {
     const formattedData = {
       ...data,
-      upperbound: Number(data.upperbound), // Convert to number
-      lowerbound: Number(data.lowerbound), // Convert to number
+      upperbound: Number(data.upperbound), 
+      lowerbound: Number(data.lowerbound), 
     };
 
-    console.log('Form Data:', formattedData);
-    await createNewMonitor(formattedData);
+    await updateMonitor(monitorId,formattedData);
     reset(); 
-    setRefresh(prev => !prev)
+    setRefresh((prev)=>(!prev));
     modal.close(); 
   };
 
   return (
-    <>
-      {/* Add New Button */}
-      <button
-        onClick={modal.open}
-        className="mb-6 flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md"
-      >
-        <Plus className="h-5 w-5" />
-        <span className="font-medium">Thêm mới quan trắc</span>
-      </button>
-
-      {/* Modal */}
       <Modal
         isOpen={modal.isOpen}
         onClose={modal.close}
         onBackdropClick={modal.handleBackdropClick}
-        title="Thêm mới quan trắc"
+        title="Chỉnh sửa quan trắc"
       >
         <div className='overflow-y-auto max-h-[80vh]'>
           <form 
@@ -153,12 +121,12 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
                 control={control}
                 rules={{ required: 'Feed là bắt buộc' }}
                 render={({ field }) => (
-                  <ComboBox
-                    options={feedList} // Dynamic options
-                    selected={field.value} // Controlled value
-                    onChange={field.onChange} // Controlled onChange
-                    onCreateNew={handleCreateNewFeed} // Handle creating a new feed
-                    placeholder="Chọn feed"
+                  <input
+                    {...field}
+                    disabled
+                    className={`w-full border ${
+                    errors.name ? 'border-red-500' : 'border-gray-300'
+                  } rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
                   />
                 )}
               />
@@ -284,8 +252,7 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
         </div>
         
       </Modal>
-    </>
   );
 }
 
-export default ThemMoiQuanTrac
+export default EditQuanTrac;

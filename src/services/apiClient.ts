@@ -31,8 +31,21 @@ export const api = {
   },
 
   post: async <T>(url: string, data?: any): Promise<T> => {
-    const response = await apiClient.post<T>(url, data)
-    return response.data
+    try {
+      const response = await apiClient.post<T>(url, data)
+      return response.data
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Failed to post data')
+    }
+  },
+
+  patch: async <T>(url: string, data?: any): Promise<T> => {
+    try {
+      const response = await apiClient.patch<T>(url, data)
+      return response.data
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Failed to patch data')
+    }
   },
 
   put: async <T>(url: string, data?: any): Promise<T> => {
@@ -41,7 +54,11 @@ export const api = {
   },
 
   delete: async <T>(url: string): Promise<T> => {
-    const response = await apiClient.delete<T>(url)
-    return response.data
+    try {
+      const response = await apiClient.delete<T>(url)
+      return response.data
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Failed to delete data')
+    }
   },
 }

@@ -47,7 +47,7 @@ export function Modal({
           <X className="h-6 w-6" />
         </button>
         {title && (
-          <h2 className="text-3xl font-bold text-green-900 mb-8">{title}</h2>
+          <h2 className="text-center text-3xl font-bold text-green-900 mb-4">{title}</h2>
         )}
         {children}
       </div>

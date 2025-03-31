@@ -10,9 +10,8 @@ function Layout() {
       <header className="sticky top-0 left-0 right-0 z-20 bg-white shadow-md">
         <Header />
       </header>
-
-      {/* Main Content */}
-      <main className="flex-1 pt-6 px-4 sm:px-6 lg:px-8">
+      
+      <main className="flex-1 pt-6 px-4 sm:px-6 lg:px-8 w-full">
         <Outlet />
       </main>
 
