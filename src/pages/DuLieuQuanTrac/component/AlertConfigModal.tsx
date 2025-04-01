@@ -9,8 +9,8 @@ import ToastMessage from '../../../components/ToastNotification/ToastMessage';
 
 interface FormData {
   alertDes: string
-  alertUpperbound: number
-  alertLowerbound: number
+  alertupperbound: number
+  alertlowerbound: number
   status: boolean
   email: boolean
 }
@@ -25,14 +25,6 @@ interface AlertConfigModalProps {
 const AlertConfigModal: React.FC<AlertConfigModalProps> = (props) => {
   const { monitorId, modal, data, setRefresh } = props
 
-  const onSubmit = async (data: FormData) => {
-    try {
-      await sensorDataService.postConfigAlert(monitorId, data)
-      toast.error(<ToastMessage mainMessage='Cài đặt cảnh báo thành công' description=''/>)
-    } catch {
-      toast.error(<ToastMessage mainMessage='Cài đặt cảnh báo không thành công' description='Vui lòng thử lại'/>)
-    }
-  }
 
   const {
     handleSubmit,
@@ -42,13 +34,28 @@ const AlertConfigModal: React.FC<AlertConfigModalProps> = (props) => {
   } = useForm<FormData>({
     defaultValues: {
       alertDes: data.alertDes,
-      alertUpperbound: data.alertUpperbound,
-      alertLowerbound: data.alertLowerbound,
+      alertupperbound: data.alertupperbound,
+      alertlowerbound: data.alertlowerbound,
       status: data.status,
       email: data.email,
     },
   });
 
+  const onSubmit = async (data: FormData) => {
+    try {
+      const formattedData = {
+        ...data,
+        alertLowerbound: Number(data.alertlowerbound),
+        alertUpperbound: Number(data.alertupperbound)
+      }
+      await sensorDataService.postConfigAlert(monitorId, formattedData)
+      toast.success(<ToastMessage mainMessage='Cài đặt cảnh báo thành công' description=''/>)
+      reset()
+      modal.close()
+    } catch {
+      toast.error(<ToastMessage mainMessage='Cài đặt cảnh báo không thành công' description='Vui lòng thử lại'/>)
+    }
+  }
 
   return (
     <Modal
@@ -87,7 +94,7 @@ const AlertConfigModal: React.FC<AlertConfigModalProps> = (props) => {
                   Thông số thấp nhất
                 </label>
                 <Controller
-                  name="alertLowerbound"
+                  name="alertlowerbound"
                   control={control}
                   rules={{ required: 'Thông số thấp nhất là bắt buộc' }}
                   render={({ field }) => (
@@ -95,15 +102,15 @@ const AlertConfigModal: React.FC<AlertConfigModalProps> = (props) => {
                       {...field}
                       type="number"
                       className={`w-full border ${
-                        errors.alertLowerbound ? 'border-red-500' : 'border-gray-300'
+                        errors.alertlowerbound ? 'border-red-500' : 'border-gray-300'
                       } rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
                       placeholder="Nhập giá trị thấp nhất"
                     />
                   )}
                 />
-                {errors.alertLowerbound && (
+                {errors.alertlowerbound && (
                   <p className="text-red-500 text-sm">
-                    {errors.alertLowerbound.message}
+                    {errors.alertlowerbound.message}
                   </p>
                 )}
               </div>
@@ -112,7 +119,7 @@ const AlertConfigModal: React.FC<AlertConfigModalProps> = (props) => {
                   Thông số cao nhất
                 </label>
                 <Controller
-                  name="alertUpperbound"
+                  name="alertupperbound"
                   control={control}
                   rules={{ required: 'Thông số cao nhất là bắt buộc' }}
                   render={({ field }) => (
@@ -120,15 +127,15 @@ const AlertConfigModal: React.FC<AlertConfigModalProps> = (props) => {
                       {...field}
                       type="number"
                       className={`w-full border ${
-                        errors.alertUpperbound ? 'border-red-500' : 'border-gray-300'
+                        errors.alertupperbound ? 'border-red-500' : 'border-gray-300'
                       } rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
                       placeholder="Nhập giá trị cao nhất"
                     />
                   )}
                 />
-                {errors.alertUpperbound && (
+                {errors.alertupperbound && (
                   <p className="text-red-500 text-sm">
-                    {errors.alertUpperbound.message}
+                    {errors.alertupperbound.message}
                   </p>
                 )}
               </div>

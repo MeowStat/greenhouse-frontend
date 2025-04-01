@@ -339,18 +339,18 @@ export default function DataMonitoringDashboard() {
           <ChevronRight className="h-4 w-4 ml-1" />
         </Button>
       </div>
-      <AlertConfigModal 
+      {sensor && <AlertConfigModal 
         key={id}
         monitorId={id ?? ''} 
         data={{
           alertDes: sensor?.alertDes || '',
-          alertLowerbound: sensor?.alertlowerbound || 0,
-          alertUpperbound: sensor?.alertupperbound || 0,
+          alertlowerbound: sensor?.alertlowerbound || 0,
+          alertupperbound: sensor?.alertupperbound || 0,
           status: sensor?.warning || false,
           email: sensor?.email || false
         }}
         modal={modal}
-      />
+      />}
     </div>
   )
 }
