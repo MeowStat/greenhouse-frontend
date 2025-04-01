@@ -20,6 +20,14 @@ export interface IMonitorCreatePayload {
   description: string
 }
 
+export interface IAlertConfig {
+  alertDes: string
+  alertUpperbound: number
+  alertLowerbound: number
+  status: boolean
+  email: boolean
+}
+
 export interface IResponseApiPost {
   status: boolean
   message: string

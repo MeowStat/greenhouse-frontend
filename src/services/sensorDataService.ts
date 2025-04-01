@@ -1,4 +1,4 @@
-import { IMonitorCreatePayload, IResponseApiPost, IResponseFeedList, IResponseSensorData, IResponseSensorList, SensorVisualDataPayload } from '../types/SensorTypes'
+import { IAlertConfig, IMonitorCreatePayload, IResponseApiPost, IResponseFeedList, IResponseSensorData, IResponseSensorList, SensorVisualDataPayload } from '../types/SensorTypes'
 import { api } from './apiClient'
 
 export const sensorDataService = {
@@ -24,5 +24,9 @@ export const sensorDataService = {
 
   deleteMonitor: async (id: string): Promise<IResponseApiPost> => {
     return await api.delete<IResponseApiPost>(`/monitor/${id}`)
-  }
+  },
+
+  postConfigAlert: async (id: string, data: IAlertConfig): Promise<IResponseApiPost> => {
+    return await api.post<IResponseApiPost>(`monitor/alert/${id}`, data)
+  },
 }
