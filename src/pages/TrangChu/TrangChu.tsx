@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router'
+import { NavLink } from 'react-router-dom'
 
 import image1 from '../../assets/The-Most-Important-Benefits-of-a-Greenhouse-GreenPro-Ventures 1.png'
 

@@ -19,3 +19,46 @@ apiClient.interceptors.request.use(
     return config
   },
 )
+
+export const api = {
+  get: async <T>(url: string, params?: Record<string, any>): Promise<T> => {
+    try {
+      const response = await apiClient.get<T>(url, {params})
+      return response.data
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Failed to fetch data')
+    }
+  },
+
+  post: async <T>(url: string, data?: any): Promise<T> => {
+    try {
+      const response = await apiClient.post<T>(url, data)
+      return response.data
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Failed to post data')
+    }
+  },
+
+  patch: async <T>(url: string, data?: any): Promise<T> => {
+    try {
+      const response = await apiClient.patch<T>(url, data)
+      return response.data
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Failed to patch data')
+    }
+  },
+
+  put: async <T>(url: string, data?: any): Promise<T> => {
+    const response = await apiClient.put<T>(url, data)
+    return response.data
+  },
+
+  delete: async <T>(url: string): Promise<T> => {
+    try {
+      const response = await apiClient.delete<T>(url)
+      return response.data
+    } catch (error: any) {
+      throw new Error(error.response?.data?.message || 'Failed to delete data')
+    }
+  },
+}

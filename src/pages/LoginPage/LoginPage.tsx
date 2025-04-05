@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
-import { useLocation, useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Button, Field, Input, Label } from '@headlessui/react'
 import clsx from 'clsx'
+import { Eye, EyeOff } from 'lucide-react' // Import icons
 
 import FinisherBackground from '../../components/FinisherHeader/FinisherHeader'
 import Spin from '../../components/Spin/Spin'
@@ -22,6 +23,7 @@ function LoginPage() {
   const location = useLocation()
   const from = location.state?.from?.pathname || '/'
   const [loading, setLoading] = useState<boolean>(false)
+  const [showPassword, setShowPassword] = useState<boolean>(false)
 
   const {
     register,
@@ -70,42 +72,76 @@ function LoginPage() {
       <div className="flex min-h-[65%] w-[53%] drop-shadow-lg mt-25">
         <div className="flex-1 bg-[#FDFCF7] rounded-l-xl py-8 px-15">
           <div className="text-3xl font-semibold">Đăng nhập</div>
-          <form className="w-[88%] mt-8">
+          <form className="w-[88%] mt-8" onSubmit={handleSubmit(onSubmit)}>
             <Field>
-              <Label className="text-base font-medium">Tên người dùng</Label>
+              <Label htmlFor="username" className="text-base font-medium">
+                Tên người dùng
+              </Label>
               <Input
+                id="username"
                 className={clsx(
                   'mt-2 block w-full rounded-lg outline outline-gray-400 bg-white py-2 px-3 text-base',
                   'focus:outline-green-700 focus:ring-2 focus:ring-green-400 transition-all duration-200',
-                  `${errors.username?.type === 'required' ? 'outline-red-400' : ''}`,
+                  errors.username?.type === 'required' && 'outline-red-400',
                 )}
                 type="text"
-                {...register('username', { required: 'true' })}
+                {...register('username', {
+                  required: 'Vui lòng nhập tên người dùng',
+                })}
+                aria-invalid={!!errors.username}
+                aria-describedby="username-error"
               />
               {errors.username && (
-                <div className="text-red-500 mt-1">
-                  Vui lòng nhập tên người dùng
+                <div
+                  id="username-error"
+                  className="text-red-500 mt-1"
+                  role="alert"
+                >
+                  {errors.username.message}
                 </div>
               )}
             </Field>
             <Field className="mt-5">
-              <Label className="text-base font-medium">Mật khẩu</Label>
-              <Input
-                className={clsx(
-                  'mt-2 block w-full rounded-lg outline outline-gray-400 bg-white py-2 px-3 text-base',
-                  'focus:outline-green-700 focus:ring-2 focus:ring-green-400 transition-all duration-200',
-                  `${errors.password?.type === 'required' ? 'outline-red-400' : ''}`,
-                )}
-                type="password"
-                {...register('password', { required: 'true' })}
-              />
+              <Label htmlFor="password" className="text-base font-medium">
+                Mật khẩu
+              </Label>
+              <div className="relative">
+                <Input
+                  id="password"
+                  className={clsx(
+                    'mt-2 block w-full rounded-lg outline outline-gray-400 bg-white py-2 px-3 text-base',
+                    'focus:outline-green-700 focus:ring-2 focus:ring-green-400 transition-all duration-200',
+                    errors.password?.type === 'required' && 'outline-red-400',
+                  )}
+                  type={showPassword ? 'text' : 'password'}
+                  {...register('password', {
+                    required: 'Vui lòng nhập mật khẩu',
+                  })}
+                  aria-invalid={!!errors.password}
+                  aria-describedby="password-error"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5" />
+                  ) : (
+                    <Eye className="h-5 w-5" />
+                  )}
+                </button>
+              </div>
               {errors.password && (
-                <div className="text-red-500 mt-1">Vui lòng nhập mật khẩu</div>
+                <div
+                  id="password-error"
+                  className="text-red-500 mt-1"
+                  role="alert"
+                >
+                  {errors.password.message}
+                </div>
               )}
             </Field>
-            <a className="inline-block mt-5 cursor-pointer font-medium text-green-700 hover:underline">
-              Quên mật khẩu?
-            </a>
             <Button
               className={clsx(
                 'mt-8 w-full',
@@ -114,12 +150,12 @@ function LoginPage() {
                   ? 'bg-gray-400 cursor-not-allowed'
                   : 'bg-[#48AB69] hover:bg-green-500 active:bg-green-700 cursor-pointer',
               )}
-              onClick={handleSubmit(onSubmit)}
+              type="submit"
               disabled={loading}
             >
-              Xác nhận
+              {loading ? 'Đang xử lý...' : 'Xác nhận'}
             </Button>
-            <div className={clsx('flex justify-center items-center w-full')}>
+            <div className="flex justify-center items-center w-full">
               <Spin loading={loading} />
             </div>
           </form>
