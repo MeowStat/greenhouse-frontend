@@ -48,6 +48,7 @@ export default function DataMonitoringDashboard() {
 
   const [ sensor, setSensor ] = useState<ISensor>()
   const [ allSensor, setAllSensor ] = useState<ISensor[]>([])
+  const [ refresh, setRefresh ] = useState(false)
 
   const [fromDate, setFromDate] = useState<Date | undefined>(undefined)
   const [toDate, setToDate] = useState<Date | undefined>(undefined)
@@ -75,7 +76,7 @@ export default function DataMonitoringDashboard() {
       await fetchAllSensor()
     }
     fetchData()
-  }, [])
+  }, [refresh])
 
   useEffect(() => {
     setSensor(allSensor.find((value) => value.id == id))
@@ -350,6 +351,7 @@ export default function DataMonitoringDashboard() {
           email: sensor?.email || false
         }}
         modal={modal}
+        setRefresh={setRefresh}
       />}
     </div>
   )

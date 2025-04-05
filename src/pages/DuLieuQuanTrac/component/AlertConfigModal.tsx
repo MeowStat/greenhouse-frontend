@@ -19,7 +19,7 @@ interface AlertConfigModalProps {
   monitorId: string;
   data: FormData;
   modal: ReturnType<typeof useModal>;
-  setRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
+  setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const AlertConfigModal: React.FC<AlertConfigModalProps> = (props) => {
@@ -51,6 +51,7 @@ const AlertConfigModal: React.FC<AlertConfigModalProps> = (props) => {
       await sensorDataService.postConfigAlert(monitorId, formattedData)
       toast.success(<ToastMessage mainMessage='Cài đặt cảnh báo thành công' description=''/>)
       reset()
+      setRefresh(prev => !prev)
       modal.close()
     } catch {
       toast.error(<ToastMessage mainMessage='Cài đặt cảnh báo không thành công' description='Vui lòng thử lại'/>)
