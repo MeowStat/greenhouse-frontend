@@ -1,5 +1,5 @@
-import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Menu,
@@ -7,43 +7,43 @@ import {
   MenuItem,
   MenuItems,
   MenuSeparator,
-} from '@headlessui/react'
+} from '@headlessui/react';
 
-import DropDownIcon from '@/assets/arrow_drop_down.svg?react'
-import NotiIcon from '@/assets/notification.svg?react'
+import DropDownIcon from '@/assets/arrow_drop_down.svg?react';
+import NotiIcon from '@/assets/notification.svg?react';
 
-import { authService } from '../../services/authService'
-import { useEffect, useState } from 'react'
+import { authService } from '../../services/authService';
+import { useEffect, useState } from 'react';
 
 function UserHeader() {
-  const navigate = useNavigate()
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const navigate = useNavigate();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleLogout = () => {
     try {
-      authService.logout()
-      navigate('/login')
-      toast.success('Đăng xuất thành công!')
+      authService.logout();
+      navigate('/login');
+      toast.success('Đăng xuất thành công!');
     } catch (error: any) {
-      toast.error(String(error))
+      toast.error(String(error));
     }
-  }
+  };
 
   useEffect(() => {
     if (isDropdownOpen) {
-      document.documentElement.style.overflow = 'visible'
-      document.documentElement.style.paddingRight = '0'
+      document.documentElement.style.overflow = 'visible';
+      document.documentElement.style.paddingRight = '0';
     } else {
-      document.documentElement.style.overflow = ''
-      document.documentElement.style.paddingRight = ''
+      document.documentElement.style.overflow = '';
+      document.documentElement.style.paddingRight = '';
     }
 
     return () => {
       // Cleanup on unmount
-      document.documentElement.style.overflow = ''
-      document.documentElement.style.paddingRight = ''
-    }
-  }, [isDropdownOpen])
+      document.documentElement.style.overflow = '';
+      document.documentElement.style.paddingRight = '';
+    };
+  }, [isDropdownOpen]);
 
   return (
     <div className="text-right flex items-center gap-x-2 sticky">
@@ -89,7 +89,7 @@ function UserHeader() {
         </MenuItems>
       </Menu>
     </div>
-  )
+  );
 }
 
-export default UserHeader
+export default UserHeader;

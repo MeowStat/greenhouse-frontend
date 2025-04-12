@@ -1,5 +1,5 @@
 function LichSuQuanTrac() {
-  return <div>LichSuQuanTrac</div>
+  return <div>LichSuQuanTrac</div>;
 }
 
-export default LichSuQuanTrac
+export default LichSuQuanTrac;
