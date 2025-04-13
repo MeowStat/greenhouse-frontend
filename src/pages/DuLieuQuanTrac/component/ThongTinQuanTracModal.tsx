@@ -35,11 +35,15 @@ export function ThongTinQuanTracModal({
           </h4>
           <div className="space-y-2 pl-6 text-gray-700">
             <p>
-              <span className="font-semibold">+ Thông số lý tưởng thấp nhất:</span>{' '}
+              <span className="font-semibold">
+                + Thông số lý tưởng thấp nhất:
+              </span>{' '}
               {data.lowerbound ?? EMPTY_STRING}
             </p>
             <p>
-              <span className="font-semibold">+ Thông số lý tưởng cao nhất:</span>{' '}
+              <span className="font-semibold">
+                + Thông số lý tưởng cao nhất:
+              </span>{' '}
               {data.upperbound ?? EMPTY_STRING}
             </p>
             <p>
@@ -62,8 +66,8 @@ export function ThongTinQuanTracModal({
             <span className="font-semibold">Mô tả:</span> {data.description}
           </p>
           <p>
-            <span className="font-semibold">Giá trị gần nhất:</span> {data.value}{' '}
-            {data.unit}
+            <span className="font-semibold">Giá trị gần nhất:</span>{' '}
+            {data.value} {data.unit}
           </p>
           <p>
             <span className="font-semibold">Thời gian cập nhật:</span>{' '}
