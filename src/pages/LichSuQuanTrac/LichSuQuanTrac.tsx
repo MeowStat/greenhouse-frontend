@@ -10,10 +10,8 @@ import {
   X,
 } from 'lucide-react';
 import { format } from 'date-fns';
-import {
-  DeviceHistoryItem,
-  deviceHistoryService,
-} from '../../services/deviceService';
+import { deviceHistoryService } from '../../services/deviceService';
+import { DeviceHistoryItem } from '../../types/DeviceTypes';
 
 export default function LichSuQuanTrac() {
   const [deviceId, setDeviceId] = useState('');
@@ -38,10 +36,12 @@ export default function LichSuQuanTrac() {
         typeAction: typeAction !== 'all' ? typeAction : undefined,
       });
 
-      setHistoryData(response.data);
-      setTotalRecords(response.totalOfRecord);
+      setHistoryData(response.data || []);
+      setTotalRecords(response.totalOfRecord || 0);
     } catch (error) {
       console.error('Failed to fetch device history:', error);
+      setHistoryData([]);
+      setTotalRecords(0);
     } finally {
       setLoading(false);
     }
@@ -224,7 +224,8 @@ export default function LichSuQuanTrac() {
                 </tr>
               )}
               {/* Fill remaining rows if needed for consistent layout */}
-              {historyData.length > 0 &&
+              {historyData &&
+                historyData.length > 0 &&
                 historyData.length < 5 &&
                 Array(5 - historyData.length)
                   .fill(null)
