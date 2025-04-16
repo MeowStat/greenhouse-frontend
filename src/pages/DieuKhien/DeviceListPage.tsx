@@ -2,12 +2,9 @@ import { PenLine, Info } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { EMPTY_STRING } from '../../utils/constants';
-import { ISensor } from '../../types/SensorTypes';
 import toast from 'react-hot-toast';
-import ToastMessage from '../../components/ToastNotification/ToastMessage';
 import Skeleton from 'react-loading-skeleton';
-import { useModal } from '../../hooks/useModal';
+// import { useModal } from '../../hooks/useModal';
 import { IDevice } from '../../types/DeviceTypes';
 import { deviceService } from '../../services/deviceService';
 // import EditQuanTrac from './component/DuLieuQuanTracEditModal';
@@ -15,13 +12,11 @@ import { deviceService } from '../../services/deviceService';
 // import DeleteQuanTracButton from './component/DeleteQuanTracButton';
 
 export function DeviceListPage() {
-  const editModal = useModal();
+  // const editModal = useModal();
 
   const [devices, setDevices] = useState<IDevice[]>([]);
 
-  const [refresh, setRefresh] = useState(false);
-
-  const [selectedSensor, setSelectedSensor] = useState<ISensor | null>(null);
+  // const [refresh, setRefresh] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
@@ -40,10 +35,10 @@ export function DeviceListPage() {
     fetchAllDevice();
   }, []);
 
-  const handleEditSensor = (sensor: ISensor) => {
-    setSelectedSensor(sensor);
-    editModal.open();
-  };
+  // const handleEditSensor = (sensor: ISensor) => {
+  //   // setSelectedSensor(sensor);
+  //   editModal.open();
+  // };
 
   const navigate = useNavigate();
 

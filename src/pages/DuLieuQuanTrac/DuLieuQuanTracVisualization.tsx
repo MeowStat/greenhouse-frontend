@@ -48,7 +48,7 @@ export default function DataMonitoringDashboard() {
 
   const [searchParams] = useSearchParams();
   const feed = searchParams.get('feed') || '';
-  const id = searchParams.get('id');
+  const id = searchParams.get('id') || 0;
   const sensorName = searchParams.get('name');
   const lowerbound = searchParams.get('lowerbound');
   const upperbound = searchParams.get('upperbound');
@@ -94,7 +94,7 @@ export default function DataMonitoringDashboard() {
     const fetchData = async () => {
       try {
         const response = await sensorDataService.getSensorVisualData({
-          feed,
+          id,
           page: 1,
           pageSize: 30,
         });
@@ -351,7 +351,7 @@ export default function DataMonitoringDashboard() {
       {sensor && (
         <AlertConfigModal
           key={id}
-          monitorId={id ?? ''}
+          monitorId={id ?? 0}
           data={{
             alertDes: sensor?.alertDes || '',
             alertlowerbound: sensor?.alertlowerbound || 0,

@@ -40,7 +40,7 @@ function DuLieuQuanTrac() {
       const responses = await Promise.all(
         allSensor.map((sensor) =>
           sensorDataService.getSensorVisualData({
-            feed: sensor.feed,
+            id: sensor.id,
             page: 1,
             pageSize: 1,
           })

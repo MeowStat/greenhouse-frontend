@@ -42,7 +42,7 @@ export const sensorDataService = {
   },
 
   postConfigAlert: async (
-    id: string,
+    id: string | number,
     data: IAlertConfig
   ): Promise<IResponseApiPost> => {
     return await api.post<IResponseApiPost>(`monitor/alert/${id}`, data);

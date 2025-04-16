@@ -4,7 +4,7 @@ interface ISensorServiceApiResponse<TData> {
 }
 
 export interface SensorVisualDataPayload {
-  feed: string;
+  id: string | number;
   page?: number;
   pageSize?: number;
   startDate?: string;

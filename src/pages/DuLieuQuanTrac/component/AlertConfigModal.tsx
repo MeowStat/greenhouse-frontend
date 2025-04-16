@@ -16,7 +16,7 @@ interface FormData {
 }
 
 interface AlertConfigModalProps {
-  monitorId: string;
+  monitorId: string | number;
   data: FormData;
   modal: ReturnType<typeof useModal>;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
