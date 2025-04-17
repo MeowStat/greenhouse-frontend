@@ -88,7 +88,6 @@ const DeviceConfigPage: React.FC = () => {
               </div>
             </div>
             <Spinner show={loading} size="medium" />
-
             <div className='flex flex-col gap-y-4 overflow-y-auto max-h-[400px] pr-2 scroll-smooth scrollbar-thin scrollbar-thumb-green-900 scrollbar-track-green-100 px-2 py-1 rounded-md'>
               {!loading && deviceSchedulerConfig.length === 0 ? (
                 <div className="w-full text-center py-8 text-green-800 font-medium text-lg border-2 border-dashed border-green-400 rounded-lg bg-green-50">
@@ -135,13 +134,9 @@ const DeviceConfigPage: React.FC = () => {
                   </tr>
                 ))}
               </tbody>
-            </table>
-              
-            
+            </table>  
           </Card>
-
         </div>
-
       </div>
     </div>
   );

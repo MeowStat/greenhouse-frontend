@@ -80,6 +80,7 @@ const DeviceCard: React.FC<DeviceCardProps> = (props) => {
       try {
         setLoadingSwitch(true);
         await deviceService.updateDeviceInfo(id, { power });
+        await deviceService.turnOnOffDevice(id, power? true : false)
       } catch (error) {
         toast.error(<ToastMessage mainMessage='Lỗi' description='Vui lòng thử lại'/>);
       } finally {
@@ -167,7 +168,7 @@ const DeviceCard: React.FC<DeviceCardProps> = (props) => {
                       />
                       :
                       <div className={`flex align-center w-100
-                        ${!on || loadingSwitch ? 'cursor-not-allowed opacity-30' : 'text-red-600'}`}>
+                        ${loadingSwitch ? 'cursor-not-allowed opacity-30' : 'text-red-600'}`}>
                         <Slider
                           min={0}
                           max={100}
