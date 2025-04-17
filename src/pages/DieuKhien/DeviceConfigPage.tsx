@@ -4,7 +4,6 @@ import { IDevice, IDeviceConfig } from '../../types/DeviceTypes';
 import { deviceService } from '../../services/deviceService';
 import { CirclePlus } from 'lucide-react';
 import { Card } from '../../components/UI/card';
-import CheckBox from '../../components/UI/checkbox';
 import SchedulerCard from './components/SchedulerCard';
 import SchedulerConfigCreateModal from './components/SchedulerConfigCreateModal';
 import toast from 'react-hot-toast';
@@ -107,22 +106,16 @@ const DeviceConfigPage: React.FC = () => {
                 })
               )}
             </div>
-
-            
           </Card>
           
           <Card className="flex-1 bg-green-100 shadow-md rounded-lg p-6 mb-6 max-w-xl min-w-[500px] h-120">
             <div>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-x-2">
-                  <CheckBox checked={deviceConfig[0]?.action} onChange={function (_): void {
-                    throw new Error('Function not implemented.');
-                  } } />
-                  <span className="text-2xl font-semibold text-gray-800">Tự động</span>
+                  <span className="text-3xl font-semibold text-gray-800">Tự động</span>
                 </div>
                 <CirclePlus className="h-6 w-6 hover:text-green-500 text-green-900 cursor-pointer" />
               </div>
-              <p>Trạng thái điều chỉnh: Bật</p>
             </div>
 
             <table className="w-full mt-4">

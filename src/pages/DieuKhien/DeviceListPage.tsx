@@ -94,54 +94,14 @@ export function DeviceListPage() {
                       <td className="px-6 py-4">
                         {device.description}
                       </td>
-                      {/* <td className="px-6 py-4">
-                        {sensor.lowerbound !== null &&
-                        sensor.upperbound !== null
-                          ? `${sensor.lowerbound}-${sensor.upperbound}`
-                          : EMPTY_STRING}
-                      </td>
-                      <td className="px-6 py-4">
-                        {sensor.unit || EMPTY_STRING}
-                      </td> */}
                       <td className="px-6 py-4">
                         <div className="flex justify-end gap-2">
-                          {/* <DeleteQuanTracButton
-                            key={sensor.id}
-                            quanTracId={sensor.id}
-                            setRefresh={setRefresh}
-                          /> */}
                           <button
                             className="p-1 hover:bg-green-100 rounded"
                             title="Chỉnh sửa"
-                            // onClick={() => handleEditSensor(sensor)}
                           >
                             <PenLine className="h-5 w-5" />
                           </button>
-                          {/* <button
-                            className="p-1 hover:bg-green-100 rounded"
-                            title="Xem biểu đồ"
-                            onClick={() => {
-                              const params = new URLSearchParams({
-                                id: sensor.id,
-                                name: sensor.name,
-                                feed: sensor.feed,
-                                lowerbound:
-                                  sensor.lowerbound !== null
-                                    ? String(sensor.lowerbound)
-                                    : '',
-                                upperbound:
-                                  sensor.upperbound !== null
-                                    ? String(sensor.upperbound)
-                                    : '',
-                              });
-
-                              navigate(
-                                `/du-lieu-quan-trac/visualization?${params.toString()}`
-                              );
-                            }}
-                          >
-                            <Info className="h-5 w-5" />
-                          </button> */}
                         </div>
                       </td>
                     </tr>

@@ -8,6 +8,8 @@ import { Slider } from '../../../components/UI/slider';
 import { Settings } from 'lucide-react';
 import { useDebounce } from "use-debounce";
 import { useNavigate } from 'react-router-dom';
+import ToastMessage from '../../../components/ToastNotification/ToastMessage';
+import toast from 'react-hot-toast';
 
 interface DeviceCardProps {
   id: string;
@@ -15,18 +17,19 @@ interface DeviceCardProps {
   description: string;
   power: number;
   status: boolean;
+  deviceType: number;
 }
 
 const DeviceCard: React.FC<DeviceCardProps> = (props) => {
-  const { name, description, id, power, status } = props;
+  const { name, description, id, power, status, deviceType } = props;
 
   const navigate = useNavigate();
 
   const [on, setOn] = useState(status);
   const [loadingConfig, setLoadingConfig] = useState(false);
   const [loadingSwitch, setLoadingSwitch] = useState(false);
-  const [sliderValue, setSliderValue] = useState<number>(power*100);
-  const [debouncedSliderValue] = useDebounce(sliderValue, 500);
+  const [sliderValue, setSliderValue] = useState<number>(power);
+  const [debouncedSliderValue] = useDebounce(sliderValue, 750);
   const [isFirstRender, setIsFirstRender] = useState(true);
 
   const [dataConfig, setDataConfig] = useState<IDeviceConfig[]>([]);
@@ -76,22 +79,20 @@ const DeviceCard: React.FC<DeviceCardProps> = (props) => {
     const updateDevicePower = async (power: number) => {
       try {
         setLoadingSwitch(true);
-        const response = await deviceService.updateDeviceInfo(id, { power });
-        console.log('Update Device Power Response:', response);
+        await deviceService.updateDeviceInfo(id, { power });
       } catch (error) {
-        console.error('Error updating device power:', error);
-        return null;
+        toast.error(<ToastMessage mainMessage='Lỗi' description='Vui lòng thử lại'/>);
       } finally {
         setLoadingSwitch(false);
       }
     };
 
-    updateDevicePower(debouncedSliderValue / 100);
+    updateDevicePower(debouncedSliderValue);
   },[debouncedSliderValue]);
 
   return (
     <>
-      <div className={`${dataConfig.length? "bg-green-100" : "bg-gray-300 opacity-50"} min-h-2xl rounded-lg py-4 px-8 mb-6 shadow-md relative`}>
+      <div className={`bg-green-100 min-h-2xl rounded-lg py-4 px-8 mb-6 shadow-md relative`}>
         <div className="grid grid-cols-16 gap-4">
           {/* Device Info */}
           <div className="col-span-4 flex flex-col items-start justify-center border-r-[2px] border-black pr-4">
@@ -149,34 +150,35 @@ const DeviceCard: React.FC<DeviceCardProps> = (props) => {
                 ) : null}
 
                 {/* Manual Control */}
-                {dataConfig.length ? 
                 <div className="flex flex-col justify-start mb-4">
                   <h2 className="text-2xl font-semibold text-gray-900">
                     Thủ công
                   </h2>
                   <p>{dataConfig[0]?.description}</p>
                   <div className="flex mt-4 items-center gap-x-2">
-                    <ToggleSwitch
-                      checked={on}
-                      onChange={() => handleSwitch(!on)}
-                      enableText="Bật"
-                      disableText="Tắt"
-                      disabled={loadingSwitch}
-                    />
                     <Spinner show={loadingSwitch} size="small" />
-                    <div className={`mx-16 flex w-full align-center 
-                      ${!on || loadingSwitch ? 'cursor-not-allowed opacity-30' : 'text-red-600'}`}>
-                      <Slider
-                        min={0}
-                        max={100}
-                        step={10}
-                        title="Cường độ:"
-                        value={[sliderValue]}
-                        onValueChange={handleSliderChange}
+                    { !deviceType ? 
+                      <ToggleSwitch
+                        checked={on}
+                        onChange={() => handleSwitch(!on)}
+                        enableText="Bật"
+                        disableText="Tắt"
+                        disabled={loadingSwitch}
                       />
-                    </div>
+                      :
+                      <div className={`flex align-center w-100
+                        ${!on || loadingSwitch ? 'cursor-not-allowed opacity-30' : 'text-red-600'}`}>
+                        <Slider
+                          min={0}
+                          max={100}
+                          step={10}
+                          title="Cường độ:"
+                          value={[sliderValue]}
+                          onValueChange={handleSliderChange}
+                        />
+                      </div>}
                   </div>
-                </div> : <div className="flex flex-col justify-start mb-4 text-2xl font-semibold">No available configuration</div>}
+                </div> 
               </div>
             )}
           </div>
@@ -191,13 +193,6 @@ const DeviceCard: React.FC<DeviceCardProps> = (props) => {
           <span className="text-sm">Cấu hình</span>
         </button>
       </div>
-
-      {/* Modal */}
-      {/* <ThongTinQuanTracModal
-        isOpen={showInfo}
-        onClose={() => setShowInfo(false)}
-        data={data}
-      /> */}
     </>
   );
 };

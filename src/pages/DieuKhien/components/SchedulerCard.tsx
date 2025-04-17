@@ -67,7 +67,7 @@ const SchedulerCard: React.FC<SchedulerCardProps> = (props) => {
         </div>
       </div>   
       <p>
-        Trạng thái mặc định:{' '}
+        Trạng thái điều chỉnh:{' '}
         <span className='font-semibold'>
           {config.changePower? `Bật ${deviceType? '- ' + config.changePower : ''}` : 'Tắt'}
         </span>

@@ -58,6 +58,7 @@ const DieuKhien: React.FC = () => {
                 description={device.description}
                 power={device.power}
                 status={device.status}
+                deviceType={device.type}
               />
             ))
           )}
