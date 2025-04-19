@@ -7,6 +7,13 @@ interface LoginPayload {
   password: string;
 }
 
+export interface UserInfoResponse {
+  id: number;
+  email: string;
+  name: string;
+  receiveNotification: boolean;
+}
+
 export const authService = {
   login: async ({ username, password }: LoginPayload) => {
     try {
@@ -14,10 +21,11 @@ export const authService = {
         username,
         password,
       });
+      debugger;
       if (response.data.data) {
         localStorage.setItem(
           API_CONFIG.tokenStorageKey,
-          response.data.data.username
+          response.data.data.token
         );
         localStorage.setItem('username', response.data.data.username);
         localStorage.setItem('email', response.data.data.email);
@@ -30,12 +38,12 @@ export const authService = {
   },
 
   logout: (): Promise<void> => {
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem(API_CONFIG.tokenStorageKey);
     return Promise.resolve();
   },
 
   getIdentity: async (): Promise<{ id: string; email: string } | undefined> => {
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem(API_CONFIG.tokenStorageKey);
     if (!token) return Promise.reject();
 
     try {
@@ -45,6 +53,25 @@ export const authService = {
       return response.data;
     } catch {
       return Promise.reject();
+    }
+  },
+
+  getUserInfo: async (): Promise<UserInfoResponse> => {
+    try {
+      const response = await apiClient.get<{
+        statusCode: boolean;
+        data: UserInfoResponse;
+        message: string;
+      }>('/user/info');
+
+      if (!response.data || !response.data.data) {
+        throw new Error('Failed to fetch user info');
+      }
+
+      return response.data.data;
+    } catch (error) {
+      console.error('Failed to fetch user info:', error);
+      throw error;
     }
   },
 

@@ -13,6 +13,7 @@ import { QuanLyQuanTracEdit } from './pages/DuLieuQuanTrac/DuLieuQuanTracEdit';
 import DataMonitoringDashboard from './pages/DuLieuQuanTrac/DuLieuQuanTracVisualization';
 import DeviceConfigPage from './pages/DieuKhien/DeviceConfigPage';
 import { DeviceListPage } from './pages/DieuKhien/DeviceListPage';
+import UserProfile from './pages/UserProfile/UserProfile';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
               path="du-lieu-quan-trac/visualization"
               element={<DataMonitoringDashboard></DataMonitoringDashboard>}
             ></Route>
+            <Route path="profile" element={<UserProfile></UserProfile>}></Route>
           </Route>
         </Route>
       </Routes>
