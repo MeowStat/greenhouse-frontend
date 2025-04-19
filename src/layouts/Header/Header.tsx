@@ -6,7 +6,7 @@ const navItems = [
   { to: '/trang-chu', label: 'Trang chủ' },
   { to: '/dieu-khien', label: 'Điều khiển' },
   { to: '/du-lieu-quan-trac', label: 'Dữ liệu quan trắc' },
-  { to: '/lich-su-quan-trac', label: 'Lịch sử quan trắc' },
+  { to: '/lich-su-quan-trac', label: 'Lịch sử thiết bị' },
   { to: '/huong-dan', label: 'Hướng dẫn' },
 ];
 

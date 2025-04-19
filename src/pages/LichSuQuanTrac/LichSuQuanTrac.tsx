@@ -88,13 +88,13 @@ export default function LichSuQuanTrac() {
   const totalPages = Math.ceil(totalRecords / rowsPerPage);
 
   return (
-    <div className="py-10">
-      <div className="mx-auto">
-        <h1 className="text-2xl font-bold text-[#1e472e] mb-4">
+    <div className="p-6 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-[#1e472e] mb-6">
           Lịch sử hoạt động
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <div>
             <label
               htmlFor="deviceId"
@@ -189,19 +189,21 @@ export default function LichSuQuanTrac() {
           </div>
         </div>
 
-        <div className="overflow-x-auto mt-2">
+        <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-[#1e472e] text-white">
-                <th className="py-2 px-3 text-left font-medium">Thời gian</th>
-                <th className="py-2 px-3 text-left font-medium">Mã thiết bị</th>
-                <th className="py-2 px-3 text-left font-medium">Hoạt động</th>
+                <th className="py-3 px-4 text-left font-medium">Thời gian</th>
+                <th className="py-3 px-4 text-left font-medium">
+                  Tên thiết bị
+                </th>
+                <th className="py-3 px-4 text-left font-medium">Hoạt động</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr className="bg-[#bce4c7]">
-                  <td colSpan={3} className="py-12 text-center text-gray-500">
+                  <td colSpan={3} className="py-20 text-center text-gray-500">
                     Đang tải dữ liệu...
                   </td>
                 </tr>
@@ -211,20 +213,23 @@ export default function LichSuQuanTrac() {
                     key={index}
                     className="bg-[#bce4c7] border-b border-[#a5d3b2]"
                   >
-                    <td className="py-2 px-3">{formatDate(item.date)}</td>
-                    <td className="py-2 px-3">{item.deviceId}</td>
-                    <td className="py-2 px-3">{item.info}</td>
+                    <td className="py-3 px-4">{formatDate(item.date)}</td>
+                    <td className="py-3 px-4">
+                      {item.device.name || item.deviceId}
+                    </td>
+                    <td className="py-3 px-4">{item.info}</td>
                   </tr>
                 ))
               ) : (
                 <tr className="bg-[#bce4c7]">
-                  <td colSpan={3} className="py-12 text-center text-gray-500">
+                  <td colSpan={3} className="py-20 text-center text-gray-500">
                     Không có dữ liệu
                   </td>
                 </tr>
               )}
               {/* Fill remaining rows if needed for consistent layout */}
-              {historyData.length > 0 &&
+              {historyData &&
+                historyData.length > 0 &&
                 historyData.length < 5 &&
                 Array(5 - historyData.length)
                   .fill(null)
@@ -233,56 +238,56 @@ export default function LichSuQuanTrac() {
                       key={`empty-${i}`}
                       className="bg-[#bce4c7] border-b border-[#a5d3b2]"
                     >
-                      <td className="py-8 px-3"></td>
-                      <td className="py-8 px-3"></td>
-                      <td className="py-8 px-3"></td>
+                      <td className="py-10 px-4"></td>
+                      <td className="py-10 px-4"></td>
+                      <td className="py-10 px-4"></td>
                     </tr>
                   ))}
             </tbody>
           </table>
         </div>
 
-        <div className="mt-3 flex justify-between items-center">
-          <button className="p-1.5 border border-gray-300 rounded-md">
+        <div className="mt-4 flex justify-between items-center">
+          <button className="p-2 border border-gray-300 rounded-md">
             <Download className="h-4 w-4" />
           </button>
 
-          <div className="flex items-center space-x-1.5">
+          <div className="flex items-center space-x-2">
             <select
               value={rowsPerPage.toString()}
               onChange={(e) => {
                 setRowsPerPage(Number.parseInt(e.target.value));
                 setCurrentPage(1); // Reset to first page when changing rows per page
               }}
-              className="w-14 px-1 py-1 border border-gray-300 rounded-md text-sm"
+              className="w-16 px-2 py-1 border border-gray-300 rounded-md"
             >
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="50">50</option>
             </select>
 
-            <div className="flex items-center space-x-1.5">
+            <div className="flex items-center space-x-2">
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                className="px-1.5 py-1 border border-gray-300 rounded-md flex items-center text-sm"
+                className="px-2 py-1 border border-gray-300 rounded-md flex items-center"
                 disabled={currentPage === 1}
               >
-                <ChevronLeft className="h-3 w-3" />
-                Prev
+                <ChevronLeft className="h-4 w-4" />
+                Previous
               </button>
-              <div className="px-2 py-1 border border-gray-300 rounded-md text-sm">
-                {currentPage}/{totalPages || 1} ({totalRecords})
+              <div className="px-4 py-1 border border-gray-300 rounded-md">
+                {currentPage}/{totalPages || 1} ({totalRecords} records)
               </div>
               <button
                 onClick={() => setCurrentPage((prev) => prev + 1)}
-                className={`px-1.5 py-1 ${
+                className={`px-3 py-1 ${
                   currentPage < totalPages
                     ? 'bg-[#4a9967] hover:bg-[#3a7850]'
                     : 'bg-gray-300'
-                } text-white rounded-md flex items-center text-sm`}
+                } text-white rounded-md flex items-center`}
                 disabled={currentPage >= totalPages}
               >
-                Next <ChevronRight className="h-3 w-3 ml-1" />
+                Next <ChevronRight className="h-4 w-4 ml-1" />
               </button>
             </div>
           </div>
