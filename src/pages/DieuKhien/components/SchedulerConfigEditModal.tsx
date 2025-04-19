@@ -3,9 +3,8 @@ import { useModal } from '../../../hooks/useModal';
 import { Modal } from '../../../components/Modal/modal';
 import toast from 'react-hot-toast';
 import ToastMessage from '../../../components/ToastNotification/ToastMessage';
-import { DAY_OF_WEEK, DEVICE_ON_OFF, FULL_DAY_VI } from '../../../utils/constants';
-import { Input } from '../../../components/UI/input';
-import { useState } from 'react';
+import { DAY_OF_WEEK, DEVICE_ON_OFF, FULL_DAY_VI, POWER_LEVELS } from '../../../utils/constants';
+import { useEffect, useState } from 'react';
 import { deviceService } from '../../../services/deviceService';
 import { Spinner } from '../../../components/UI/spinner';
 import { IDeviceConfig } from '../../../types/DeviceTypes';
@@ -132,7 +131,6 @@ const SchedulerConfigEditModal: React.FC<SchedulerConfigEditModalProps> = (props
       await deviceService.updateDeviceSchedulerConfig(config.id,payload)
       setRefresh(prev => !prev);
       toast.success(<ToastMessage mainMessage='Cập nhật thành công'/>)
-      modal.close();
     } catch (error) {
       toast.error(<ToastMessage mainMessage='Lỗi' description='Vui lòng thử lại'/>)
     } finally {
@@ -140,6 +138,10 @@ const SchedulerConfigEditModal: React.FC<SchedulerConfigEditModalProps> = (props
     }
   };
 
+  useEffect(() => {
+    if (modal.isOpen)
+      resetForm();
+  },[modal.isOpen]);
 
   return (
     <>
@@ -154,7 +156,7 @@ const SchedulerConfigEditModal: React.FC<SchedulerConfigEditModalProps> = (props
       {/* Modal */}
       <Modal
         isOpen={modal.isOpen}
-        onClose={() => {resetForm(); modal.close()}}
+        onClose={modal.close}
         onBackdropClick={modal.handleBackdropClick}
         title="Cập nhật hẹn giờ"
       >
@@ -294,19 +296,33 @@ const SchedulerConfigEditModal: React.FC<SchedulerConfigEditModalProps> = (props
                         </option>
                       ))}
                     </select> ) : (
-                    <Input
-                        type='number'
-                        min={0}
-                        max={100}
-                        step={10}
-                        value={changePower} 
-                        onChange={(e) => setChangePower(Number(e.target.value))}
-                    />
+                    <select
+                      value={changePower}
+                      onChange={(e) => setChangePower(Number(e.target.value))}
+                      className="bg-white border border-gray-300 rounded-md text-base font-medium px-4 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    >
+                      {POWER_LEVELS.map((level) => (
+                        <option key={level} value={level}>
+                          {level} %
+                        </option>
+                      ))}
+                    </select>
                   )
                 }
               </div>  
             </div>
-            
+            { deviceType ? (
+              <div className='text-sm text-gray-600'>
+                <span>Lưu ý:</span>
+                <ul className='list-disc pl-5'>
+                  <li>Các mức cường độ được hỗ trợ là 0%, 20%, 40%, 60%, 80%, 100%</li>
+                  <li>Sau khoảng thời gian được chọn, thiết bị sẽ quay về trạng thái mặc định</li>
+                </ul>
+              </div>
+            )
+              : (<p className='text-sm text-gray-600'>
+              Lưu ý: Sau khoảng thời gian được chọn, thiết bị sẽ quay về trạng thái mặc định
+            </p>)}
           </form>
         </div>
         {/* Submit Button */}

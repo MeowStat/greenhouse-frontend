@@ -2,13 +2,14 @@ import React from 'react'
 import { useParams } from 'react-router-dom';
 import { IDevice, IDeviceConfig } from '../../types/DeviceTypes';
 import { deviceService } from '../../services/deviceService';
-import { CirclePlus } from 'lucide-react';
 import { Card } from '../../components/UI/card';
 import SchedulerCard from './components/SchedulerCard';
 import SchedulerConfigCreateModal from './components/SchedulerConfigCreateModal';
 import toast from 'react-hot-toast';
 import ToastMessage from '../../components/ToastNotification/ToastMessage';
 import { Spinner } from '../../components/UI/spinner';
+import AutomationCard from './components/AutomationCard';
+import AutoConfigCreateModal from './components/AutoConfigCreateModal';
 
 const DeviceConfigPage: React.FC = () => {
 
@@ -22,6 +23,10 @@ const DeviceConfigPage: React.FC = () => {
 
   const deviceSchedulerConfig: IDeviceConfig[] = (deviceConfig ?? []).filter(
     (config) => config?.automationConfig == null
+  );
+
+  const deviceAutoConfig: IDeviceConfig[] = (deviceConfig ?? []).filter(
+    (config) => config?.schedulerConfig == null
   );
 
   const fetchDeviceInfo = async (deviceId: string) => {
@@ -72,7 +77,7 @@ const DeviceConfigPage: React.FC = () => {
         </div>
 
         <div className='flex items-center gap-x-20 flex-wrap'>
-          <Card className={`flex-1 bg-green-100 shadow-md rounded-lg p-6 mb-6 max-w-xl min-w-[500px] h-120
+          <Card className={`flex-1 bg-green-100 shadow-md rounded-lg p-6 mb-6 min-w-[500px] h-120
             ${loading ? 'opacity-40' : ''}  
           `}>
             <div>
@@ -107,34 +112,36 @@ const DeviceConfigPage: React.FC = () => {
             </div>
           </Card>
           
-          <Card className="flex-1 bg-green-100 shadow-md rounded-lg p-6 mb-6 max-w-xl min-w-[500px] h-120">
+          <Card className={`flex-1 bg-green-100 shadow-md rounded-lg p-6 mb-6 max-w-xl min-w-[500px] h-120
+            ${loading ? 'opacity-40' : ''}  
+          `}>
             <div>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-x-2">
                   <span className="text-3xl font-semibold text-gray-800">Tự động</span>
                 </div>
-                <CirclePlus className="h-6 w-6 hover:text-green-500 text-green-900 cursor-pointer" />
+                {deviceInfo && <AutoConfigCreateModal setRefresh={setRefresh} deviceId={deviceInfo.id} deviceType={deviceInfo?.type}/>}
               </div>
             </div>
-
-            <table className="w-full mt-4">
-              <thead>
-                <tr>
-                  <th className="text-left p-2 border-r border-b border-black">Điều kiện</th>
-                  <th className="text-left p-2 border-r border-b border-black">Hành động</th>
-                  <th className="text-left p-2 border-b border-black">Mô tả</th>
-                </tr>
-              </thead>
-              <tbody>
-                {deviceConfig[0]?.automationConfig?.Condition?.map((condition, index) => (
-                  <tr key={index} className="border-black">
-                    <td className="p-2 border-r border-black">{`${condition.sensorId} ${condition.condition} ${condition.threshold}`}</td>
-                    <td className="p-2 border-r border-black">...</td>
-                    <td className="p-2">{condition.description}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>  
+            <Spinner show={loading} size="medium" />
+            <div className='flex flex-col gap-y-4 overflow-y-auto max-h-[400px] pr-2 scroll-smooth scrollbar-thin scrollbar-thumb-green-900 scrollbar-track-green-100 px-2 py-1 rounded-md'>
+              {!loading && deviceAutoConfig.length === 0 ? (
+                <div className="w-full text-center py-8 text-green-800 font-medium text-lg border-2 border-dashed border-green-400 rounded-lg bg-green-50">
+                  Empty
+                </div>
+              ) : (
+                deviceAutoConfig.map((config) => {
+                  return (
+                    <AutomationCard
+                      key={config.id}
+                      config={config}
+                      deviceType={deviceInfo?.type || 0}
+                      setRefresh={setRefresh}
+                    />
+                  );
+                })
+              )}
+            </div>
           </Card>
         </div>
       </div>
