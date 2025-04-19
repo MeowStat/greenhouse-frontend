@@ -53,8 +53,14 @@ export const SensorCard: React.FC<SensorCardProps> = (props) => {
               Thời gian cập nhật: {data.date.toLocaleString('en-GB')}
             </p>
             {data.warning && data.alertDes && (
-              <div className="flex items-center mt-2">
-                <div className="w-3 h-3 rounded-full bg-red-600 mr-2 animate-pulse"></div>
+              <div className="flex items-center gap-x-2 mt-2">
+                <div className="relative flex items-center">
+                  {/* Ping animation (outer ring) */}
+                  <span className="absolute inline-flex h-3 w-3 rounded-full bg-red-400 opacity-75 animate-ping"></span>
+
+                  {/* Solid dot (inner core) */}
+                  <span className="relative inline-flex h-3 w-3 rounded-full bg-red-600"></span>
+                </div>
                 <span className="text-red-600 font-medium">
                   {data.alertDes}
                 </span>
