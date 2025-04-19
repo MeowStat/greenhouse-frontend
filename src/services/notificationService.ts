@@ -62,7 +62,9 @@ export const notificationService = {
   },
 
   markAsRead: async (notificationId: number): Promise<any> => {
-    return await api.patch(`/notification/read/${notificationId}`);
+    return await api.patch(`/notification/status/${notificationId}`, {
+      value: true,
+    });
   },
 
   markAllAsRead: async (): Promise<any> => {

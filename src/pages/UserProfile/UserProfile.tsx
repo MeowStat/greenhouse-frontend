@@ -1,10 +1,21 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { User, Mail, Key, Eye, EyeOff, Edit, UserCircle } from 'lucide-react';
+import {
+  User,
+  Mail,
+  Key,
+  Eye,
+  EyeOff,
+  Edit,
+  UserCircle,
+  Bell,
+} from 'lucide-react';
 import { Card, CardContent } from '../../components/UI/card';
 import { Button } from '../../components/UI/button';
 import { authService, UserInfoResponse } from '../../services/authService';
+import ToggleSwitch from '../../components/UI/ToggleSwitch';
+import toast from 'react-hot-toast';
 
 interface UserProfileData {
   id: number;
@@ -18,6 +29,7 @@ export default function UserProfile() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hideInfo, setHideInfo] = useState(false);
+  const [updatingNotification, setUpdatingNotification] = useState(false);
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -39,6 +51,36 @@ export default function UserProfile() {
 
   const toggleInfoVisibility = () => {
     setHideInfo(!hideInfo);
+  };
+
+  const toggleNotificationSetting = async (value: boolean) => {
+    if (!userData) return;
+
+    setUpdatingNotification(true);
+    try {
+      // Call the API to update the user's notification settings
+      const success = await authService.updateUserNotification(value);
+
+      if (success) {
+        // Update the user data locally
+        setUserData((prev) => {
+          if (!prev) return null;
+          return {
+            ...prev,
+            receiveNotification: value,
+          };
+        });
+
+        toast.success(`Đã ${value ? 'bật' : 'tắt'} nhận thông báo`);
+      } else {
+        toast.error('Không thể cập nhật cài đặt thông báo.');
+      }
+    } catch (err) {
+      console.error('Failed to update notification setting:', err);
+      toast.error('Không thể cập nhật cài đặt thông báo.');
+    } finally {
+      setUpdatingNotification(false);
+    }
   };
 
   if (loading) {
@@ -111,6 +153,26 @@ export default function UserProfile() {
                     <p className="text-xl font-semibold">
                       {hideInfo ? '••••••••' : userData.email}
                     </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100">
+                    <Bell className="w-5 h-5 text-[#4f3d97]" />
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-sm font-medium text-gray-500">
+                      Nhận thông báo
+                    </p>
+                    <div className="mt-1">
+                      <ToggleSwitch
+                        checked={userData.receiveNotification}
+                        onChange={toggleNotificationSetting}
+                        enableText="Bật"
+                        disableText="Tắt"
+                        disabled={updatingNotification}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

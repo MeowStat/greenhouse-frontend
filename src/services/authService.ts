@@ -89,6 +89,22 @@ export const authService = {
     }
   },
 
+  updateUserNotification: async (
+    receiveNotification: boolean
+  ): Promise<boolean> => {
+    try {
+      const response = await apiClient.patch<{
+        status: boolean;
+        message: string;
+      }>(`/user/notification`, { value: receiveNotification });
+
+      return response.data.status === true;
+    } catch (error) {
+      console.error('Failed to update notification settings:', error);
+      throw error;
+    }
+  },
+
   checkError: (error: any): Promise<void> => {
     if (error.response?.status === 401 || error.response?.status === 403) {
       localStorage.removeItem(API_CONFIG.tokenStorageKey);

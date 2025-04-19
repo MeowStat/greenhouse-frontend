@@ -56,7 +56,7 @@ function UserHeader() {
       <Menu>
         <img
           className="h-10 mr-[-3px] cursor-pointer"
-          src={`https://avatar.iran.liara.run/username?username=${localStorage.getItem('username')}`}
+          src={`https://avatar.iran.liara.run/username?username=${localStorage.getItem('email')}`}
           onClick={navigateToProfile}
         />
         <MenuButton

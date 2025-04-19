@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { Menu, MenuButton, MenuItems } from '@headlessui/react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
+import { Check } from 'lucide-react';
 
 import NotiIcon from '@/assets/notification.svg?react';
 import {
@@ -19,6 +20,7 @@ function NotificationDropdown() {
   const [page, setPage] = useState(1);
   const pageSize = 20;
   const pollingIntervalRef = useRef<number | null>(null);
+  const [markingAsRead, setMarkingAsRead] = useState<number[]>([]);
 
   const fetchNotifications = useCallback(
     async (currentPage = 1) => {
@@ -61,9 +63,22 @@ function NotificationDropdown() {
   };
 
   const handleMarkAsRead = async (notificationId: number) => {
+    // If already marked as read or in process of marking, do nothing
+    if (
+      notifications.find((n) => n.id === notificationId)?.read ||
+      markingAsRead.includes(notificationId)
+    ) {
+      return;
+    }
+
     try {
+      // Add to marking as read array to show animation
+      setMarkingAsRead((prev) => [...prev, notificationId]);
+
+      // Use the PATCH /notification/status/{id} endpoint with value: true
       await notificationService.markAsRead(notificationId);
-      // Update the notification to mark it as read
+
+      // Update the notification to mark it as read in the UI
       setNotifications((prev) =>
         prev.map((notification) =>
           notification.id === notificationId
@@ -78,6 +93,9 @@ function NotificationDropdown() {
           description="Không thể đánh dấu đã đọc"
         />
       );
+    } finally {
+      // Remove from marking as read array
+      setMarkingAsRead((prev) => prev.filter((id) => id !== notificationId));
     }
   };
 
@@ -164,22 +182,43 @@ function NotificationDropdown() {
             </div>
           ) : (
             <>
-              {notifications?.map((notification) => (
-                <div
-                  key={notification.id}
-                  className={`border-b border-gray-100 px-3 py-2 hover:bg-green-50 ${!notification.read ? 'bg-green-50' : ''}`}
-                  onClick={() => handleMarkAsRead(notification.id)}
-                >
-                  <div className="font-medium text-sm">{notification.name}</div>
-                  <div className="text-xs text-gray-600 overflow-hidden text-ellipsis whitespace-nowrap">
-                    {notification.description} • {notification.value}{' '}
-                    {notification.unit}
+              {notifications?.map((notification) => {
+                const isMarking = markingAsRead.includes(notification.id);
+                const isRead = notification.read;
+
+                return (
+                  <div
+                    key={notification.id}
+                    className={`relative border-b border-gray-100 px-3 py-2 hover:bg-green-50 transition-all duration-300 
+                      ${isRead ? 'bg-white' : 'bg-green-50'} 
+                      ${isMarking ? 'opacity-70' : 'opacity-100'}`}
+                    onClick={() => handleMarkAsRead(notification.id)}
+                  >
+                    {isMarking && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-5 z-10">
+                        <div className="h-4 w-4 border-2 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+                      </div>
+                    )}
+
+                    <div className="flex justify-between items-start">
+                      <div className="font-medium text-sm">
+                        {notification.name}
+                      </div>
+                      {isRead && (
+                        <Check className="h-4 w-4 text-green-600 flex-shrink-0 ml-1" />
+                      )}
+                    </div>
+
+                    <div className="text-xs text-gray-600 overflow-hidden text-ellipsis whitespace-nowrap">
+                      {notification.description} • {notification.value}{' '}
+                      {notification.unit}
+                    </div>
+                    <div className="text-xs text-gray-400">
+                      {format(new Date(notification.date), 'dd/MM/yyyy HH:mm')}
+                    </div>
                   </div>
-                  <div className="text-xs text-gray-400">
-                    {format(new Date(notification.date), 'dd/MM/yyyy HH:mm')}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </>
           )}
         </div>
