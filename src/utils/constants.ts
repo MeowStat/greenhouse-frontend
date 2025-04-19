@@ -24,3 +24,12 @@ export const DEVICE_ON_OFF = [
    { status: true, power: 100},
    { status: false, power: 0}
 ]
+
+export const COMPARISION_OPERATORS = [
+  { label: "Bằng", value: "=="},
+  { label: "Khác", value: "!="},
+  { label: "Lớn hơn", value: ">"},
+  { label: "Nhỏ hơn", value: "<"},
+  { label: "Lớn hơn hoặc bằng", value: ">="},
+  { label: "Nhỏ hơn hoặc bằng", value: "<="},
+]

@@ -30,7 +30,7 @@ const DieuKhien: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col w-full items-center px-15">
+    <div className="flex flex-col w-full items-center xl:px-20">
       <div className="container mx-auto px-6 py-8">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-green-900">
