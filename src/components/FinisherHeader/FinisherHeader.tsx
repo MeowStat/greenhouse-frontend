@@ -1,19 +1,19 @@
-import { useEffect } from 'react';
+import { useEffect } from 'react'
 
 function FinisherBackground() {
   useEffect(() => {
-    const scriptId = 'finisher-header-script';
-    let script = document.getElementById(scriptId) as HTMLScriptElement | null;
+    const scriptId = 'finisher-header-script'
+    let script = document.getElementById(scriptId) as HTMLScriptElement | null
 
     // Remove existing script to ensure proper reloading
     if (script) {
-      script.remove();
+      script.remove()
     }
 
-    script = document.createElement('script');
-    script.id = scriptId;
-    script.src = '/finisher-header.es5.min.js';
-    script.async = true;
+    script = document.createElement('script')
+    script.id = scriptId
+    script.src = '/finisher-header.es5.min.js'
+    script.async = true
     script.onload = () => {
       if ((window as any).FinisherHeader) {
         new (window as any).FinisherHeader({
@@ -28,23 +28,23 @@ function FinisherBackground() {
           opacity: { center: 1, edge: 1 },
           skew: 0,
           shapes: ['c', 's', 't'],
-        });
+        })
       }
-    };
+    }
 
-    document.body.appendChild(script);
+    document.body.appendChild(script)
 
     return () => {
-      script?.remove();
-    };
-  }, []);
+      script?.remove()
+    }
+  }, [])
 
   return (
     <div
       className="finisher-header fixed inset-0 w-full h-full"
       style={{ zIndex: -10 }} // Lowered z-index to avoid overlapping
     />
-  );
+  )
 }
 
-export default FinisherBackground;
+export default FinisherBackground

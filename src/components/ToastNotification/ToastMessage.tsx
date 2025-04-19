@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 
 interface ToastProps {
-  mainMessage: string;
-  description?: string;
+  mainMessage: string
+  description?: string
 }
 
 const ToastMessage: React.FC<ToastProps> = ({ mainMessage, description }) => {
@@ -12,7 +12,7 @@ const ToastMessage: React.FC<ToastProps> = ({ mainMessage, description }) => {
       <br />
       {description}
     </div>
-  );
-};
+  )
+}
 
-export default ToastMessage;
+export default ToastMessage

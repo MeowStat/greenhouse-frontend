@@ -1,16 +1,16 @@
-'use client';
+'use client'
 
-import type React from 'react';
+import type React from 'react'
 
-import { X } from 'lucide-react';
-import { useEffect } from 'react';
+import { X } from 'lucide-react'
+import { useEffect } from 'react'
 
 interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onBackdropClick: (event: React.MouseEvent) => void;
-  children: React.ReactNode;
-  title?: string;
+  isOpen: boolean
+  onClose: () => void
+  onBackdropClick: (event: React.MouseEvent) => void
+  children: React.ReactNode
+  title?: string
 }
 
 export function Modal({
@@ -22,17 +22,17 @@ export function Modal({
 }: ModalProps) {
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = 'unset'
     }
 
     return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div
@@ -47,12 +47,10 @@ export function Modal({
           <X className="h-6 w-6" />
         </button>
         {title && (
-          <h2 className="text-center text-3xl font-bold text-green-900 mb-4">
-            {title}
-          </h2>
+          <h2 className="text-center text-3xl font-bold text-green-900 mb-4">{title}</h2>
         )}
         {children}
       </div>
     </div>
-  );
+  )
 }

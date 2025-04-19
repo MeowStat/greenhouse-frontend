@@ -1,4 +1,4 @@
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast'
 
 function ToastNofitication() {
   return (
@@ -33,7 +33,7 @@ function ToastNofitication() {
         },
       }}
     />
-  );
+  )
 }
 
-export default ToastNofitication;
+export default ToastNofitication

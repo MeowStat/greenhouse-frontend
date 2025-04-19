@@ -1,29 +1,29 @@
-import { useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Button, Field, Input, Label } from '@headlessui/react';
-import clsx from 'clsx';
-import { Eye, EyeOff } from 'lucide-react'; // Import icons
+import { useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { Button, Field, Input, Label } from '@headlessui/react'
+import clsx from 'clsx'
+import { Eye, EyeOff } from 'lucide-react' // Import icons
 
-import FinisherBackground from '../../components/FinisherHeader/FinisherHeader';
-import Spin from '../../components/Spin/Spin';
-import useAuth from '../../hooks/useAuth';
-import { authService } from '../../services/authService';
+import FinisherBackground from '../../components/FinisherHeader/FinisherHeader'
+import Spin from '../../components/Spin/Spin'
+import useAuth from '../../hooks/useAuth'
+import { authService } from '../../services/authService'
 
 interface LoginFormInput {
-  username: string;
-  password: string;
+  username: string
+  password: string
 }
 
 function LoginPage() {
-  const { setAuth } = useAuth();
+  const { setAuth } = useAuth()
 
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || '/';
-  const [loading, setLoading] = useState<boolean>(false);
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/'
+  const [loading, setLoading] = useState<boolean>(false)
+  const [showPassword, setShowPassword] = useState<boolean>(false)
 
   const {
     register,
@@ -34,26 +34,26 @@ function LoginPage() {
       username: '',
       password: '',
     },
-  });
+  })
 
   const onSubmit: SubmitHandler<LoginFormInput> = async (data) => {
     if (Object.keys(errors).length > 0) {
-      const firstError = Object.values(errors)[0]?.message || 'Có lỗi xảy ra!';
-      toast.error(firstError);
-      return;
+      const firstError = Object.values(errors)[0]?.message || 'Có lỗi xảy ra!'
+      toast.error(firstError)
+      return
     }
-    setLoading(true);
+    setLoading(true)
     try {
-      const userData = await authService.login(data);
-      setAuth({ token: userData.username });
-      navigate(from, { replace: true });
-      toast.success('Đăng nhập thành công!');
+      const userData = await authService.login(data)
+      setAuth({ token: userData.username })
+      navigate(from, { replace: true })
+      toast.success('Đăng nhập thành công!')
     } catch (error) {
-      toast.error((error as any)?.message || 'Đăng nhập thất bại!');
+      toast.error((error as any)?.message || 'Đăng nhập thất bại!')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="flex flex-col items-center h-[100vh] w-[100vw] p-5 pl-15 pr-15">
@@ -82,7 +82,7 @@ function LoginPage() {
                 className={clsx(
                   'mt-2 block w-full rounded-lg outline outline-gray-400 bg-white py-2 px-3 text-base',
                   'focus:outline-green-700 focus:ring-2 focus:ring-green-400 transition-all duration-200',
-                  errors.username?.type === 'required' && 'outline-red-400'
+                  errors.username?.type === 'required' && 'outline-red-400',
                 )}
                 type="text"
                 {...register('username', {
@@ -111,7 +111,7 @@ function LoginPage() {
                   className={clsx(
                     'mt-2 block w-full rounded-lg outline outline-gray-400 bg-white py-2 px-3 text-base',
                     'focus:outline-green-700 focus:ring-2 focus:ring-green-400 transition-all duration-200',
-                    errors.password?.type === 'required' && 'outline-red-400'
+                    errors.password?.type === 'required' && 'outline-red-400',
                   )}
                   type={showPassword ? 'text' : 'password'}
                   {...register('password', {
@@ -148,7 +148,7 @@ function LoginPage() {
                 'rounded-xl py-2.5 px-4 text-lg text-white font-semibold',
                 loading
                   ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-[#48AB69] hover:bg-green-500 active:bg-green-700 cursor-pointer'
+                  : 'bg-[#48AB69] hover:bg-green-500 active:bg-green-700 cursor-pointer',
               )}
               type="submit"
               disabled={loading}
@@ -163,7 +163,7 @@ function LoginPage() {
         <div className="flex-1 rounded-r-xl bg-[url('/bgLogin.png')] bg-cover bg-center" />
       </div>
     </div>
-  );
+  )
 }
 
-export default LoginPage;
+export default LoginPage

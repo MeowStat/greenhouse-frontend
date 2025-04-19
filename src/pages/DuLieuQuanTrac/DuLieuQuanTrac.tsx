@@ -1,21 +1,19 @@
-import { PenLine } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { SensorCard } from './component/SensorCard';
-import { useEffect, useState } from 'react';
-import { ISensor, ISensorVisualData } from '../../types/SensorTypes';
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
-import toast from 'react-hot-toast';
-import ToastMessage from '../../components/ToastNotification/ToastMessage';
-import { sensorDataService } from '../../services/sensorDataService';
+import { PenLine } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { SensorCard } from './component/SensorCard'
+import { useEffect, useState } from 'react'
+import { ISensor, ISensorVisualData } from '../../types/SensorTypes'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
+import toast from 'react-hot-toast'
+import ToastMessage from '../../components/ToastNotification/ToastMessage'
+import { sensorDataService } from '../../services/sensorDataService'
 
 function DuLieuQuanTrac() {
   const navigate = useNavigate();
 
   const [allSensor, setAllSensor] = useState<ISensor[]>([]);
-  const [sensorVisualData, setSensorVisualData] = useState<ISensorVisualData[]>(
-    []
-  );
+  const [sensorVisualData, setSensorVisualData] = useState<ISensorVisualData[]>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchAllSensor = async () => {
@@ -23,12 +21,7 @@ function DuLieuQuanTrac() {
       const data = await sensorDataService.getAllSensor();
       setAllSensor(data.data || []);
     } catch (error: any) {
-      toast.error(
-        <ToastMessage
-          mainMessage="Failed to fetch sensors"
-          description={error.message}
-        />
-      );
+      toast.error(<ToastMessage mainMessage='Failed to fetch sensors' description={error.message} />);
       console.error('Error fetching sensors:', error.message);
     }
   };
@@ -40,11 +33,11 @@ function DuLieuQuanTrac() {
       const responses = await Promise.all(
         allSensor.map((sensor) =>
           sensorDataService.getSensorVisualData({
-            id: sensor.id,
+            feed: sensor.feed,
             page: 1,
             pageSize: 1,
-          })
-        )
+          }),
+        ),
       );
 
       const visualData = responses.map((response, index) => ({
@@ -73,12 +66,13 @@ function DuLieuQuanTrac() {
   useEffect(() => {
     if (allSensor.length === 0) return;
 
-    fetchSensorVisualData();
+    fetchSensorVisualData(); 
 
-    const intervalId = setInterval(fetchSensorVisualData, 30000);
+    const intervalId = setInterval(fetchSensorVisualData, 30000); 
 
-    return () => clearInterval(intervalId);
+    return () => clearInterval(intervalId); 
   }, [allSensor]);
+
 
   return (
     <div className="flex flex-col w-full items-center px-15">
@@ -108,7 +102,7 @@ function DuLieuQuanTrac() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default DuLieuQuanTrac;
+export default DuLieuQuanTrac

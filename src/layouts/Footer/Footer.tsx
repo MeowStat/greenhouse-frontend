@@ -1,5 +1,5 @@
-import EmailIcon from '@/assets/mail.svg?react';
-import PhoneIcon from '@/assets/Phone.svg?react';
+import EmailIcon from '@/assets/mail.svg?react'
+import PhoneIcon from '@/assets/Phone.svg?react'
 
 export function Footer() {
   return (
@@ -30,5 +30,5 @@ export function Footer() {
         </div>
       </div>
     </div>
-  );
+  )
 }

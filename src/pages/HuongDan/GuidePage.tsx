@@ -1,5 +1,5 @@
 function GuidePage() {
-  return <div>Hướng dẫn</div>;
+  return <div>Hướng dẫn</div>
 }
 
-export default GuidePage;
+export default GuidePage

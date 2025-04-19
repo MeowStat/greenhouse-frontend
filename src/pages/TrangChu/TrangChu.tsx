@@ -1,6 +1,6 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom'
 
-import image1 from '../../assets/The-Most-Important-Benefits-of-a-Greenhouse-GreenPro-Ventures 1.png';
+import image1 from '../../assets/The-Most-Important-Benefits-of-a-Greenhouse-GreenPro-Ventures 1.png'
 
 function TrangChu() {
   return (
@@ -92,7 +92,7 @@ function TrangChu() {
         </NavLink>
       </div>
     </div>
-  );
+  )
 }
 
-export default TrangChu;
+export default TrangChu

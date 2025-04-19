@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { useState, useEffect } from 'react'
+import { format } from 'date-fns'
 import {
   Download,
   Settings,
   ChevronLeft,
   ChevronRight,
   Search,
-} from 'lucide-react';
-import { Bar } from 'react-chartjs-2';
+} from 'lucide-react'
+import { Bar } from 'react-chartjs-2'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -16,101 +16,96 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
+} from 'chart.js'
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '../../components/UI/popover';
-import { Button } from '../../components/UI/button';
-import { Calendar } from '../../components/UI/calendar';
-import { Card } from '../../components/UI/card';
-import { sensorDataService } from '../../services/sensorDataService';
-import { useSearchParams } from 'react-router-dom';
-import { ISensor, ISensorData } from '../../types/SensorTypes';
-import Skeleton from 'react-loading-skeleton';
-import toast from 'react-hot-toast';
-import ToastMessage from '../../components/ToastNotification/ToastMessage';
-import AlertConfigModal from './component/AlertConfigModal';
-import { useModal } from '../../hooks/useModal';
+} from '../../components/UI/popover'
+import { Button } from '../../components/UI/button'
+import { Calendar } from '../../components/UI/calendar'
+import { Card } from '../../components/UI/card'
+import { sensorDataService } from '../../services/sensorDataService'
+import { useSearchParams } from 'react-router-dom'
+import { ISensor, ISensorData } from '../../types/SensorTypes'
+import Skeleton from 'react-loading-skeleton'
+import toast from 'react-hot-toast'
+import ToastMessage from '../../components/ToastNotification/ToastMessage'
+import AlertConfigModal from './component/AlertConfigModal'
+import { useModal } from '../../hooks/useModal'
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default function DataMonitoringDashboard() {
-  const modal = useModal();
+  const modal = useModal()
 
-  const [searchParams] = useSearchParams();
-  const feed = searchParams.get('feed') || '';
-  const id = searchParams.get('id') || 0;
-  const sensorName = searchParams.get('name');
-  const lowerbound = searchParams.get('lowerbound');
-  const upperbound = searchParams.get('upperbound');
+  const [searchParams] = useSearchParams()
+  const feed = searchParams.get('feed') || ''
+  const id = searchParams.get('id')
+  const sensorName = searchParams.get('name')
+  const lowerbound = searchParams.get('lowerbound')
+  const upperbound = searchParams.get('upperbound')
 
-  const [sensor, setSensor] = useState<ISensor>();
-  const [allSensor, setAllSensor] = useState<ISensor[]>([]);
-  const [refresh, setRefresh] = useState(false);
+  const [ sensor, setSensor ] = useState<ISensor>()
+  const [ allSensor, setAllSensor ] = useState<ISensor[]>([])
+  const [ refresh, setRefresh ] = useState(false)
 
-  const [fromDate, setFromDate] = useState<Date | undefined>(undefined);
-  const [toDate, setToDate] = useState<Date | undefined>(undefined);
-  const [fromDateOpen, setFromDateOpen] = useState(false);
-  const [toDateOpen, setToDateOpen] = useState(false);
-  const [sensorData, setSensorData] = useState<ISensorData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [fromDate, setFromDate] = useState<Date | undefined>(undefined)
+  const [toDate, setToDate] = useState<Date | undefined>(undefined)
+  const [fromDateOpen, setFromDateOpen] = useState(false)
+  const [toDateOpen, setToDateOpen] = useState(false)
+  const [sensorData, setSensorData] = useState<ISensorData[]>([])
+  const [loading, setLoading] = useState(true)
 
   const fetchAllSensor = async () => {
     try {
-      const data = await sensorDataService.getAllSensor();
-      setAllSensor(data.data || []);
+      const data = await sensorDataService.getAllSensor()
+      setAllSensor(data.data || [])
     } catch (error: any) {
       toast.error(
         <ToastMessage
           mainMessage="Failed to fetch sensors"
           description={error.message}
-        />
-      );
+        />,
+      )
     }
-  };
+  }
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchAllSensor();
-    };
-    fetchData();
-  }, [refresh]);
+      await fetchAllSensor()
+    }
+    fetchData()
+  }, [refresh])
 
   useEffect(() => {
-    setSensor(allSensor.find((value) => value.id == id));
-    console.log(sensor);
-  }, [allSensor]);
+    setSensor(allSensor.find((value) => value.id == id))
+    console.log(sensor)
+  },[allSensor])
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await sensorDataService.getSensorVisualData({
-          id,
+          feed,
           page: 1,
           pageSize: 30,
-        });
-        setSensorData(response.data);
-        setLoading(false);
+        })
+        setSensorData(response.data)
+        setLoading(false)
       } catch (error) {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchData();
-  }, [feed]);
+    fetchData()
+  }, [feed])
 
   const chartData = {
     labels:
-      sensorData?.map((item) => format(new Date(item.date), 'HH:mm')) || [],
+      sensorData?.map((item) => format(new Date(item.date), 'HH:mm')) ||
+      [],
     datasets: [
       {
         data: sensorData?.map((item) => Number(item.value)) || [],
@@ -119,7 +114,7 @@ export default function DataMonitoringDashboard() {
         categoryPercentage: 0.9,
       },
     ],
-  };
+  }
 
   const chartOptions = {
     responsive: true,
@@ -149,20 +144,20 @@ export default function DataMonitoringDashboard() {
         },
       },
     },
-  };
+  }
 
   const calculateStats = () => {
-    if (!sensorData.length) return { max: 0, min: 0, avg: 0 };
+    if (!sensorData.length) return { max: 0, min: 0, avg: 0 }
 
-    const values = sensorData?.map((item) => Number(item.value));
+    const values = sensorData?.map((item) => Number(item.value))
     return {
       max: Math.max(...values),
       min: Math.min(...values),
       avg: values.reduce((a, b) => a + b, 0) / values.length,
-    };
-  };
+    }
+  }
 
-  const stats = calculateStats();
+  const stats = calculateStats()
 
   return (
     <div className="max-w-6xl mx-auto p-4">
@@ -174,14 +169,12 @@ export default function DataMonitoringDashboard() {
           <h2 className="text-xl text-[#2c4c2c]">
             {sensorName || 'Loading...'}
           </h2>
-          <div
+          <div 
             className="flex items-center mt-1 cursor-pointer"
             onClick={() => modal.open()}
           >
             <Settings className="h-5 w-5 mr-2 text-[#2c4c2c]" />
-            <span className="text-sm text-[#2c4c2c] hover:underline">
-              Cài đặt cảnh báo
-            </span>
+            <span className="text-sm text-[#2c4c2c] hover:underline">Cài đặt cảnh báo</span>
           </div>
         </div>
 
@@ -206,8 +199,8 @@ export default function DataMonitoringDashboard() {
                   mode="single"
                   selected={fromDate}
                   onSelect={(date) => {
-                    setFromDate(date);
-                    setFromDateOpen(false);
+                    setFromDate(date)
+                    setFromDateOpen(false)
                   }}
                   initialFocus
                   className="rounded-md border-0 shadow-md bg-white"
@@ -239,8 +232,8 @@ export default function DataMonitoringDashboard() {
                   mode="single"
                   selected={toDate}
                   onSelect={(date) => {
-                    setToDate(date);
-                    setToDateOpen(false);
+                    setToDate(date)
+                    setToDateOpen(false)
                   }}
                   initialFocus
                   className="rounded-md border-0 shadow-md bg-white"
@@ -261,8 +254,8 @@ export default function DataMonitoringDashboard() {
             variant="outline"
             className="bg-[#f8f8d0] hover:bg-[#f0f0c0] text-black border-[#e0e0a0] h-9 px-4 transition-colors cursor-pointer"
             onClick={() => {
-              setFromDate(undefined);
-              setToDate(undefined);
+              setFromDate(undefined)
+              setToDate(undefined)
             }}
           >
             Bỏ tìm kiếm
@@ -294,39 +287,38 @@ export default function DataMonitoringDashboard() {
       </div>
 
       <div className="bg-[#e8f5e9] overflow-hidden">
-        {loading ? (
-          <Skeleton height={300} />
-        ) : (
-          <>
-            {sensorData.length === 0 && (
-              <div className="text-center text-gray-500 py-8">
-                <p>No sensors available. Please add new sensors.</p>
-              </div>
-            )}
-            <table className="w-full">
-              <thead>
-                <tr className="bg-green-900 text-white">
-                  <th className="text-left px-6 py-3">Giá trị</th>
-                  <th className="text-left px-6 py-3">Thời gian quan trắc</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sensorData.map((item, index) => (
-                  <tr
-                    key={index}
-                    className="border-b border-green-100 hover:bg-green-50"
-                  >
-                    <td className="px-6 py-4">{item.value}</td>
-                    <td className="px-6 py-4">
-                      {new Date(item.date).toLocaleString('en-GB')}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </>
-        )}
-      </div>
+          { 
+            loading? 
+              <Skeleton height={300} /> 
+              : 
+              <>
+                {sensorData.length === 0 && (
+                  <div className="text-center text-gray-500 py-8">
+                    <p>No sensors available. Please add new sensors.</p>
+                  </div>
+                )}
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-green-900 text-white">
+                      <th className="text-left px-6 py-3">Giá trị</th>
+                      <th className="text-left px-6 py-3">Thời gian quan trắc</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sensorData.map((item,index) => (
+                      <tr
+                        key={index}
+                        className="border-b border-green-100 hover:bg-green-50"
+                      >
+                        <td className="px-6 py-4">{item.value}</td>
+                        <td className="px-6 py-4">{new Date(item.date).toLocaleString('en-GB')}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
+          }
+        </div>
 
       <div className="flex justify-end gap-1">
         <Button
@@ -348,21 +340,19 @@ export default function DataMonitoringDashboard() {
           <ChevronRight className="h-4 w-4 ml-1" />
         </Button>
       </div>
-      {sensor && (
-        <AlertConfigModal
-          key={id}
-          monitorId={id ?? 0}
-          data={{
-            alertDes: sensor?.alertDes || '',
-            alertlowerbound: sensor?.alertlowerbound || 0,
-            alertupperbound: sensor?.alertupperbound || 0,
-            status: sensor?.warning || false,
-            email: sensor?.email || false,
-          }}
-          modal={modal}
-          setRefresh={setRefresh}
-        />
-      )}
+      {sensor && <AlertConfigModal 
+        key={id}
+        monitorId={id ?? ''} 
+        data={{
+          alertDes: sensor?.alertDes || '',
+          alertlowerbound: sensor?.alertlowerbound || 0,
+          alertupperbound: sensor?.alertupperbound || 0,
+          status: sensor?.warning || false,
+          email: sensor?.email || false
+        }}
+        modal={modal}
+        setRefresh={setRefresh}
+      />}
     </div>
-  );
+  )
 }
