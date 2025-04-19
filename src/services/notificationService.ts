@@ -10,12 +10,44 @@ export interface INotification {
   value: number;
   name: string;
   read: boolean;
+  type?: string;
 }
+
+export interface ISchedulerNotification {
+  deviceName: string;
+  deviceDescription: string;
+  configDescription: string;
+  scheduleStart: string;
+  scheduleEnd: string;
+  repetition: string;
+  type: 'Scheduler';
+}
+
+export interface IAutoNotification {
+  deviceName: string;
+  deviceDescription: string;
+  configDescription: string;
+  conditionDescription: string;
+  conditionOperator: string;
+  conditionThreshold: string;
+  currentValue: number;
+  type: 'Auto';
+}
+
+export type NotificationItem =
+  | INotification
+  | ISchedulerNotification
+  | IAutoNotification;
 
 export interface INotificationResponse {
   status: boolean;
   totalOfRecord: number;
   data: INotification[];
+}
+
+export interface IPollResponse {
+  status: boolean;
+  data: NotificationItem[];
 }
 
 export const notificationService = {
@@ -34,5 +66,9 @@ export const notificationService = {
 
   markAllAsRead: async (): Promise<any> => {
     return await api.patch('/notification/read-all');
+  },
+
+  pollNotifications: async (): Promise<IPollResponse> => {
+    return await api.get<IPollResponse>('/notification/poll');
   },
 };

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { Menu, MenuButton, MenuItems } from '@headlessui/react';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
@@ -6,9 +6,11 @@ import toast from 'react-hot-toast';
 import NotiIcon from '@/assets/notification.svg?react';
 import {
   type INotification,
+  type NotificationItem,
   notificationService,
 } from '../../services/notificationService';
 import ToastMessage from '../ToastNotification/ToastMessage';
+import NotificationToast from '../NotificationToast/NotificationToast';
 
 function NotificationDropdown() {
   const [notifications, setNotifications] = useState<INotification[]>([]);
@@ -16,6 +18,7 @@ function NotificationDropdown() {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const pageSize = 20;
+  const pollingIntervalRef = useRef<number | null>(null);
 
   const fetchNotifications = useCallback(
     async (currentPage = 1) => {
@@ -78,9 +81,42 @@ function NotificationDropdown() {
     }
   };
 
-  useEffect(() => {
-    fetchNotifications();
+  // Poll for new notifications every 5 seconds
+  const pollForNotifications = useCallback(async () => {
+    try {
+      const response = await notificationService.pollNotifications();
+
+      if (response.status && response.data && response.data.length > 0) {
+        // Show toast notifications for new notifications
+        response.data.forEach((notification) => {
+          toast.success(<NotificationToast notification={notification} />, {
+            duration: 5000,
+            position: 'top-right',
+          });
+        });
+
+        // Refresh the notification list to include the new notifications
+        fetchNotifications();
+      }
+    } catch (error) {
+      console.error('Error polling for notifications:', error);
+    }
   }, [fetchNotifications]);
+
+  useEffect(() => {
+    // Initial fetch
+    fetchNotifications();
+
+    // Set up polling interval
+    pollingIntervalRef.current = window.setInterval(pollForNotifications, 5000);
+
+    // Clean up interval on unmount
+    return () => {
+      if (pollingIntervalRef.current) {
+        clearInterval(pollingIntervalRef.current);
+      }
+    };
+  }, [fetchNotifications, pollForNotifications]);
 
   // Count unread notifications
   const unreadCount =
