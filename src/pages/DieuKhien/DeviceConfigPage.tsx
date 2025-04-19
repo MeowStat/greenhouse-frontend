@@ -77,7 +77,7 @@ const DeviceConfigPage: React.FC = () => {
         </div>
 
         <div className='flex items-center gap-x-20 flex-wrap'>
-          <Card className={`flex-1 bg-green-100 shadow-md rounded-lg p-6 mb-6 max-w-xl min-w-[500px] h-120
+          <Card className={`flex-1 bg-green-100 shadow-md rounded-lg p-6 mb-6 min-w-[500px] h-120
             ${loading ? 'opacity-40' : ''}  
           `}>
             <div>

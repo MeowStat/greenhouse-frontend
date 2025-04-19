@@ -25,7 +25,7 @@ export const DEVICE_ON_OFF = [
    { status: false, power: 0}
 ]
 
-export const POWER_LEVELS = [0, 20, 40, 60, 100]
+export const POWER_LEVELS = [0, 20, 40, 60, 80, 100]
 
 export const COMPARISION_OPERATORS = [
   { label: "Bằng", value: "=="},
