@@ -21,7 +21,7 @@ export const authService = {
         username,
         password,
       });
-      debugger;
+
       if (response.data.data) {
         localStorage.setItem(
           API_CONFIG.tokenStorageKey,
@@ -29,6 +29,12 @@ export const authService = {
         );
         localStorage.setItem('username', response.data.data.username);
         localStorage.setItem('email', response.data.data.email);
+
+        // Store user ID if available
+        if (response.data.data.id) {
+          localStorage.setItem('userId', response.data.data.id.toString());
+        }
+
         return response.data.data;
       }
       throw new Error('Invalid credentials');
@@ -39,6 +45,9 @@ export const authService = {
 
   logout: (): Promise<void> => {
     localStorage.removeItem(API_CONFIG.tokenStorageKey);
+    localStorage.removeItem('username');
+    localStorage.removeItem('email');
+    localStorage.removeItem('userId');
     return Promise.resolve();
   },
 
@@ -66,6 +75,11 @@ export const authService = {
 
       if (!response.data || !response.data.data) {
         throw new Error('Failed to fetch user info');
+      }
+
+      // Store user ID if it wasn't stored yet
+      if (response.data.data.id) {
+        localStorage.setItem('userId', response.data.data.id.toString());
       }
 
       return response.data.data;

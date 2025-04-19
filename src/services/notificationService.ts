@@ -1,4 +1,5 @@
 import { api } from './apiClient';
+import { authService } from './authService';
 
 export interface INotification {
   id: number;
@@ -69,6 +70,23 @@ export const notificationService = {
   },
 
   pollNotifications: async (): Promise<IPollResponse> => {
-    return await api.get<IPollResponse>('/notification/poll');
+    const userId = localStorage.getItem('userId');
+
+    // If userId doesn't exist, try to get user info first to set it
+    if (!userId) {
+      try {
+        await authService.getUserInfo();
+        const newUserId = localStorage.getItem('userId');
+        if (newUserId) {
+          return await api.get<IPollResponse>(
+            `/notification/poll/${newUserId}`
+          );
+        }
+      } catch (error) {
+        console.error('Failed to get user ID:', error);
+      }
+    }
+
+    return await api.get<IPollResponse>(`/notification/poll/${userId || ''}`);
   },
 };
