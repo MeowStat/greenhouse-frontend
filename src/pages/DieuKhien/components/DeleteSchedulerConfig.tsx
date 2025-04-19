@@ -6,39 +6,41 @@ import {
 } from '../../../components/UI/popover';
 import { Trash2 } from 'lucide-react';
 import { PopoverArrow } from '@radix-ui/react-popover';
-import { sensorDataService } from '../../../services/sensorDataService';
+import { deviceService } from '../../../services/deviceService';
 import toast from 'react-hot-toast';
 import ToastMessage from '../../../components/ToastNotification/ToastMessage';
 
-interface DeleteQuanTracButtonProps {
-  quanTracId: string;
+interface DeleteSchedulerConfigProps {
+  configId: string | number;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const DeleteQuanTracButton: React.FC<DeleteQuanTracButtonProps> = (props) => {
-  const { quanTracId, setRefresh } = props;
+const DeleteSchedulerConfig: React.FC<DeleteSchedulerConfigProps> = (props) => {
+  const { configId, setRefresh, setLoading } = props;
 
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
 
-  const handleDeleteSensor = async (id: string) => {
+  const handleDeleteConfig = async () => {
     try {
-      await sensorDataService.deleteMonitor(id);
+      setLoading(true);
+      await deviceService.deleteDeviceConfig(configId);
       setRefresh((prev) => !prev);
       toast.success(
         <ToastMessage
           mainMessage="Xóa thành công"
-          description="Xóa quan trắc thành công"
         />
       );
     } catch (error) {
       toast.success(
         <ToastMessage
           mainMessage="Xóa không thành công"
-          description={(error as Error).message}
+          description="Vui lòng thử lại"
         />
       );
     } finally {
       setOpenDeleteConfirm(false);
+      setLoading(false);
     }
   };
 
@@ -58,7 +60,7 @@ const DeleteQuanTracButton: React.FC<DeleteQuanTracButtonProps> = (props) => {
           <div className="flex justify-center gap-2">
             {/* Confirm Button */}
             <button
-              onClick={() => handleDeleteSensor(quanTracId)}
+              onClick={() => handleDeleteConfig()}
               className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
             >
               Xóa
@@ -82,4 +84,4 @@ const DeleteQuanTracButton: React.FC<DeleteQuanTracButtonProps> = (props) => {
   );
 };
 
-export default DeleteQuanTracButton;
+export default DeleteSchedulerConfig;

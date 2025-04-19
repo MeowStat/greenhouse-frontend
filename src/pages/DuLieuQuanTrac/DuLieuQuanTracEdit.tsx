@@ -1,65 +1,65 @@
-import { PenLine, Info } from 'lucide-react'
+import { PenLine, Info } from 'lucide-react';
 
-import { useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { sensorDataService } from '../../services/sensorDataService'
-import { EMPTY_STRING } from '../../utils/constants'
-import { ISensor } from '../../types/SensorTypes'
-import toast from 'react-hot-toast'
-import ToastMessage from '../../components/ToastNotification/ToastMessage'
-import Skeleton from 'react-loading-skeleton'
-import { useModal } from '../../hooks/useModal'
-import EditQuanTrac from './component/DuLieuQuanTracEditModal'
-import ThemMoiQuanTrac from './component/DuLieuQuanTracCreateModal'
-import DeleteQuanTracButton from './component/DeleteQuanTracButton'
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { sensorDataService } from '../../services/sensorDataService';
+import { EMPTY_STRING } from '../../utils/constants';
+import { ISensor } from '../../types/SensorTypes';
+import toast from 'react-hot-toast';
+import ToastMessage from '../../components/ToastNotification/ToastMessage';
+import Skeleton from 'react-loading-skeleton';
+import { useModal } from '../../hooks/useModal';
+import EditQuanTrac from './component/DuLieuQuanTracEditModal';
+import ThemMoiQuanTrac from './component/DuLieuQuanTracCreateModal';
+import DeleteQuanTracButton from './component/DeleteQuanTracButton';
 
 export function QuanLyQuanTracEdit() {
-  const editModal = useModal()
+  const editModal = useModal();
 
-  const [allSensor, setAllSensor] = useState<ISensor[]>([])
+  const [allSensor, setAllSensor] = useState<ISensor[]>([]);
 
-  const [refresh, setRefresh] = useState(false)
+  const [refresh, setRefresh] = useState(false);
 
-  const [selectedSensor, setSelectedSensor] = useState<ISensor | null>(null)
+  const [selectedSensor, setSelectedSensor] = useState<ISensor | null>(null);
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const fetchAllSensor = async () => {
     try {
-      const data = await sensorDataService.getAllSensor()
-      setAllSensor(data.data || [])
+      const data = await sensorDataService.getAllSensor();
+      setAllSensor(data.data || []);
     } catch (error: any) {
       toast.error(
         <ToastMessage
           mainMessage="Failed to fetch sensors"
           description={error.message}
-        />,
-      )
+        />
+      );
     }
-  }
+  };
 
   const handleEditSensor = (sensor: ISensor) => {
-    setSelectedSensor(sensor)
-    editModal.open()
-  }
+    setSelectedSensor(sensor);
+    editModal.open();
+  };
 
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      await fetchAllSensor()
-      setLoading(false)
-    }
-    fetchData()
-  }, [])
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchAllSensor()
-    }
-    fetchData()
-  }, [refresh])
+      setLoading(true);
+      await fetchAllSensor();
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchAllSensor();
+    };
+    fetchData();
+  }, [refresh]);
 
   return (
     <div className="flex flex-col w-full items-center min-h-screen bg-[#fafdf9] px-15">
@@ -152,11 +152,11 @@ export function QuanLyQuanTracEdit() {
                                   sensor.upperbound !== null
                                     ? String(sensor.upperbound)
                                     : '',
-                              })
+                              });
 
                               navigate(
-                                `/du-lieu-quan-trac/visualization?${params.toString()}`,
-                              )
+                                `/du-lieu-quan-trac/visualization?${params.toString()}`
+                              );
                             }}
                           >
                             <Info className="h-5 w-5" />
@@ -186,5 +186,5 @@ export function QuanLyQuanTracEdit() {
         </div>
       </div>
     </div>
-  )
+  );
 }

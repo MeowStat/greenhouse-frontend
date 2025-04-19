@@ -1,14 +1,14 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom';
 
-import UserHeader from '../../components/UserHeader/UserHeader'
+import UserHeader from '../../components/UserHeader/UserHeader';
 
 const navItems = [
   { to: '/trang-chu', label: 'Trang chủ' },
   { to: '/dieu-khien', label: 'Điều khiển' },
   { to: '/du-lieu-quan-trac', label: 'Dữ liệu quan trắc' },
-  { to: '/lich-su-quan-trac', label: 'Lịch sử quan trắc' },
+  { to: '/lich-su-quan-trac', label: 'Lịch sử thiết bị' },
   { to: '/huong-dan', label: 'Hướng dẫn' },
-]
+];
 
 export const Header: React.FC = () => {
   return (
@@ -29,14 +29,14 @@ export const Header: React.FC = () => {
         </div>
         <UserHeader />
       </div>
-      <div className="flex flex-wrap items-center pl-[10%] pr-[10%] bg-green-800">
-        <div className="font-medium flex-1 flex flex-wrap items-center justify-center p-3 gap-x-16">
+      <div className="flex flex-wrap items-center bg-green-800">
+        <div className="font-medium flex-1 flex flex-wrap items-center justify-center p-3 gap-x-4">
           {navItems.map((navItem) => (
             <NavLink
               key={navItem.to}
               to={navItem.to}
               className={({ isActive }: { isActive: boolean }) =>
-                `relative text-lg transition-all duration-300 ${
+                `relative text-base transition-all duration-300 ${
                   isActive
                     ? 'text-white font-semibold'
                     : 'text-[#B4E8C5] hover:text-white'
@@ -49,5 +49,5 @@ export const Header: React.FC = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

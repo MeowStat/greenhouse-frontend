@@ -24,7 +24,7 @@ const createNewMonitor = async (data: FormData) => {
       <ToastMessage
         mainMessage="Tạo mới thành công"
         description="Đã tạo mới quan trắc thành công"
-      />,
+      />
     );
     return response;
   } catch (error) {
@@ -32,21 +32,21 @@ const createNewMonitor = async (data: FormData) => {
       <ToastMessage
         mainMessage="Tạo mới không thành công"
         description={(error as Error).message}
-      />,
+      />
     );
     throw error;
   }
-}
+};
 
 interface ThemMoiQuanTracProps {
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
-  const { setRefresh } = props
+  const { setRefresh } = props;
 
   const modal = useModal();
-  
+
   const {
     handleSubmit,
     control,
@@ -78,7 +78,7 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
   }, []);
 
   const handleCreateNewFeed = (newFeed: string) => {
-    setFeedList((prev) => [...prev, newFeed]); 
+    setFeedList((prev) => [...prev, newFeed]);
   };
 
   const onSubmit = async (data: FormData) => {
@@ -90,9 +90,9 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
 
     console.log('Form Data:', formattedData);
     await createNewMonitor(formattedData);
-    reset(); 
-    setRefresh(prev => !prev)
-    modal.close(); 
+    reset();
+    setRefresh((prev) => !prev);
+    modal.close();
   };
 
   return (
@@ -113,10 +113,10 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
         onBackdropClick={modal.handleBackdropClick}
         title="Thêm mới quan trắc"
       >
-        <div className='overflow-y-auto max-h-[80vh]'>
-          <form 
-            id='createSensorForm'
-            onSubmit={handleSubmit(onSubmit)} 
+        <div className="overflow-y-auto max-h-[80vh]">
+          <form
+            id="createSensorForm"
+            onSubmit={handleSubmit(onSubmit)}
             className="space-y-4 px-4 py-4"
           >
             {/* Name Field */}
@@ -248,7 +248,7 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
             {/* Description Field */}
             <div className="space-y-1">
               <label className="block text-lg font-medium text-gray-700">
-                Mô tả 
+                Mô tả
               </label>
               <Controller
                 name="description"
@@ -276,16 +276,15 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
           <button
             type="submit"
             className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md text-lg font-medium"
-            form='createSensorForm'
+            form="createSensorForm"
             onClick={handleSubmit(onSubmit)}
           >
             Lưu
           </button>
         </div>
-        
       </Modal>
     </>
   );
-}
+};
 
-export default ThemMoiQuanTrac
+export default ThemMoiQuanTrac;
