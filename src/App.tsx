@@ -24,7 +24,10 @@ function App() {
             <Route index element={<Navigate to="/trang-chu" replace />} />
             <Route path="trang-chu" element={<TrangChu />} />
             <Route path="dieu-khien" element={<DieuKhien />} />
-            <Route path="dieu-khien/:deviceId/cau-hinh" element={<DeviceConfigPage />} />
+            <Route
+              path="dieu-khien/:deviceId/cau-hinh"
+              element={<DeviceConfigPage />}
+            />
             <Route path="dieu-khien/edit" element={<DeviceListPage />} />
             <Route path="du-lieu-quan-trac" element={<DuLieuQuanTrac />} />
             <Route path="lich-su-quan-trac" element={<LichSuQuanTrac />} />

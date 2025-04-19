@@ -10,10 +10,10 @@ import {
 } from '@headlessui/react';
 
 import DropDownIcon from '@/assets/arrow_drop_down.svg?react';
-import NotiIcon from '@/assets/notification.svg?react';
 
 import { authService } from '../../services/authService';
 import { useEffect, useState } from 'react';
+import NotificationDropdown from '../NotificationDropdown/NotificationDropdown';
 
 function UserHeader() {
   const navigate = useNavigate();
@@ -47,11 +47,7 @@ function UserHeader() {
 
   return (
     <div className="text-right flex items-center gap-x-2 sticky">
-      <Menu>
-        <MenuButton className="flex">
-          <NotiIcon className="block h-6.5 cursor-pointer hover:fill-green-800 transition-colors duration-200" />
-        </MenuButton>
-      </Menu>
+      <NotificationDropdown />
       <Menu>
         <img
           className="h-10 mr-[-3px]"
