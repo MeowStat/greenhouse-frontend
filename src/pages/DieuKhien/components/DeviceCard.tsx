@@ -10,15 +10,22 @@ import { useDebounce } from "use-debounce";
 import { useNavigate } from 'react-router-dom';
 import ToastMessage from '../../../components/ToastNotification/ToastMessage';
 import toast from 'react-hot-toast';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../../../components/UI/tooltip';
+import { displayComparison } from '../../../lib/utils';
 
 interface DeviceCardProps {
-  id: string;
+  id: string | number;
   name: string;
   description: string;
   power: number;
   status: boolean;
   deviceType: number;
 }
+
+const dayMap = {
+  sun: "CN", mon: "T2", tue: "T3", wed: "T4",
+  thu: "T5", fri: "T6", sat: "T7",
+};
 
 const DeviceCard: React.FC<DeviceCardProps> = (props) => {
   const { name, description, id, power, status, deviceType } = props;
@@ -33,6 +40,9 @@ const DeviceCard: React.FC<DeviceCardProps> = (props) => {
   const [isFirstRender, setIsFirstRender] = useState(true);
 
   const [dataConfig, setDataConfig] = useState<IDeviceConfig[]>([]);
+
+  const schedulerConfig = dataConfig.filter((config) => config.automationConfig === null && config.action === true);
+  const automationConfig = dataConfig.filter((config) => config.schedulerConfig === null && config.action === true);
 
   const handleSwitch = async (status: boolean) => {
     try {
@@ -53,7 +63,7 @@ const DeviceCard: React.FC<DeviceCardProps> = (props) => {
   }
 
   useEffect(() => {
-    const fetchDeviceConfig = async (deviceId: string) => {
+    const fetchDeviceConfig = async (deviceId: string | number) => {
       try {
         setLoadingConfig(true);
         const response = await deviceService.getDeviceConfig(deviceId);
@@ -107,49 +117,6 @@ const DeviceCard: React.FC<DeviceCardProps> = (props) => {
               <Spinner show={loadingConfig} size="large" />
             ) : (
               <div className="flex flex-1 flex-col justify-start">
-                {/* Scheduler Config */}
-                {dataConfig.map(
-                  (config) =>
-                    config?.schedulerConfig && (
-                      <div
-                        className="flex flex-col justify-start mb-4"
-                        key={config.id}
-                      >
-                        <h2 className="text-2xl font-semibold text-gray-900">
-                          Hẹn giờ
-                        </h2>
-                        <p>
-                          Bật trong khung giờ {config.schedulerConfig.start} -{' '}
-                          {config.schedulerConfig.end}
-                        </p>
-                      </div>
-                    )
-                )}
-
-                {/* Automation Config */}
-                {dataConfig.map(
-                  (config) =>
-                    config?.automationConfig?.Condition?.length > 0 && (
-                      <div
-                        className="flex flex-col justify-start mb-4"
-                        key={config.id}
-                      >
-                        <h2 className="text-2xl font-semibold text-gray-900">
-                          Tự động
-                        </h2>
-                        {config.automationConfig.Condition.map(
-                          (condition, index) => (
-                            <p key={index}>{condition.description}</p>
-                          )
-                        )}
-                      </div>
-                    )
-                )}
-
-                {dataConfig.length && (dataConfig[0]?.schedulerConfig || dataConfig[0]?.automationConfig?.Condition?.length) ? (
-                  <div className=" bg-gray-400 h-px w-full mb-2"></div>
-                ) : null}
-
                 {/* Manual Control */}
                 <div className="flex flex-col justify-start mb-4">
                   <h2 className="text-2xl font-semibold text-gray-900">
@@ -167,19 +134,131 @@ const DeviceCard: React.FC<DeviceCardProps> = (props) => {
                         disabled={loadingSwitch}
                       />
                       :
-                      <div className={`flex align-center w-100
+                      <div className={`flex align-center xl:w-80 md:w-85
                         ${loadingSwitch ? 'cursor-not-allowed opacity-30' : 'text-red-600'}`}>
                         <Slider
                           min={0}
                           max={100}
-                          step={10}
-                          title="Cường độ:"
+                          step={20}
+                          title="Cường độ"
                           value={[sliderValue]}
                           onValueChange={handleSliderChange}
                         />
                       </div>}
                   </div>
                 </div> 
+                
+                <div className=" bg-gray-300 h-px w-full mb-4"></div>
+                
+                <div className='flex gap-x-4'>
+                <TooltipProvider>
+                    <Tooltip delayDuration={0}>
+                      <TooltipTrigger>
+                        <div
+                          className={`
+                            inline-flex items-center px-4 py-2 rounded-md 
+                            border-2 text-sm 
+                            ${automationConfig.length ?
+                              "border-green-500 text-green-700 font-semibold bg-green-50"
+                              :
+                              "border-gray-300 text-gray-500 bg-gray-50 font-medium"
+                            }
+                          `}
+                        >
+                          <span className="relative mr-2 flex h-3 w-3">
+                            {automationConfig.length ? (
+                              <>
+                                <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping"></span>
+                                <span className="relative inline-flex h-3 w-3 rounded-full bg-green-500"></span>
+                              </>
+                            ) : (
+                              <span className="relative inline-flex h-3 w-3 rounded-full bg-gray-400 shadow-inner" />
+                            )}
+                          </span>
+                          Tự động
+                        </div>
+                      </TooltipTrigger>
+
+                      <TooltipContent className="max-h-60 overflow-y-auto max-w-[260px] px-3 bg-green-950 text-green-100 shadow-xl border border-green-700 rounded-md">
+                        {automationConfig.map((a, i) => (
+                          <div key={i} className="mb-2 last:mb-0">
+                            <div className={`font-semibold ${a.changePower ? "text-green-300" : "text-red-400"}`}>
+                              {a.changePower ? `Bật ${deviceType ? '- ' + a.changePower + '%' : ''}` : 'Tắt'}
+                            </div>
+
+                            <div className="mt-1 text-sm">
+                              <ul className="list-inside mt-1 space-y-0.5 text-xs">
+                                {a.automationConfig.Condition.map((cond, j) => (
+                                  <li key={j}>
+                                    {cond.sensorId} {displayComparison(cond.condition)} {cond.threshold}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+
+                            {i < automationConfig.length - 1 && <hr className="my-2 border-green-800" />}
+                          </div>
+                        ))}
+                        {!automationConfig.length && <div className="text-sm text-gray-200">Không kích hoạt</div>}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
+
+                  
+                  <TooltipProvider>
+                    <Tooltip delayDuration={0}>
+                      <TooltipTrigger>
+                        <div
+                          className={`
+                            inline-flex items-center px-4 py-2 rounded-md 
+                            border-2 text-sm 
+                            ${schedulerConfig.length ?
+                              "border-green-500 text-green-700 font-semibold bg-green-50"
+                              :
+                              "border-gray-300 text-gray-500 bg-gray-50 font-medium"
+                            }
+                          `}
+                        >
+                          <span className="relative mr-2 flex h-3 w-3">
+                            {schedulerConfig.length ? (
+                              <>
+                                <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping"></span>
+                                <span className="relative inline-flex h-3 w-3 rounded-full bg-green-500"></span>
+                              </>
+                            ) : <span className="relative inline-flex h-3 w-3 rounded-full bg-gray-400 shadow-inner"></span>
+                            }
+                          </span>
+                          Hẹn giờ
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent className="max-h-60 overflow-y-auto max-w-[260px] px-3 bg-green-950 text-green-100 shadow-xl border border-green-700 rounded-md">
+                        {schedulerConfig.map((s, i) => (
+                          <div key={i} className="mb-2 last:mb-0">
+                            <div className={`font-semibold ${s.changePower? "text-green-300":"text-red-400" }`}>
+                              {s.changePower ? `Bật ${deviceType ? '- ' + s.changePower+'%' : ''}` : 'Tắt'}
+                            </div>
+                            <div className="font-medium">{s.schedulerConfig.start} → {s.schedulerConfig.end}</div>
+                            <div className="flex flex-wrap gap-1 mt-1 text-xs">
+                              {s.schedulerConfig.repitation.map(day => (
+                                <span
+                                  key={day}
+                                  className="border-gray-100 border-1 px-1.5 py-0.5 rounded font-medium"
+                                >
+                                  {dayMap[day as keyof typeof dayMap]}
+                                </span>
+                              ))}
+                            </div>
+                            {i < schedulerConfig.length - 1 && <hr className="my-2 border-gray-200" />}
+                          </div>
+                        ))}
+                        {!schedulerConfig.length && <div className="text-sm text-gray-200">Không kích hoạt</div>}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+
+                
               </div>
             )}
           </div>

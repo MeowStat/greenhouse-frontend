@@ -7,14 +7,14 @@ export interface IDeviceServiceApiResponse<TData> {
 export type IDeviceList = IDeviceServiceApiResponse<IDevice[]>;
 
 export interface IDevice {
-  id: string;
-  name: string;
-  feed: string;
-  prefixMessage: string;
-  description: string;
-  power: number;
-  status: boolean;
-  type: number;
+    id: string | number;
+    name: string;
+    feed: string;
+    prefixMessage: string;
+    description: string;
+    power: number;
+    status: boolean;
+    type: number;
 }
 
 export interface IDeviceConfig {
@@ -56,6 +56,7 @@ export interface IDeviceUpdatePayload {
   name?: string;
   feed?: string;
   description?: string;
+  type?: number;
   power?: number;
   status?: boolean;
 }
@@ -83,8 +84,23 @@ export interface IPayloadCreateUpdateSchedulerConfig {
   repetition: string[];
 }
 
-export interface IResponseDeviveInfo
-  extends IDeviceServiceApiResponse<IDevice> {}
+export interface IPayloadCreateDevice {
+  name: string;
+  feed: string;
+  type: number;
+  description: string;
+  prefixMessage: string;
+}
+
+export interface IPayloadCreateAutoCondition {
+  configId?: number | string;
+  sensorId?: number | string;
+  condition?: string;
+  threshold?: number | string;
+  description?: string;
+}
+
+export interface IResponseDeviveInfo extends IDeviceServiceApiResponse<IDevice> {}
 
 export interface IResponseDeviceConfig
   extends IDeviceServiceApiResponse<IDeviceConfig[]> {}
@@ -117,9 +133,9 @@ export interface DeviceHistoryQueryParams {
   typeAction?: string;
 }
 // extends IDeviceServiceApiResponse<IDevice> {}
+export interface IResponseDevice extends IDeviceServiceApiResponse<IDevice> {}
 
-export interface IResponseTurnDeviceConfig
-  extends IDeviceServiceApiResponse<IDeviceConfig> {}
+export interface IResponseTurnDeviceConfig extends IDeviceServiceApiResponse<IDeviceConfig> {}
 
 export interface IResponseDeleteDeviceConfig
   extends IDeviceServiceApiResponse<IDeviceConfig> {}
