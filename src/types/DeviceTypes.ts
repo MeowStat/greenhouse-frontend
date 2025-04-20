@@ -25,7 +25,7 @@ export interface IDeviceConfig {
   action: boolean;
   deviceId: string;
   defaultPower?: number;
-  changePower?:number;
+  changePower?: number;
   schedulerConfig: {
     id: string;
     start: string;
@@ -35,7 +35,7 @@ export interface IDeviceConfig {
   automationConfig: {
     id: number;
     Condition: [
-    {
+      {
         id: number;
         sensorId: string;
         condition: string;
@@ -44,11 +44,11 @@ export interface IDeviceConfig {
         automationConfigId: number;
       },
     ];
-  }
+  };
 }
 
 // export interface IDeviceConfig {
-    
+
 //   };
 // }
 
@@ -65,10 +65,10 @@ export interface IResponseDeviveInfo
   extends IDeviceServiceApiResponse<IDevice> {}
 
 export interface IPayloadCreateConfig {
-    name?: string;
-    deviceId?: string | number;
-    description?: string;
-    changePower?: number;
+  name?: string;
+  deviceId?: string | number;
+  description?: string;
+  changePower?: number;
 }
 
 export interface IPayloadUpdateConfig {
@@ -78,10 +78,10 @@ export interface IPayloadUpdateConfig {
 }
 
 export interface IPayloadCreateUpdateSchedulerConfig {
-    configId?: number | string;
-    start: string;
-    end: string;
-    repetition: string[];
+  configId?: number | string;
+  start: string;
+  end: string;
+  repetition: string[];
 }
 
 export interface IPayloadCreateDevice {
@@ -114,6 +114,9 @@ export interface DeviceHistoryItem {
   date: string;
   info: string;
   typeAction: 'Auto' | 'Scheduler' | 'Manual';
+  device: {
+    name: string;
+  };
 }
 
 export interface DeviceHistoryResponse {
@@ -130,11 +133,12 @@ export interface DeviceHistoryQueryParams {
   typeAction?: string;
 }
 // extends IDeviceServiceApiResponse<IDevice> {}
-
 export interface IResponseDevice extends IDeviceServiceApiResponse<IDevice> {}
 
 export interface IResponseTurnDeviceConfig extends IDeviceServiceApiResponse<IDeviceConfig> {}
 
-export interface IResponseDeleteDeviceConfig extends IDeviceServiceApiResponse<IDeviceConfig> {}
+export interface IResponseDeleteDeviceConfig
+  extends IDeviceServiceApiResponse<IDeviceConfig> {}
 
-export interface IResponseCreateDeviceConfig extends IDeviceServiceApiResponse<IDeviceConfig> {}
+export interface IResponseCreateDeviceConfig
+  extends IDeviceServiceApiResponse<IDeviceConfig> {}

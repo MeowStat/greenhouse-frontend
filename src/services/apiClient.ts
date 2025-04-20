@@ -10,15 +10,13 @@ export const apiClient: AxiosInstance = axios.create({
   },
 });
 
-apiClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    const token = localStorage.getItem(API_CONFIG.tokenStorageKey);
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
+apiClient.interceptors.request.use((config): InternalAxiosRequestConfig => {
+  const token = localStorage.getItem(API_CONFIG.tokenStorageKey);
+  if (token && config.headers) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-);
+  return config;
+});
 
 export const api = {
   get: async <T>(url: string, params?: Record<string, any>): Promise<T> => {

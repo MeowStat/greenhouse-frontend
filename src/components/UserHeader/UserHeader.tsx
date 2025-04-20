@@ -10,10 +10,10 @@ import {
 } from '@headlessui/react';
 
 import DropDownIcon from '@/assets/arrow_drop_down.svg?react';
-import NotiIcon from '@/assets/notification.svg?react';
 
 import { authService } from '../../services/authService';
 import { useEffect, useState } from 'react';
+import NotificationDropdown from '../NotificationDropdown/NotificationDropdown';
 
 function UserHeader() {
   const navigate = useNavigate();
@@ -27,6 +27,11 @@ function UserHeader() {
     } catch (error: any) {
       toast.error(String(error));
     }
+  };
+
+  const navigateToProfile = () => {
+    navigate('/profile');
+    setIsDropdownOpen(false);
   };
 
   useEffect(() => {
@@ -47,15 +52,12 @@ function UserHeader() {
 
   return (
     <div className="text-right flex items-center gap-x-2 sticky">
-      <Menu>
-        <MenuButton className="flex">
-          <NotiIcon className="block h-6.5 cursor-pointer hover:fill-green-800 transition-colors duration-200" />
-        </MenuButton>
-      </Menu>
+      <NotificationDropdown />
       <Menu>
         <img
-          className="h-10 mr-[-3px]"
-          src={`https://avatar.iran.liara.run/username?username=${localStorage.getItem('username')}`}
+          className="h-10 mr-[-3px] cursor-pointer"
+          src={`https://avatar.iran.liara.run/username?username=${localStorage.getItem('email')}`}
+          onClick={navigateToProfile}
         />
         <MenuButton
           className="cursor-pointer"
@@ -69,6 +71,14 @@ function UserHeader() {
           className="z-40 mt-2 w-auto bg-white shadow-lg rounded-md border border-gray-200 text-center cursor-pointer overflow-auto max-h-60"
           onClick={() => setIsDropdownOpen(false)}
         >
+          <MenuItem>
+            <a
+              className="block px-6 py-2 hover:bg-green-200"
+              onClick={navigateToProfile}
+            >
+              Hồ sơ người dùng
+            </a>
+          </MenuItem>
           <MenuItem>
             <a className="block px-6 py-2 hover:bg-green-200">Tùy chỉnh</a>
           </MenuItem>
