@@ -29,7 +29,6 @@ function DuLieuQuanTrac() {
           description={error.message}
         />
       );
-      console.error('Error fetching sensors:', error.message);
     }
   };
 
@@ -57,7 +56,6 @@ function DuLieuQuanTrac() {
       setLoading(false);
     } catch (error: any) {
       toast.error('Failed to fetch sensor visual data');
-      console.error('Error fetching sensor visual data:', error.message);
     }
   };
 
@@ -75,24 +73,27 @@ function DuLieuQuanTrac() {
 
     fetchSensorVisualData();
 
-    const intervalId = setInterval(fetchSensorVisualData, 30000);
+    const intervalId = setInterval(fetchSensorVisualData, allSensor.length * 4000);
 
     return () => clearInterval(intervalId);
   }, [allSensor]);
 
   return (
-    <div className="flex flex-col w-full items-center px-15">
-      <div className="container mx-auto px-6 py-8">
+    <div className="flex flex-col w-full items-center">
+      <div className="container mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-green-900">
-            Dữ liệu quan trắc
-          </h1>
+          <div className="space-y-1">
+            <h1 className="text-3xl font-bold text-green-900">
+              Dữ liệu quan trắc
+            </h1>
+            <h2 className="text-2xl text-green-800">Quản lý bảng quan trắc</h2>
+          </div>
           <div className="flex items-center gap-4">
             <button
               className="p-2 rounded-md hover:bg-gray-100 transition-colors"
               onClick={() => navigate('/du-lieu-quan-trac/edit')}
             >
-              <PenLine className="h-5 w-5" />
+              <PenLine className="h-6 w-6" />
             </button>
           </div>
         </div>

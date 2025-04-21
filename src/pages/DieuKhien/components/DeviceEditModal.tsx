@@ -40,6 +40,7 @@ const DeviceEditModal: React.FC<DeviceEditModalProps> = (props) => {
       feed: deviceInfo?.feed,
       type: deviceInfo?.type,
       description: deviceInfo?.description,
+      prefixMessage: deviceInfo?.prefixMessage || '',
     },
   });
 
@@ -137,6 +138,31 @@ const DeviceEditModal: React.FC<DeviceEditModalProps> = (props) => {
               )}
             </div>
 
+            {/* Alias Field */}
+            <div className="space-y-1">
+              <label className="block text-lg font-medium text-gray-700">
+                Alias
+              </label>
+              <Controller
+                name="prefixMessage"
+                control={control}
+                rules={{ required: 'Alias là bắt buộc' }}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    className={`w-full border ${
+                      errors.name ? 'border-red-500' : 'border-gray-300'
+                    } rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
+                     disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed`}
+                    disabled={true}
+                  />
+                )}
+              />
+              {errors.prefixMessage && (
+                <p className="text-red-500 text-sm">{errors.prefixMessage.message}</p>
+              )}
+            </div>
+
             {/* Feed Field */}
             <div className="space-y-1">
               <label className="block text-lg font-medium text-gray-700">
@@ -151,9 +177,11 @@ const DeviceEditModal: React.FC<DeviceEditModalProps> = (props) => {
                     {...field}
                     className={`w-full border ${
                       errors.name ? 'border-red-500' : 'border-gray-300'
-                    } rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
-                    placeholder="Nhập tên feed"
+                    } rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 
+                      disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed`}
+                    disabled={true}
                   />
+
                 )}
               />
               {errors.feed && (
@@ -233,16 +261,28 @@ const DeviceEditModal: React.FC<DeviceEditModalProps> = (props) => {
         </div>
         {/* Submit Button */}
         <div className="flex justify-end gap-x-2">
-            <Spinner show={loading}/>
-            <button
+          <button
+            className={
+                `px-6 py-2 text-green-800 border-green-800 border-1 rounded-lg  transition-colors shadow-md text-lg font-medium  
+                ${loading ? 'cursor-not-allowed opacity-50' : 'hover:bg-green-50 cursor-pointer'}`
+            }
+            onClick={() => reset()}
+          >
+            Đặt lại
+          </button>
+          <button
             type="submit"
             className={`px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md text-lg font-medium
                 ${loading? "cursor-not-allowed opacity-30" : ""}
                 `}
             form="editDeviceForm"
             >
-            Lưu
-            </button>
+            {loading ? (
+              <Spinner size="small" />
+            ) : (
+              'Lưu'
+            )}
+          </button>
         </div>
       </Modal>
     </>

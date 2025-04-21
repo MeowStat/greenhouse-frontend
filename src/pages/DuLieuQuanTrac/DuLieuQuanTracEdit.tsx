@@ -62,11 +62,11 @@ export function QuanLyQuanTracEdit() {
   }, [refresh]);
 
   return (
-    <div className="flex flex-col w-full items-center min-h-screen bg-[#fafdf9] px-15">
-      <div className="container mx-auto px-6 py-8">
+    <div className="flex flex-col w-full items-center min-h-screen bg-[#fafdf9]">
+      <div className="container mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div className="space-y-1">
-            <h1 className="text-4xl font-bold text-green-900">
+            <h1 className="text-3xl font-bold text-green-900">
               Dữ liệu quan trắc
             </h1>
             <h2 className="text-2xl text-green-800">Quản lý bảng quan trắc</h2>
@@ -96,11 +96,11 @@ export function QuanLyQuanTracEdit() {
               <table className="w-full">
                 <thead>
                   <tr className="bg-green-900 text-white">
-                    <th className="text-left px-6 py-3">Tên</th>
-                    <th className="text-left px-6 py-3">Mô tả</th>
-                    <th className="text-left px-6 py-3">Mức lý tưởng</th>
-                    <th className="text-left px-6 py-3">Đơn vị</th>
-                    <th className="text-right px-6 py-3"></th>
+                    <th className="text-left px-4 py-2">Tên</th>
+                    <th className="text-left px-4 py-2">Mô tả</th>
+                    <th className="text-left px-4 py-2">Mức lý tưởng</th>
+                    <th className="text-left px-4 py-2">Đơn vị</th>
+                    <th className="text-right px-4 py-2"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -109,33 +109,21 @@ export function QuanLyQuanTracEdit() {
                       key={sensor.id}
                       className="border-b border-green-100 hover:bg-green-50"
                     >
-                      <td className="px-6 py-4">{sensor.name}</td>
-                      <td className="px-6 py-4" title={sensor.description}>
+                      <td className="px-4 py-2">{sensor.name}</td>
+                      <td className="px-4 py-2" title={sensor.description}>
                         {sensor.description}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-2">
                         {sensor.lowerbound !== null &&
                         sensor.upperbound !== null
                           ? `${sensor.lowerbound}-${sensor.upperbound}`
                           : EMPTY_STRING}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-2">
                         {sensor.unit || EMPTY_STRING}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-2">
                         <div className="flex justify-end gap-2">
-                          <DeleteQuanTracButton
-                            key={sensor.id}
-                            quanTracId={sensor.id}
-                            setRefresh={setRefresh}
-                          />
-                          <button
-                            className="p-1 hover:bg-green-100 rounded"
-                            title="Chỉnh sửa"
-                            onClick={() => handleEditSensor(sensor)}
-                          >
-                            <PenLine className="h-5 w-5" />
-                          </button>
                           <button
                             className="p-1 hover:bg-green-100 rounded"
                             title="Xem biểu đồ"
@@ -161,6 +149,18 @@ export function QuanLyQuanTracEdit() {
                           >
                             <Info className="h-5 w-5" />
                           </button>
+                          <button
+                            className="p-1 hover:bg-green-100 rounded"
+                            title="Chỉnh sửa"
+                            onClick={() => handleEditSensor(sensor)}
+                          >
+                            <PenLine className="h-5 w-5" />
+                          </button>
+                          <DeleteQuanTracButton
+                            key={sensor.id}
+                            quanTracId={sensor.id}
+                            setRefresh={setRefresh}
+                          />
                         </div>
                       </td>
                     </tr>

@@ -43,11 +43,11 @@ export function DeviceListPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col w-full items-center min-h-screen bg-[#fafdf9] px-15">
-      <div className="container mx-auto px-6 py-8">
+    <div className="flex flex-col w-full items-center min-h-screen bg-[#fafdf9]">
+      <div className="container mx-auto">
         <div className="flex justify-between items-center mb-8">
           <div className="space-y-1">
-            <h1 className="text-4xl font-bold text-green-900">
+            <h1 className="text-3xl font-bold text-green-900">
               Điều khiển thiết bị
             </h1>
             <h2 className="text-2xl text-green-800">Quản lý bảng điều khiển</h2>
@@ -75,7 +75,7 @@ export function DeviceListPage() {
                   <p>No sensors available. Please add new sensors.</p>
                 </div>
               )}
-              <table className="w-full">
+              <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-green-900 text-white">
                     <th className="text-left px-6 py-3">Tên</th>
@@ -91,13 +91,13 @@ export function DeviceListPage() {
                       key={device.id}
                       className="border-b border-green-100 hover:bg-green-50"
                     >
-                      <td className="px-6 py-4">{device.name}</td>
-                      <td className="px-6 py-4">{device.feed}</td>
-                      <td className="text-center px-6 py-4">{device.type}</td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-2">{device.name}</td>
+                      <td className="px-4 py-2">{device.feed}</td>
+                      <td className="text-center px-4 py-2">{device.type}</td>
+                      <td className="px-4 py-2">
                         {device.description}
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-4 py-2">
                         <div className="flex justify-end gap-2">
                           <DeviceShowModal deviceId={device.id} />
                           <DeviceEditModal setRefresh={setRefresh} deviceId={device.id}/>
@@ -109,7 +109,7 @@ export function DeviceListPage() {
                 </tbody>
               </table>
 
-              <div className="p-6 bg-green-50 border-t-1 border-green-800 text-base text-green-800">
+              <div className="p-4 bg-green-50 border-t-1 border-green-800 text-base text-green-800">
                 <span>Tổng số thiết bị: <strong>{devices.length}</strong></span>
                 <div className="mt-5 flex items-start gap-2 text-sm text-green-800">
                   <Info className="h-4 w-4 mt-0.5 text-green-700" />

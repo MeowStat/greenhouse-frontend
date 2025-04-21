@@ -56,8 +56,23 @@ const AutoConfigEditModal: React.FC<AutoConfigEditModalProps> = ({ setRefresh, c
   },[])
 
   const resetForm = () => {
-    setConditions(config.automationConfig.Condition);
-    setChangePower(config.changePower || 100);
+    const originalConditions = config.automationConfig.Condition.map(cond => ({
+      id: cond.id,
+      sensorId: cond.sensorId,
+      condition: cond.condition,
+      threshold: cond.threshold,
+      automationConfigId: cond.automationConfigId,
+    }));
+  
+    setConditions(originalConditions);
+    setChangePower(config.changePower || 0);
+    if (titleRef.current) {
+      titleRef.current.value = config.name || '';
+    }
+  
+    if (descriptionRef.current) {
+      descriptionRef.current.value = config.description || '';
+    }
   };
 
   useEffect(() => {
@@ -131,7 +146,7 @@ const AutoConfigEditModal: React.FC<AutoConfigEditModalProps> = ({ setRefresh, c
   
       toast.success(<ToastMessage mainMessage='Cập nhật thành công' />);
       setRefresh(prev => !prev);
-    //   modal.close();
+      modal.close();
     } catch (error) {
       toast.error(<ToastMessage mainMessage='Lỗi' description='Vui lòng thử lại' />);
     } finally {
@@ -139,7 +154,7 @@ const AutoConfigEditModal: React.FC<AutoConfigEditModalProps> = ({ setRefresh, c
     }
   };  
 
-  const formId = `createAutoConfigForm-${Date.now()}`;
+  const formId = `editAutoConfigForm-${config.id}`;
 
   return (
     <>
@@ -160,6 +175,16 @@ const AutoConfigEditModal: React.FC<AutoConfigEditModalProps> = ({ setRefresh, c
           <form
             id={formId}
             className="space-y-4 px-4 py-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmit();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                onSubmit();
+              }
+            }}
           >
             <div className="space-y-2 text-black">
               <label className="block text-xl font-semibold text-gray-700">
@@ -182,7 +207,7 @@ const AutoConfigEditModal: React.FC<AutoConfigEditModalProps> = ({ setRefresh, c
                   {/* Select sensor device (placeholder only) */}
                   <Select
                     onValueChange={(value) => updateCondition(index, 'sensorId', value)}
-                    defaultValue={cond.sensorId}
+                    value={cond.sensorId}
                   >
                     <SelectTrigger className="w-60">
                       <SelectValue placeholder="Chọn cảm biến" />
@@ -194,7 +219,7 @@ const AutoConfigEditModal: React.FC<AutoConfigEditModalProps> = ({ setRefresh, c
 
                   <Select
                     onValueChange={(value) => updateCondition(index, 'condition', value)}
-                    defaultValue={cond.condition}
+                    value={cond.condition}
                   >
                     <SelectTrigger className="w-55">
                       <SelectValue placeholder="Chọn điều kiện so sánh" />
@@ -300,16 +325,28 @@ const AutoConfigEditModal: React.FC<AutoConfigEditModalProps> = ({ setRefresh, c
 
         {/* Submit Button */}
         <div className="flex justify-end gap-x-4">
-          <Spinner show={loading} />
           <button
-            // type="submit"
+            className={
+                `px-6 py-2 text-green-800 border-green-800 border-1 rounded-lg  transition-colors shadow-md text-lg font-medium  
+                ${loading ? 'cursor-not-allowed opacity-50' : 'hover:bg-green-50 cursor-pointer'}`
+            }
+            onClick={()=>resetForm()}
+          >
+            Đặt lại
+          </button>
+          <button
+            type="submit"
             className={`px-6 py-2 bg-green-600 text-white rounded-lg transition-colors shadow-md text-lg font-medium 
               ${loading ? 'cursor-not-allowed opacity-50' : 'hover:bg-green-700 cursor-pointer'}`}
-            // form={formId}
+            form={formId}
             disabled={loading}
             onClick={() => onSubmit()}
           >
-            Lưu
+            {loading ? (
+              <Spinner size="small" />
+            ) : (
+              'Lưu'
+            )}
           </button>
         </div>
       </Modal>

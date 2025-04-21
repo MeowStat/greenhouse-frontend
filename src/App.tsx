@@ -31,7 +31,7 @@ function App() {
             />
             <Route path="dieu-khien/edit" element={<DeviceListPage />} />
             <Route path="du-lieu-quan-trac" element={<DuLieuQuanTrac />} />
-            <Route path="lich-su-quan-trac" element={<LichSuQuanTrac />} />
+            <Route path="lich-su-hoat-dong" element={<LichSuQuanTrac />} />
             <Route path="huong-dan" element={<GuidePage />} />
             <Route
               path="du-lieu-quan-trac/edit"
