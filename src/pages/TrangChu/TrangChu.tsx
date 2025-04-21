@@ -12,7 +12,10 @@ function TrangChu() {
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
       >
-        <img src={image1} className="flex-3 max-w-3xl rounded-xl shadow-md backdrop-blur-md" />
+        <img
+          src={image1}
+          className="flex-3 max-w-3xl rounded-xl shadow-md backdrop-blur-md hover:scale-105 transition-transform duration-300"
+        />
         <p className="block min-w-3xs flex-2 text-lg text-justify self-end bg-white/40 p-4 rounded-lg shadow-sm backdrop-blur-md">
           là một hệ thống được phát triển giúp bạn giám sát và điều khiển môi
           trường nhà kính mọi lúc, mọi nơi thông qua website.
@@ -39,7 +42,10 @@ function TrangChu() {
             Thông tin thêm &gt;&gt;
           </a>
         </div>
-        <img src={image1} className="flex-3 max-w-3xl rounded-xl shadow-md backdrop-blur-md" />
+        <img
+          src={image1}
+          className="flex-3 max-w-3xl rounded-xl shadow-md backdrop-blur-md hover:scale-105 transition-transform duration-300"
+        />
       </motion.div>
 
       <div className="my-8 h-1 w-100 bg-gray-300" />
@@ -64,7 +70,10 @@ function TrangChu() {
               transition={{ duration: 0.8, delay: 0.6 + index * 0.2 }}
               viewport={{ once: true }}
             >
-              <img src={image1} className="rounded-xl shadow-md" />
+              <img
+                src={image1}
+                className="flex-3 max-w-3xl rounded-xl shadow-md backdrop-blur-md hover:scale-105 transition-transform duration-300"
+              />
               <div className="flex flex-col mt-5 bg-white/40 p-4 rounded-lg shadow-sm backdrop-blur-md">
                 <h2 className="text-2xl text-[#858250] font-semibold">
                   {title}
