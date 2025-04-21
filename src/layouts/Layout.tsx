@@ -1,5 +1,4 @@
 import { Outlet } from 'react-router-dom';
-
 import { Footer } from './Footer';
 import { Header } from './Header';
 
@@ -11,8 +10,11 @@ function Layout() {
         <Header />
       </header>
 
-      <main className="flex-1 pt-6 px-4 sm:px-6 lg:px-8 flex flex-col items-center max-w-screen-lg">
-        <Outlet />
+      {/* Main Content */}
+      <main className="flex-1 w-full pt-6 pb-10">
+        <div className="px-4 sm:px-6 lg:px-10 xl:px-16 max-w-screen-xl mx-auto w-full">
+          <Outlet />
+        </div>
       </main>
 
       {/* Footer */}

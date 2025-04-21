@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import {
   User,
   Mail,
-  Key,
+  // Key,
   Eye,
   EyeOff,
   Edit,
@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { Card, CardContent } from '../../components/UI/card';
 import { Button } from '../../components/UI/button';
-import { authService, UserInfoResponse } from '../../services/authService';
+import { authService } from '../../services/authService';
 import ToggleSwitch from '../../components/UI/ToggleSwitch';
 import toast from 'react-hot-toast';
 

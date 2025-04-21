@@ -7,7 +7,7 @@ import { Check } from 'lucide-react';
 import NotiIcon from '@/assets/notification.svg?react';
 import {
   type INotification,
-  type NotificationItem,
+  // type NotificationItem,
   notificationService,
 } from '../../services/notificationService';
 import ToastMessage from '../ToastNotification/ToastMessage';

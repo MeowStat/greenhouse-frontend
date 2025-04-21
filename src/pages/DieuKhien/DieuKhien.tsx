@@ -30,10 +30,10 @@ const DieuKhien: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col w-full items-center xl:px-20">
-      <div className="container mx-auto px-6 py-8">
+    <div className="flex flex-col w-full items-center">
+      <div className="container mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-green-900">
+          <h1 className="text-3xl font-bold text-green-900">
             Điều khiển thiết bị
           </h1>
           <div className="flex items-center gap-4">
@@ -46,7 +46,7 @@ const DieuKhien: React.FC = () => {
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {loading ? (
             <Skeleton count={5} height={80} />
           ) : (
