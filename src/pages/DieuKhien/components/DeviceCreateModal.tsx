@@ -37,26 +37,26 @@ const DeviceCreateModal: React.FC<DeviceCreateModalProps> = (props) => {
       feed: '',
       type: 0,
       description: '',
+      prefixMessage: '',
     },
   });
 
   const onSubmit = async (data: FormData) => {
     try {
       setLoading(true);
-      const formattedData = {...data, prefixMessage: ''};
-      await deviceService.createDevice(formattedData);
+      await deviceService.createDevice(data);
       reset();
       setRefresh((prev) => !prev);
       modal.close();
       toast.success(
           <ToastMessage
-              mainMessage="Tạo mới thành công"
+              mainMessage="Thêm thành công"
           />
       );
     } catch {
         toast.error(
             <ToastMessage
-              mainMessage="Tạo mới không thành công"
+              mainMessage="Thêm không thành công!"
               description="Vui lòng thử lại"
             />)
     } finally {
@@ -72,7 +72,7 @@ const DeviceCreateModal: React.FC<DeviceCreateModalProps> = (props) => {
         className="mb-6 flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md"
       >
         <Plus className="h-5 w-5" />
-        <span className="font-medium">Thêm mới thiết bị điều khiển</span>
+        <span className="font-medium">Thêm thiết bị</span>
       </button>
 
       {/* Modal */}
@@ -109,6 +109,30 @@ const DeviceCreateModal: React.FC<DeviceCreateModalProps> = (props) => {
               />
               {errors.name && (
                 <p className="text-red-500 text-sm">{errors.name.message}</p>
+              )}
+            </div>
+
+            {/* Alias Field */}
+            <div className="space-y-1">
+              <label className="block text-lg font-medium text-gray-700">
+                Alias
+              </label>
+              <Controller
+                name="prefixMessage"
+                control={control}
+                rules={{ required: 'Alias là bắt buộc' }}
+                render={({ field }) => (
+                  <input
+                    {...field}
+                    className={`w-full border ${
+                      errors.name ? 'border-red-500' : 'border-gray-300'
+                    } rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
+                    placeholder="Nhập alias thiết bị"
+                  />
+                )}
+              />
+              {errors.prefixMessage && (
+                <p className="text-red-500 text-sm">{errors.prefixMessage.message}</p>
               )}
             </div>
 
@@ -209,7 +233,6 @@ const DeviceCreateModal: React.FC<DeviceCreateModalProps> = (props) => {
 
         {/* Submit Button */}
         <div className="flex justify-end gap-x-2">
-          <Spinner show={loading}/>
           <button
             type="submit"
             className={`px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md text-lg font-medium
@@ -217,7 +240,11 @@ const DeviceCreateModal: React.FC<DeviceCreateModalProps> = (props) => {
               `}
             form="createSensorForm"
           >
-            Lưu
+            {loading ? (
+              <Spinner size="small" />
+            ) : (
+              'Lưu'
+            )}
           </button>
         </div>
         

@@ -5,7 +5,7 @@ import { deviceService } from '../../../services/deviceService';
 import { IDeviceConfig } from '../../../types/DeviceTypes';
 import { Spinner } from '../../../components/UI/spinner';
 import { Slider } from '../../../components/UI/slider';
-import { Settings } from 'lucide-react';
+import { Settings, Zap } from 'lucide-react';
 import { useDebounce } from "use-debounce";
 import { useNavigate } from 'react-router-dom';
 import ToastMessage from '../../../components/ToastNotification/ToastMessage';
@@ -85,6 +85,8 @@ const DeviceCard: React.FC<DeviceCardProps> = (props) => {
       setIsFirstRender(false);
       return; // Skip the first execution
     }
+
+    if (debouncedSliderValue === power) return;
     
     const updateDevicePower = async (power: number) => {
       try {
@@ -103,26 +105,25 @@ const DeviceCard: React.FC<DeviceCardProps> = (props) => {
 
   return (
     <>
-      <div className="bg-green-100 xl:max-w-screen-xl mx-auto rounded-lg px-6 py-4 mb-8 shadow-md relative">
-        <div className="grid grid-cols-12 gap-6">
+      <div className="bg-green-100 xl:max-w-screen-xl mx-auto rounded-lg px-6 py-4 mb-6 shadow-md relative">
+        <div className="grid grid-cols-12 gap-2">
           {/* Device Info */}
-          <div className="col-span-3 flex flex-col items-start gap-1 justify-center border-r-[2px] border-black pr-3">
-            <span className="text-2xl font-bold text-gray-800">{name}</span>
+          <div className="col-span-3 flex flex-col items-start justify-center border-r-[2px] border-black pr-3">
+            <span className="text-3xl font-bold text-green-950">{name}</span>
             <span className="text-sm text-gray-600">{description}</span>
           </div>
   
           {/* Device Details */}
-          <div className="col-span-9 pl-6">
+          <div className="col-span-9 pl-4">
             {loadingConfig ? (
               <Spinner show={loadingConfig} size="large" />
             ) : (
               <div className="flex flex-col justify-start">
                 {/* Manual Control */}
-                <div className="mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900">Thủ công</h2>
+                <div className="mb-4">
+                  <h2 className="text-2xl font-semibold text-gray-900">Thủ công</h2>
                   <p className='text-sm'>{dataConfig[0]?.description}</p>
-                  <div className="flex mt-4 items-center gap-x-4">
-                    <Spinner show={loadingSwitch} size="small" />
+                  <div className="flex mt-2 items-center gap-x-4">
                     {!deviceType ? (
                       <ToggleSwitch
                         checked={on}
@@ -133,7 +134,7 @@ const DeviceCard: React.FC<DeviceCardProps> = (props) => {
                       />
                     ) : (
                       <div
-                        className={`flex items-center w-80 ${
+                        className={`w-80 ${
                           loadingSwitch ? 'cursor-not-allowed opacity-30' : ''
                         }`}
                       >
@@ -141,16 +142,15 @@ const DeviceCard: React.FC<DeviceCardProps> = (props) => {
                           min={0}
                           max={100}
                           step={20}
-                          title="Cường độ"
                           value={[sliderValue]}
                           onValueChange={handleSliderChange}
                         />
+                        <span className="mt-3 flex items-center gap-0.5 text-sm font-medium text-gray-800"><Zap className='h-4 w-4'/>Cường độ: {sliderValue}%</span>
                       </div>
                     )}
+                    <Spinner show={loadingSwitch} size="small" />
                   </div>
                 </div>
-  
-                <div className="bg-gray-300 h-px w-full mb-6"></div>
   
                 {/* Automation and Scheduler */}
                 <div className="flex gap-x-6">

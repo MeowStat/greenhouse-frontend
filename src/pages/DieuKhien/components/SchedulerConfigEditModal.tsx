@@ -131,6 +131,7 @@ const SchedulerConfigEditModal: React.FC<SchedulerConfigEditModalProps> = (props
       await deviceService.updateDeviceSchedulerConfig(config.id,payload)
       setRefresh(prev => !prev);
       toast.success(<ToastMessage mainMessage='Cập nhật thành công'/>)
+      modal.close();
     } catch (error) {
       toast.error(<ToastMessage mainMessage='Lỗi' description='Vui lòng thử lại'/>)
     } finally {
@@ -162,8 +163,18 @@ const SchedulerConfigEditModal: React.FC<SchedulerConfigEditModalProps> = (props
       >
         <div className={`overflow-y-auto max-h-[80vh] ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
           <form
-            id={"createSchedulerConfigForm" + Date.now()}
+            id="editSchedulerConfigForm"
             className="space-y-4 px-6 py-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmit();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                onSubmit();
+              }   
+            }}
           >
             {/* Time Picker Field */}
             <div className="flex items-center space-x-6 text-black">
@@ -327,7 +338,6 @@ const SchedulerConfigEditModal: React.FC<SchedulerConfigEditModalProps> = (props
         </div>
         {/* Submit Button */}
         <div className="flex justify-end gap-x-4">
-          <Spinner show={loading} />
           <button
             className={
                 `px-6 py-2 text-green-800 border-green-800 border-1 rounded-lg  transition-colors shadow-md text-lg font-medium  
@@ -343,11 +353,14 @@ const SchedulerConfigEditModal: React.FC<SchedulerConfigEditModalProps> = (props
               `px-6 py-2 bg-green-600 text-white rounded-lg  transition-colors shadow-md text-lg font-medium 
               ${loading ? 'cursor-not-allowed opacity-50' : 'hover:bg-green-700 cursor-pointer'}`
             }
-            form="createSchedulerConfigForm"
+            form="editSchedulerConfigForm"
             disabled={loading}
-            onClick={() => onSubmit()}
           >
-            Lưu
+            {loading ? (
+              <Spinner size="small" />
+            ) : (
+              'Lưu'
+            )}
           </button>
         </div>
       </Modal>

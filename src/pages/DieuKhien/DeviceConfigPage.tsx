@@ -11,6 +11,13 @@ import { Spinner } from '../../components/UI/spinner';
 import AutomationCard from './components/AutomationCard';
 import AutoConfigCreateModal from './components/AutoConfigCreateModal';
 import { CalendarSync, SquareFunction } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+
+const cardVariants = {
+  hidden: { opacity: 0, scale: 0.95, y: 10 },
+  visible: { opacity: 1, scale: 1, y: 0 },
+  exit: { opacity: 0, scale: 0.9, y: -10 },
+};
 
 const DeviceConfigPage: React.FC = () => {
 
@@ -117,23 +124,33 @@ const DeviceConfigPage: React.FC = () => {
                       Empty
                     </div>
                   ) : (
-                    configList.map((config) =>
-                      idx === 0 ? (
-                        <SchedulerCard
+                    <AnimatePresence mode="popLayout">
+                      {configList.map((config) => (
+                        <motion.div
                           key={config.id}
-                          config={config}
-                          deviceType={deviceInfo?.type || 0}
-                          setRefresh={setRefresh}
-                        />
-                      ) : (
-                        <AutomationCard
-                          key={config.id}
-                          config={config}
-                          deviceType={deviceInfo?.type || 0}
-                          setRefresh={setRefresh}
-                        />
-                      )
-                    )
+                          variants={cardVariants}
+                          initial="hidden"
+                          animate="visible"
+                          exit="exit"
+                          transition={{ duration: 0.3 }}
+                          layout // animate position changes (e.g. after edit or reorder)
+                        >
+                          {idx === 0 ? (
+                            <SchedulerCard
+                              config={config}
+                              deviceType={deviceInfo?.type || 0}
+                              setRefresh={setRefresh}
+                            />
+                          ) : (
+                            <AutomationCard
+                              config={config}
+                              deviceType={deviceInfo?.type || 0}
+                              setRefresh={setRefresh}
+                            />
+                          )}
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
                   )}
                 </div>
               </Card>

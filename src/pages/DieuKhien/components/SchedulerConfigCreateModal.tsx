@@ -135,8 +135,18 @@ const SchedulerConfigCreateModal: React.FC<ThemMoiQuanTracProps> = (props) => {
       >
         <div className={`overflow-y-auto max-h-[80vh] ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
           <form
-            id={"createSchedulerConfigForm" + Date.now()}
+            id="createSchedulerConfigForm"
             className="space-y-4 px-6 py-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmit();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                onSubmit();
+              }
+            }}
           >
             {/* Time Picker Field */}
             <div className="flex items-center space-x-6 text-black">
@@ -296,22 +306,25 @@ const SchedulerConfigCreateModal: React.FC<ThemMoiQuanTracProps> = (props) => {
                 Lưu ý: Sau khoảng thời gian được chọn, thiết bị sẽ quay về trạng thái mặc định
               </p>
             )}
-          </form>
-        </div>
 
-        {/* Submit Button */}
-        <div className="flex justify-end gap-x-6">
-          <button
-            className={`w-24 h-12 text-base font-medium bg-green-600 rounded-md text-white ${loading ? 'cursor-not-allowed' : ''}`}
-            onClick={onSubmit}
-            disabled={loading}
-          >
-            {loading ? (
-              <Spinner size="small" />
-            ) : (
-              'Lưu'
-            )}
-          </button>
+            <input type="text" style={{ display: 'none' }} />
+
+            {/* Submit Button */}
+            <div className="flex justify-end gap-x-6">
+              <button
+                className={`w-24 h-12 text-base font-medium bg-green-600 rounded-md text-white ${loading ? 'cursor-not-allowed' : ''}`}
+                type="submit"
+                disabled={loading}
+                form="createSchedulerConfigForm"
+              >
+                {loading ? (
+                  <Spinner size="small" />
+                ) : (
+                  'Lưu'
+                )}
+              </button>
+            </div>
+          </form>
         </div>
       </Modal>
     </>
