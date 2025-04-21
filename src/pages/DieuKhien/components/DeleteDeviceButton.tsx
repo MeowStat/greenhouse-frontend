@@ -9,6 +9,7 @@ import { PopoverArrow } from '@radix-ui/react-popover';
 import toast from 'react-hot-toast';
 import ToastMessage from '../../../components/ToastNotification/ToastMessage';
 import { deviceService } from '../../../services/deviceService';
+import { Spinner } from '../../../components/UI/spinner';
 
 interface DeleteDeviceButtonProps {
   deviceId: string | number;
@@ -19,9 +20,11 @@ const DeleteDeviceButton: React.FC<DeleteDeviceButtonProps> = (props) => {
   const { deviceId, setRefresh } = props;
 
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleDeleteDevice = async () => {
     try {
+      setLoading(true);
       await deviceService.deleteDevice(deviceId);
       setRefresh((prev) => !prev);
       toast.success(
@@ -38,6 +41,7 @@ const DeleteDeviceButton: React.FC<DeleteDeviceButtonProps> = (props) => {
       );
     } finally {
       setOpenDeleteConfirm(false);
+      setLoading(false);
     }
   };
 
@@ -58,9 +62,10 @@ const DeleteDeviceButton: React.FC<DeleteDeviceButtonProps> = (props) => {
             {/* Confirm Button */}
             <button
               onClick={() => handleDeleteDevice()}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+              className={`px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition
+                ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              Xóa
+              {loading ? <Spinner size="small" /> : 'Xóa'}
             </button>
             {/* Cancel Button */}
             <button

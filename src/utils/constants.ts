@@ -11,13 +11,13 @@ export const DAY_OF_WEEK = [
   ];
 
 export const FULL_DAY_VI = {
-    SUN: 'chủ nhật',
-    MON: 'thứ hai',
-    TUE: 'thứ ba',
-    WED: 'thứ tư',
-    THU: 'thứ năm',
-    FRI: 'thứ sáu',
-    SAT: 'thứ bảy',
+    SUN: 'Chủ nhật',
+    MON: 'Thứ hai',
+    TUE: 'Thứ ba',
+    WED: 'Thứ tư',
+    THU: 'Thứ năm',
+    FRI: 'Thứ sáu',
+    SAT: 'Thứ bảy',
   };
 
 export const DEVICE_ON_OFF = [
@@ -35,3 +35,5 @@ export const COMPARISION_OPERATORS = [
   { label: "Lớn hơn hoặc bằng", value: ">="},
   { label: "Nhỏ hơn hoặc bằng", value: "<="},
 ]
+
+export const UNITS = ["°C", "%", "Lux"]

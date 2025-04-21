@@ -4,9 +4,11 @@ import { useModal } from '../../../hooks/useModal';
 import { Modal } from '../../../components/Modal/modal';
 import { useEffect, useState } from 'react';
 import { sensorDataService } from '../../../services/sensorDataService';
-import { ComboBox } from '../../../components/UI/combobox';
 import toast from 'react-hot-toast';
 import ToastMessage from '../../../components/ToastNotification/ToastMessage';
+import { Spinner } from '../../../components/UI/spinner';
+import { useDebounce } from "use-debounce";
+import { UNITS } from '../../../utils/constants';
 
 interface FormData {
   name: string;
@@ -44,6 +46,7 @@ interface ThemMoiQuanTracProps {
 
 const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
   const { setRefresh } = props;
+  const [loading, setLoading] = useState(false);
 
   const modal = useModal();
 
@@ -65,34 +68,67 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
 
   const [feedList, setFeedList] = useState<string[]>([]);
 
+  const [feedValue, setFeedValue] = useState('');
+  const [debouncedFeed] = useDebounce(feedValue, 500);
+  const [feedStatus, setFeedStatus] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle');
+
+
   useEffect(() => {
     const fetchFeedList = async () => {
       try {
         const response = await sensorDataService.getAllFeed();
         setFeedList(response.data);
       } catch (error) {
-        console.error('Error fetching feed list:', error);
+        toast.error('Error fetching feed list:');
       }
     };
     fetchFeedList();
   }, []);
 
-  const handleCreateNewFeed = (newFeed: string) => {
-    setFeedList((prev) => [...prev, newFeed]);
-  };
+  useEffect(() => {
+    if (!debouncedFeed) {
+      setFeedStatus('idle');
+      return;
+    }
+  
+    setFeedStatus('checking');
+    const isTaken = feedList.includes(debouncedFeed);
+    setFeedStatus(isTaken ? 'taken' : 'available');
+  }, [debouncedFeed, feedList]);
+
+  useEffect(() => {
+    if (modal.isOpen) {
+      reset({
+        name: '',
+        feed: '',
+        upperbound: 0,
+        lowerbound: 0,
+        unit: '',
+        description: '',
+      });
+      setFeedValue('');
+      setFeedStatus('idle');
+    }
+  }, [modal.isOpen]);
 
   const onSubmit = async (data: FormData) => {
-    const formattedData = {
-      ...data,
-      upperbound: Number(data.upperbound), // Convert to number
-      lowerbound: Number(data.lowerbound), // Convert to number
-    };
-
-    console.log('Form Data:', formattedData);
-    await createNewMonitor(formattedData);
-    reset();
-    setRefresh((prev) => !prev);
-    modal.close();
+    try {
+      setLoading(true);
+      const formattedData = {
+        ...data,
+        upperbound: Number(data.upperbound), // Convert to number
+        lowerbound: Number(data.lowerbound), // Convert to number
+      };
+      await createNewMonitor(formattedData);
+      reset();
+      setRefresh((prev) => !prev);
+      modal.close();
+      toast.success(<ToastMessage mainMessage="Thêm thành công" />);
+    } catch {
+      toast.error(<ToastMessage mainMessage="Thêm không thành công" description='Vui lòng thử lại' />);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -103,7 +139,7 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
         className="mb-6 flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md"
       >
         <Plus className="h-5 w-5" />
-        <span className="font-medium">Thêm mới quan trắc</span>
+        <span className="font-medium">Thêm quan trắc</span>
       </button>
 
       {/* Modal */}
@@ -111,7 +147,7 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
         isOpen={modal.isOpen}
         onClose={modal.close}
         onBackdropClick={modal.handleBackdropClick}
-        title="Thêm mới quan trắc"
+        title="Thêm quan trắc"
       >
         <div className="overflow-y-auto max-h-[80vh]">
           <form
@@ -122,7 +158,7 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
             {/* Name Field */}
             <div className="space-y-1">
               <label className="block text-lg font-medium text-gray-700">
-                Tên <span className="text-red-500">*</span>
+                Tên
               </label>
               <Controller
                 name="name"
@@ -146,20 +182,60 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
             {/* Feed Field */}
             <div className="space-y-1">
               <label className="block text-lg font-medium text-gray-700">
-                Feed <span className="text-red-500">*</span>
+                Feed
               </label>
               <Controller
                 name="feed"
                 control={control}
-                rules={{ required: 'Feed là bắt buộc' }}
+                rules={{
+                  required: 'Feed là bắt buộc',
+                  validate: () =>
+                    feedStatus === 'available' || !feedValue ? true : 'Feed đã được sử dụng',
+                }}
                 render={({ field }) => (
-                  <ComboBox
-                    options={feedList} // Dynamic options
-                    selected={field.value} // Controlled value
-                    onChange={field.onChange} // Controlled onChange
-                    onCreateNew={handleCreateNewFeed} // Handle creating a new feed
-                    placeholder="Chọn feed"
-                  />
+                  <>
+                    <input
+                      {...field}
+                      value={feedValue}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        setFeedValue(e.target.value);
+                      }}
+                      className={`w-full border ${
+                        errors.feed
+                          ? 'border-red-500'
+                          : feedStatus === 'taken'
+                          ? 'border-red-500'
+                          : feedStatus === 'available'
+                          ? 'border-green-500'
+                          : 'border-gray-300'
+                      } rounded-lg px-3 py-2 focus:outline-none focus:ring-2 ${
+                        feedStatus === 'available'
+                          ? 'focus:ring-green-500'
+                          : feedStatus === 'taken'
+                          ? 'focus:ring-red-500'
+                          : 'focus:ring-green-500'
+                      }`}
+                      placeholder="Nhập feed"
+                    />
+
+                    {/* Feed status feedback */}
+                    <div className="text-sm mt-1 h-5">
+                      {feedStatus === 'checking' && (
+                        <span className="text-gray-500 animate-pulse">Đang kiểm tra...</span>
+                      )}
+                      {feedStatus === 'available' && (
+                        <span className="text-green-600">✔ Feed hợp lệ</span>
+                      )}
+                      {feedStatus === 'taken' && (
+                        <span className="text-red-500">✖ Feed đã tồn tại</span>
+                      )}
+                    </div>
+
+                    {errors.feed && (
+                      <p className="text-red-500 text-sm mt-1">{errors.feed.message}</p>
+                    )}
+                  </>
                 )}
               />
               {errors.feed && (
@@ -171,7 +247,7 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
                 <label className="block text-lg font-medium text-gray-700">
-                  Thông số thấp nhất <span className="text-red-500">*</span>
+                  Thông số thấp nhất
                 </label>
                 <Controller
                   name="lowerbound"
@@ -196,7 +272,7 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
               </div>
               <div className="space-y-1">
                 <label className="block text-lg font-medium text-gray-700">
-                  Thông số cao nhất <span className="text-red-500">*</span>
+                  Thông số cao nhất
                 </label>
                 <Controller
                   name="upperbound"
@@ -224,20 +300,23 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
             {/* Unit Field */}
             <div className="space-y-1">
               <label className="block text-lg font-medium text-gray-700">
-                Đơn vị <span className="text-red-500">*</span>
+                Đơn vị
               </label>
               <Controller
                 name="unit"
                 control={control}
                 rules={{ required: 'Đơn vị là bắt buộc' }}
                 render={({ field }) => (
-                  <input
+                  <select
                     {...field}
-                    className={`w-full border ${
-                      errors.unit ? 'border-red-500' : 'border-gray-300'
-                    } rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
-                    placeholder="Nhập đơn vị đo lường"
-                  />
+                    className={`w-full border ${errors.unit ? 'border-red-500' : 'border-gray-300'} rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
+                  >
+                    {UNITS.map((unit) => (
+                      <option key={unit} value={unit}>
+                        {unit}
+                      </option>
+                    ))}
+                  </select>
                 )}
               />
               {errors.unit && (
@@ -253,6 +332,7 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
               <Controller
                 name="description"
                 control={control}
+                rules={{ required: 'Mô tả là bắt buộc' }}
                 render={({ field }) => (
                   <textarea
                     {...field}
@@ -275,11 +355,16 @@ const ThemMoiQuanTrac: React.FC<ThemMoiQuanTracProps> = (props) => {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md text-lg font-medium"
+            disabled={loading || feedStatus === 'taken' || feedStatus === 'checking'}
+            className={`px-6 py-2 bg-green-600 text-white rounded-lg transition-colors shadow-md text-lg font-medium 
+              ${
+                loading || feedStatus === 'taken' || feedStatus === 'checking'
+                  ? 'cursor-not-allowed opacity-50'
+                  : 'hover:bg-green-700 cursor-pointer'
+              }`}
             form="createSensorForm"
-            onClick={handleSubmit(onSubmit)}
           >
-            Lưu
+            {loading ? <Spinner size="small" /> : 'Lưu'}
           </button>
         </div>
       </Modal>

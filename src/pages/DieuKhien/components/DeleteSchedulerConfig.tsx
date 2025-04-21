@@ -9,6 +9,7 @@ import { PopoverArrow } from '@radix-ui/react-popover';
 import { deviceService } from '../../../services/deviceService';
 import toast from 'react-hot-toast';
 import ToastMessage from '../../../components/ToastNotification/ToastMessage';
+import { Spinner } from '../../../components/UI/spinner';
 
 interface DeleteSchedulerConfigProps {
   configId: string | number;
@@ -20,10 +21,12 @@ const DeleteSchedulerConfig: React.FC<DeleteSchedulerConfigProps> = (props) => {
   const { configId, setRefresh, setLoading } = props;
 
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
+  const [loading, setLoadingState] = useState(false);
 
   const handleDeleteConfig = async () => {
     try {
       setLoading(true);
+      setLoadingState(true);
       await deviceService.deleteDeviceConfig(configId);
       setRefresh((prev) => !prev);
       toast.success(
@@ -41,6 +44,7 @@ const DeleteSchedulerConfig: React.FC<DeleteSchedulerConfigProps> = (props) => {
     } finally {
       setOpenDeleteConfirm(false);
       setLoading(false);
+      setLoadingState(false);
     }
   };
 
@@ -61,9 +65,10 @@ const DeleteSchedulerConfig: React.FC<DeleteSchedulerConfigProps> = (props) => {
             {/* Confirm Button */}
             <button
               onClick={() => handleDeleteConfig()}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+              className={`px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition
+                ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              Xóa
+              {loading ? <Spinner size="small" /> : 'Xóa'} 
             </button>
             {/* Cancel Button */}
             <button

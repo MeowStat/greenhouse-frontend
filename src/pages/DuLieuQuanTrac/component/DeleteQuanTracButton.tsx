@@ -9,6 +9,7 @@ import { PopoverArrow } from '@radix-ui/react-popover';
 import { sensorDataService } from '../../../services/sensorDataService';
 import toast from 'react-hot-toast';
 import ToastMessage from '../../../components/ToastNotification/ToastMessage';
+import { Spinner } from '../../../components/UI/spinner';
 
 interface DeleteQuanTracButtonProps {
   quanTracId: string;
@@ -17,11 +18,13 @@ interface DeleteQuanTracButtonProps {
 
 const DeleteQuanTracButton: React.FC<DeleteQuanTracButtonProps> = (props) => {
   const { quanTracId, setRefresh } = props;
+  const [loading, setLoadingState] = useState(false);
 
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
 
   const handleDeleteSensor = async (id: string) => {
     try {
+      setLoadingState(true);
       await sensorDataService.deleteMonitor(id);
       setRefresh((prev) => !prev);
       toast.success(
@@ -39,6 +42,7 @@ const DeleteQuanTracButton: React.FC<DeleteQuanTracButtonProps> = (props) => {
       );
     } finally {
       setOpenDeleteConfirm(false);
+      setLoadingState(false);
     }
   };
 
@@ -59,9 +63,10 @@ const DeleteQuanTracButton: React.FC<DeleteQuanTracButtonProps> = (props) => {
             {/* Confirm Button */}
             <button
               onClick={() => handleDeleteSensor(quanTracId)}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
+              className={`px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition
+                ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
-              Xóa
+              {loading ? <Spinner size="small" /> : 'Xóa'} 
             </button>
             {/* Cancel Button */}
             <button

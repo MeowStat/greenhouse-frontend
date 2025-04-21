@@ -115,8 +115,6 @@ const AutoConfigCreateModal: React.FC<AutoConfigCreateModalProps> = ({ setRefres
     }
   };
 
-  const formId = `createAutoConfigForm-${Date.now()}`;
-
   useEffect(() => {
     if (modal.isOpen)
       resetForm();
@@ -140,8 +138,18 @@ const AutoConfigCreateModal: React.FC<AutoConfigCreateModalProps> = ({ setRefres
       >
         <div className={`overflow-y-auto max-h-[80vh] ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
           <form
-            id={formId}
+            id="createAutoConfigForm"
             className="space-y-4 px-4 py-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              onSubmit();
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                onSubmit();
+              }
+            }}
           >
             <div className="space-y-2 text-black">
               <label className="block text-xl font-semibold text-gray-700">
@@ -280,16 +288,18 @@ const AutoConfigCreateModal: React.FC<AutoConfigCreateModalProps> = ({ setRefres
 
         {/* Submit Button */}
         <div className="flex justify-end gap-x-4">
-          <Spinner show={loading} />
           <button
-            // type="submit"
+            type="submit"
             className={`px-6 py-2 bg-green-600 text-white rounded-lg transition-colors shadow-md text-lg font-medium 
               ${loading ? 'cursor-not-allowed opacity-50' : 'hover:bg-green-700 cursor-pointer'}`}
-            // form={formId}
+            form="createAutoConfigForm"
             disabled={loading}
-            onClick={() => onSubmit()}
           >
-            Lưu
+            {loading ? (
+              <Spinner size="small" />
+            ) : (
+              'Lưu'
+            )}
           </button>
         </div>
       </Modal>
