@@ -3,78 +3,106 @@
 import { useState } from 'react';
 import { ThongTinQuanTracModal } from './ThongTinQuanTracModal';
 import { ISensorVisualData } from '../../../types/SensorTypes';
+import {
+  Thermometer,
+  Droplets,
+  Sun,
+  Info,
+} from 'lucide-react'; // use lucide icons
 
 interface SensorCardProps {
   data: ISensorVisualData;
 }
 
-export const SensorCard: React.FC<SensorCardProps> = (props) => {
-  const { data } = props;
+export const SensorCard: React.FC<SensorCardProps> = ({ data }) => {
   const [showInfo, setShowInfo] = useState(false);
 
-  const getBackgroundColor = (unit?: string) => {
+  const getTheme = (unit?: string) => {
     switch (unit) {
-      case 'độ C': // Temperature
-        return 'bg-orange-100';
-      case '%RH': // Air Humidity
-        return 'bg-blue-100';
-      case 'Lux': // Light Intensity
-        return 'bg-yellow-100';
-      case '%': // Soil Quality
-        return 'bg-green-100'; // Use green for soil-related data
-      default: // Default background
-        return 'bg-gray-100';
+      case '°C':
+        return {
+          bg: 'bg-orange-100',
+          text: 'text-orange-700',
+          icon: <Thermometer className="w-7 h-7 text-orange-500" />,
+        };
+      case '%RH':
+        return {
+          bg: 'bg-blue-100',
+          text: 'text-blue-700',
+          icon: <Droplets className="w-8 h-8 text-blue-500" />,
+        };
+      case 'Lux':
+        return {
+          bg: 'bg-yellow-100',
+          text: 'text-yellow-700',
+          icon: <Sun className="w-8 h-8 text-yellow-500" />,
+        };
+      case '%':
+        return {
+          bg: 'bg-blue-100',
+          text: 'text-blue-700',
+          icon: <Droplets className="w-6 h-6 text-blue-500" />,
+        };
+      default:
+        return {
+          bg: 'bg-gray-100',
+          text: 'text-gray-700',
+          icon: <Info className="w-6 h-6 text-gray-500" />,
+        };
     }
   };
+
+  const theme = getTheme(data.unit);
 
   return (
     <>
       <div
-        className={`${getBackgroundColor(
-          data.unit
-        )} rounded-lg py-4 px-4 mb-6 shadow-md relative`}
+        className={`${theme.bg} rounded-2xl px-6 py-2 mb-4 shadow hover:shadow-lg transition-all duration-300 relative group`}
       >
-        <div className="grid grid-cols-16 items-center gap-4">
-          {/* Value and Unit */}
+        <div className="grid grid-cols-15 items-center gap-6">
+          {/* Value & Icon */}
           <div className="col-span-3 flex flex-col items-center justify-center">
-            <span className="text-6xl font-bold text-gray-800">
+            <span className="font-bold text-[clamp(2.5rem,5vw,3.75rem)] text-gray-800">
               {data.value}
             </span>
-            <span className="text-2xl text-gray-600">{data.unit}</span>
+            <div className="flex items-center gap-0.5 mb-1">
+              {theme.icon}
+              <span className="font-bold text-2xl text-gray-500">
+                {data.unit}
+              </span>
+            </div>
           </div>
 
           {/* Sensor Details */}
-          <div className="col-span-12">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+          <div className="col-span-12 space-y-1">
+            <h2 className={`text-2xl font-semibold ${theme.text}`}>
               {data.name}
             </h2>
-            <p className="text-gray-700 mb-1">{data.description}</p>
-            <p className="text-gray-500 text-sm">
-              Thời gian cập nhật: {data.date.toLocaleString('en-GB')}
-            </p>
-            {data.warning && data.alertDes && (
-              <div className="flex items-center gap-x-2 mt-2">
-                <div className="relative flex items-center">
-                  {/* Ping animation (outer ring) */}
-                  <span className="absolute inline-flex h-3 w-3 rounded-full bg-red-400 opacity-75 animate-ping"></span>
+            <p className="text-gray-700">{data.description}</p>
 
-                  {/* Solid dot (inner core) */}
-                  <span className="relative inline-flex h-3 w-3 rounded-full bg-red-600"></span>
+            {/* Alert Box */}
+            {data.warning && data.alertDes && (
+              <div className="flex items-center gap-x-2 mt-2 animate-pulse">
+                <div className="relative flex items-center">
+                  <span className="absolute inline-flex h-3 w-3 rounded-full bg-red-400 opacity-75 animate-ping" />
+                  <span className="relative inline-flex h-3 w-3 rounded-full bg-red-600" />
                 </div>
-                <span className="text-red-600 font-medium">
-                  {data.alertDes}
-                </span>
+                <span className="text-red-600 font-medium">{data.alertDes}</span>
               </div>
             )}
+
+            <p className="text-gray-500 text-sm">
+              Cập nhật: {data.date.toLocaleString('en-GB')}
+            </p>
           </div>
         </div>
 
         {/* More Info Button */}
         <button
           onClick={() => setShowInfo(true)}
-          className="absolute bottom-4 right-4 text-gray-500 hover:text-gray-700 hover:cursor-pointer hover:underline"
+          className="absolute bottom-4 right-4 text-sm text-gray-500 hover:text-gray-700 hover:underline transition"
         >
-          <span className="text-sm italic">Thông tin thêm &gt;&gt;</span>
+          Thông tin thêm &gt;&gt;
         </button>
       </div>
 

@@ -35,3 +35,5 @@ export const COMPARISION_OPERATORS = [
   { label: "Lớn hơn hoặc bằng", value: ">="},
   { label: "Nhỏ hơn hoặc bằng", value: "<="},
 ]
+
+export const UNITS = ["°C", "%", "Lux"]

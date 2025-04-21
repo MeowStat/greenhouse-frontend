@@ -1,6 +1,15 @@
 import { Modal } from '../../../components/Modal/modal';
 import { ISensorVisualData } from '../../../types/SensorTypes';
 import { EMPTY_STRING } from '../../../utils/constants';
+import {
+  Bell,
+  TrendingDown,
+  TrendingUp,
+  FileText,
+  AlarmClock,
+  Mail,
+  Thermometer,
+} from 'lucide-react';
 
 interface ThongTinQuanTracModalProps {
   isOpen: boolean;
@@ -20,59 +29,59 @@ export function ThongTinQuanTracModal({
       onBackdropClick={onClose}
       title="Thông tin quan trắc"
     >
-      <div className="space-y-6 text-lg">
+      <div className="space-y-6 text-base text-gray-800">
         {/* Sensor Name */}
-        <div className="border-b pb-4">
-          <h3 className="text-2xl font-semibold text-green-800">
-            Tên: {data.name}
-          </h3>
+        <div className="text-center border-b pb-4">
+          <h3 className="text-2xl font-bold text-green-700">{data.name}</h3>
+          <p className="text-sm text-gray-500 mt-1">{data.description}</p>
         </div>
 
         {/* Alert Information */}
-        <div className="border-b pb-4">
-          <h4 className="font-medium text-green-700 mb-3">
-            Kích hoạt cảnh báo khi vượt ngưỡng lý tưởng
-          </h4>
-          <div className="space-y-2 pl-6 text-gray-700">
-            <p>
-              <span className="font-semibold">
-                + Thông số lý tưởng thấp nhất:
-              </span>{' '}
+        <div className="space-y-2 border-b pb-4">
+          <div className="flex items-center gap-2 text-green-700 font-semibold">
+            <Bell className="w-5 h-5" />
+            Cảnh báo khi vượt ngưỡng lý tưởng
+          </div>
+          <div className="grid grid-cols-1 gap-2 pl-6 mt-2 text-gray-700">
+            <div className="flex items-center gap-2">
+              <TrendingDown className="w-4 h-4 text-gray-500" />
+              <span className="font-medium">Thấp nhất:</span>{' '}
               {data.lowerbound ?? EMPTY_STRING}
-            </p>
-            <p>
-              <span className="font-semibold">
-                + Thông số lý tưởng cao nhất:
-              </span>{' '}
+            </div>
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-gray-500" />
+              <span className="font-medium">Cao nhất:</span>{' '}
               {data.upperbound ?? EMPTY_STRING}
-            </p>
-            <p>
-              <span className="font-semibold">+ Mô tả cảnh báo:</span>{' '}
+            </div>
+            <div className="flex items-center gap-2">
+              <FileText className="w-4 h-4 text-gray-500" />
+              <span className="font-medium">Mô tả cảnh báo:</span>{' '}
               {data.alertDes ?? EMPTY_STRING}
-            </p>
-            <p>
-              <span className="font-semibold">+ Nhận thông báo:</span>{' '}
+            </div>
+            <div className="flex items-center gap-2">
+              <Mail className="w-4 h-4 text-gray-500" />
+              <span className="font-medium">Nhận thông báo:</span>{' '}
               {data.email ? 'Email' : EMPTY_STRING}
-            </p>
+            </div>
           </div>
         </div>
 
-        {/* Additional Information */}
-        <div className="space-y-2 text-gray-700">
-          <p>
-            <span className="font-semibold">Đơn vị:</span> {data.unit}
-          </p>
-          <p>
-            <span className="font-semibold">Mô tả:</span> {data.description}
-          </p>
-          <p>
-            <span className="font-semibold">Giá trị gần nhất:</span>{' '}
+        {/* Additional Info */}
+        <div className="space-y-3 text-gray-700">
+          <div className="flex items-center gap-2">
+            <Thermometer className="w-5 h-5 text-gray-500" />
+            <span className="font-medium">Đơn vị:</span> {data.unit}
+          </div>
+          <div className="flex items-center gap-2">
+            <FileText className="w-5 h-5 text-gray-500" />
+            <span className="font-medium">Giá trị gần nhất:</span>{' '}
             {data.value} {data.unit}
-          </p>
-          <p>
-            <span className="font-semibold">Thời gian cập nhật:</span>{' '}
+          </div>
+          <div className="flex items-center gap-2">
+            <AlarmClock className="w-5 h-5 text-gray-500" />
+            <span className="font-medium">Cập nhật:</span>{' '}
             {data.date.toLocaleString('en-GB')}
-          </p>
+          </div>
         </div>
       </div>
     </Modal>
