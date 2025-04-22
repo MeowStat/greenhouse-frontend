@@ -1,5 +1,6 @@
 interface ISensorServiceApiResponse<TData> {
   status: boolean;
+  totalOfRecord?: number;
   data: TData;
 }
 

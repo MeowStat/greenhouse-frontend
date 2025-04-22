@@ -4,6 +4,10 @@ import { Modal } from '../../../components/Modal/modal';
 import { sensorDataService } from '../../../services/sensorDataService';
 import toast from 'react-hot-toast';
 import ToastMessage from '../../../components/ToastNotification/ToastMessage';
+import { UNITS } from '../../../utils/constants';
+import { useEffect, useState } from 'react';
+import { Spinner } from '../../../components/UI/spinner';
+import { PenLine } from 'lucide-react';
 
 interface FormData {
   name: string;
@@ -16,7 +20,6 @@ interface FormData {
 
 interface EditQuanTracProps {
   monitorId: string;
-  modal: ReturnType<typeof useModal>;
   data?: FormData;
   setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -43,7 +46,10 @@ const updateMonitor = async (id: string, data: FormData) => {
 };
 
 const EditQuanTrac: React.FC<EditQuanTracProps> = (props) => {
-  const { monitorId, modal, data, setRefresh } = props;
+  const { monitorId, data, setRefresh } = props;
+  const [loading, setLoading] = useState(false);
+
+  const modal = useModal();
 
   const {
     handleSubmit,
@@ -62,35 +68,60 @@ const EditQuanTrac: React.FC<EditQuanTracProps> = (props) => {
   });
 
   const onSubmit = async (data: FormData) => {
-    const formattedData = {
-      ...data,
-      upperbound: Number(data.upperbound),
-      lowerbound: Number(data.lowerbound),
-    };
-
-    await updateMonitor(monitorId, formattedData);
-    reset();
-    setRefresh((prev) => !prev);
-    modal.close();
+    try {
+      setLoading(true);
+      const formattedData = {
+        ...data,
+        upperbound: Number(data.upperbound),
+        lowerbound: Number(data.lowerbound),
+      };
+      await updateMonitor(monitorId, formattedData);
+      setRefresh((prev) => !prev);
+      modal.close();
+    } catch {
+    } finally {
+      setLoading(false);
+    }
   };
 
+  useEffect(() => {
+    if (modal.isOpen) {
+      reset({
+        name: data?.name || '',
+        feed: data?.feed || '',
+        upperbound: data?.upperbound || 0,
+        lowerbound: data?.lowerbound || 0,
+        unit: data?.unit || '',
+        description: data?.description || '',
+      });
+    }
+  },[modal.isOpen]);
+
   return (
-    <Modal
-      isOpen={modal.isOpen}
-      onClose={modal.close}
-      onBackdropClick={modal.handleBackdropClick}
-      title="Chỉnh sửa quan trắc"
+    <>
+      <button
+        className="p-1 hover:bg-green-100 rounded"
+        title="Chỉnh sửa"
+        onClick={() => modal.open()}
+      >
+        <PenLine className="h-5 w-5" />
+      </button>
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={modal.close}
+        onBackdropClick={modal.handleBackdropClick}
+        title="Chỉnh sửa thông tin quan trắc"
     >
       <div className="overflow-y-auto max-h-[80vh]">
         <form
-          id="createSensorForm"
+          id="editSensorForm"
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-4 px-4 py-4"
         >
           {/* Name Field */}
           <div className="space-y-1">
             <label className="block text-lg font-medium text-gray-700">
-              Tên <span className="text-red-500">*</span>
+              Tên
             </label>
             <Controller
               name="name"
@@ -114,7 +145,7 @@ const EditQuanTrac: React.FC<EditQuanTracProps> = (props) => {
           {/* Feed Field */}
           <div className="space-y-1">
             <label className="block text-lg font-medium text-gray-700">
-              Feed <span className="text-red-500">*</span>
+              Feed
             </label>
             <Controller
               name="feed"
@@ -123,11 +154,13 @@ const EditQuanTrac: React.FC<EditQuanTracProps> = (props) => {
               render={({ field }) => (
                 <input
                   {...field}
-                  disabled
                   className={`w-full border ${
                     errors.name ? 'border-red-500' : 'border-gray-300'
-                  } rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
+                  } rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 
+                    disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed`}
+                  disabled={true}
                 />
+
               )}
             />
             {errors.feed && (
@@ -139,7 +172,7 @@ const EditQuanTrac: React.FC<EditQuanTracProps> = (props) => {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="block text-lg font-medium text-gray-700">
-                Thông số thấp nhất <span className="text-red-500">*</span>
+                Thông số thấp nhất
               </label>
               <Controller
                 name="lowerbound"
@@ -164,7 +197,7 @@ const EditQuanTrac: React.FC<EditQuanTracProps> = (props) => {
             </div>
             <div className="space-y-1">
               <label className="block text-lg font-medium text-gray-700">
-                Thông số cao nhất <span className="text-red-500">*</span>
+                Thông số cao nhất
               </label>
               <Controller
                 name="upperbound"
@@ -192,20 +225,23 @@ const EditQuanTrac: React.FC<EditQuanTracProps> = (props) => {
           {/* Unit Field */}
           <div className="space-y-1">
             <label className="block text-lg font-medium text-gray-700">
-              Đơn vị <span className="text-red-500">*</span>
+              Đơn vị
             </label>
             <Controller
               name="unit"
               control={control}
               rules={{ required: 'Đơn vị là bắt buộc' }}
               render={({ field }) => (
-                <input
+                <select
                   {...field}
-                  className={`w-full border ${
-                    errors.unit ? 'border-red-500' : 'border-gray-300'
-                  } rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
-                  placeholder="Nhập đơn vị đo lường"
-                />
+                  className={`w-full border ${errors.unit ? 'border-red-500' : 'border-gray-300'} rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500`}
+                >
+                  {UNITS.map((unit) => (
+                    <option key={unit} value={unit}>
+                      {unit}
+                    </option>
+                  ))}
+                </select>
               )}
             />
             {errors.unit && (
@@ -221,6 +257,7 @@ const EditQuanTrac: React.FC<EditQuanTracProps> = (props) => {
             <Controller
               name="description"
               control={control}
+              rules={{ required: 'Mô tả là bắt buộc' }}
               render={({ field }) => (
                 <textarea
                   {...field}
@@ -240,17 +277,32 @@ const EditQuanTrac: React.FC<EditQuanTracProps> = (props) => {
         </form>
       </div>
       {/* Submit Button */}
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-x-2">
+        <button
+          className={
+            `px-6 py-2 text-green-800 border-green-800 border-1 rounded-lg  transition-colors shadow-md text-lg font-medium  
+            ${loading ? 'cursor-not-allowed opacity-50' : 'hover:bg-green-50 cursor-pointer'}`
+          }
+          onClick={() => reset()}
+        >
+          Đặt lại
+        </button>
         <button
           type="submit"
-          className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md text-lg font-medium"
-          form="createSensorForm"
-          onClick={handleSubmit(onSubmit)}
+          disabled={loading}
+          className={`px-6 py-2 bg-green-600 text-white rounded-lg transition-colors shadow-md text-lg font-medium 
+            ${
+              loading
+                ? 'cursor-not-allowed opacity-50'
+                : 'hover:bg-green-700 cursor-pointer'
+            }`}
+          form="editSensorForm"
         >
-          Lưu
+          {loading ? <Spinner size="small" /> : 'Lưu'}
         </button>
       </div>
     </Modal>
+    </>
   );
 };
 
