@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import {
   Download,
-  Settings,
   ChevronLeft,
   ChevronRight,
   Search,
@@ -33,7 +32,6 @@ import Skeleton from 'react-loading-skeleton';
 import toast from 'react-hot-toast';
 import ToastMessage from '../../components/ToastNotification/ToastMessage';
 import AlertConfigModal from './component/AlertConfigModal';
-import { useModal } from '../../hooks/useModal';
 import { Spinner } from '../../components/UI/spinner';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -47,7 +45,6 @@ function getAxisBounds(data: number[], step = 5) {
 }
 
 export default function DataMonitoringDashboard() {
-  const modal = useModal();
   const [searchParams] = useSearchParams();
   const feed = searchParams.get('feed') || '';
   const id = searchParams.get('id') || 0;
@@ -227,13 +224,21 @@ export default function DataMonitoringDashboard() {
           <h2 className="text-xl text-green-600 flex items-center">
             {sensorName || <Spinner className="h-5 w-5" />}
           </h2>
-          <button
-            className="flex items-center text-sm text-green-700 hover:underline mt-2"
-            aria-label="Configure garden alerts"
-          >
-            <Settings className="h-5 w-5 mr-2" />
-            <span>Cài đặt cảnh báo</span>
-          </button>
+          {/* Alert Config Modal */}
+          {sensor && (
+            <AlertConfigModal
+              key={id}
+              monitorId={id ?? 0}
+              data={{
+                alertDes: sensor?.alertDes || '',
+                alertlowerbound: sensor?.alertlowerbound || 0,
+                alertupperbound: sensor?.alertupperbound || 0,
+                status: sensor?.warning || false,
+                email: sensor?.email || false,
+              }}
+              setRefresh={setRefresh}
+            />
+          )}
         </div>
 
         <div className="flex flex-wrap items-center justify-end gap-2 mt-3">
@@ -243,7 +248,7 @@ export default function DataMonitoringDashboard() {
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
-                  className="h-9 px-3 py-1 bg-lime-100 border-green-300 hover:bg-lime-200 text-green-800 w-[140px] justify-start font-normal"
+                  className="h-9 px-3 py-1 text-green-800 w-[140px] justify-start font-normal"
                   aria-label="Select start date"
                 >
                   {fromDate ? format(fromDate, 'dd/MM/yyyy') : 'Chọn ngày'}
@@ -271,7 +276,7 @@ export default function DataMonitoringDashboard() {
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
-                  className="h-9 px-3 py-1 bg-lime-100 border-green-300 hover:bg-lime-200 text-green-800 w-[140px] justify-start font-normal"
+                  className="h-9 px-3 py-1 text-green-800 w-[140px] justify-start font-normal"
                   aria-label="Select end date"
                 >
                   {toDate ? format(toDate, 'dd/MM/yyyy') : 'Chọn ngày'}
@@ -450,23 +455,6 @@ export default function DataMonitoringDashboard() {
           </Button>
         </div>
       </div>
-
-      {/* Alert Config Modal */}
-      {sensor && (
-        <AlertConfigModal
-          key={id}
-          monitorId={id ?? 0}
-          data={{
-            alertDes: sensor?.alertDes || '',
-            alertlowerbound: sensor?.alertlowerbound || 0,
-            alertupperbound: sensor?.alertupperbound || 0,
-            status: sensor?.warning || false,
-            email: sensor?.email || false,
-          }}
-          modal={modal}
-          setRefresh={setRefresh}
-        />
-      )}
     </div>
   );
 }
