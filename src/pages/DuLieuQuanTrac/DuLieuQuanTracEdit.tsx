@@ -1,4 +1,4 @@
-import { PenLine, Info } from 'lucide-react';
+import { Info } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -8,19 +8,15 @@ import { ISensor } from '../../types/SensorTypes';
 import toast from 'react-hot-toast';
 import ToastMessage from '../../components/ToastNotification/ToastMessage';
 import Skeleton from 'react-loading-skeleton';
-import { useModal } from '../../hooks/useModal';
 import EditQuanTrac from './component/DuLieuQuanTracEditModal';
 import ThemMoiQuanTrac from './component/DuLieuQuanTracCreateModal';
 import DeleteQuanTracButton from './component/DeleteQuanTracButton';
 
 export function QuanLyQuanTracEdit() {
-  const editModal = useModal();
 
   const [allSensor, setAllSensor] = useState<ISensor[]>([]);
 
   const [refresh, setRefresh] = useState(false);
-
-  const [selectedSensor, setSelectedSensor] = useState<ISensor | null>(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -36,11 +32,6 @@ export function QuanLyQuanTracEdit() {
         />
       );
     }
-  };
-
-  const handleEditSensor = (sensor: ISensor) => {
-    setSelectedSensor(sensor);
-    editModal.open();
   };
 
   const navigate = useNavigate();
@@ -149,13 +140,19 @@ export function QuanLyQuanTracEdit() {
                           >
                             <Info className="h-5 w-5" />
                           </button>
-                          <button
-                            className="p-1 hover:bg-green-100 rounded"
-                            title="Chỉnh sửa"
-                            onClick={() => handleEditSensor(sensor)}
-                          >
-                            <PenLine className="h-5 w-5" />
-                          </button>
+                          <EditQuanTrac
+                            key={sensor?.id || 'default'}
+                            monitorId={sensor?.id || EMPTY_STRING}
+                            data={{
+                              name: sensor?.name || EMPTY_STRING,
+                              description: sensor?.description || EMPTY_STRING,
+                              unit: sensor?.unit || EMPTY_STRING,
+                              upperbound: sensor?.upperbound || 0,
+                              lowerbound: sensor?.lowerbound || 0,
+                              feed: sensor?.feed || EMPTY_STRING,
+                            }}
+                            setRefresh={setRefresh}
+                          />
                           <DeleteQuanTracButton
                             key={sensor.id}
                             quanTracId={sensor.id}
@@ -167,20 +164,6 @@ export function QuanLyQuanTracEdit() {
                   ))}
                 </tbody>
               </table>
-              <EditQuanTrac
-                key={selectedSensor?.id || 'default'}
-                monitorId={selectedSensor?.id || EMPTY_STRING}
-                modal={editModal}
-                data={{
-                  name: selectedSensor?.name || EMPTY_STRING,
-                  description: selectedSensor?.description || EMPTY_STRING,
-                  unit: selectedSensor?.unit || EMPTY_STRING,
-                  upperbound: selectedSensor?.upperbound || 0,
-                  lowerbound: selectedSensor?.lowerbound || 0,
-                  feed: selectedSensor?.feed || EMPTY_STRING,
-                }}
-                setRefresh={setRefresh}
-              />
             </>
           )}
         </div>

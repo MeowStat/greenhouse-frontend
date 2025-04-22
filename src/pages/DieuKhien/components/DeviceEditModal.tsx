@@ -190,46 +190,46 @@ const DeviceEditModal: React.FC<DeviceEditModalProps> = (props) => {
             </div>
 
             <div className="space-y-2">
-                <label className="block text-lg font-medium text-gray-800">
+              <label className="block text-lg font-medium text-gray-800">
                 Cấu hình trạng thái
-                </label>
+              </label>
 
-                <Controller
+              <Controller
                 control={control}
                 name="type"
                 render={({ field }) => (
-                    <div className="flex items-center justify-center bg-gray-100 rounded-full p-1 w-full">
-                        <button
-                            type="button"
-                            className={`px-4 py-2 flex-1 text-sm font-semibold rounded-full transition-all duration-200 ${
-                            field.value === 0
-                                ? 'bg-green-100 text-green-700 shadow-sm'
-                                : 'text-gray-700'
-                            }`}
-                            onClick={() => field.onChange(0)}
-                        >
-                            <div className='flex justify-center align-center gap-4'>
-                                <Check className={field.value === 0 ? "" : "hidden"}/>
-                                <span>Bật/Tắt</span>
-                            </div>
-                        </button>
-                        <button
-                            type="button"
-                            className={`px-4 py-2 flex-1 text-sm font-semibold rounded-full transition-all duration-200 ${
-                            field.value === 1
-                                ? 'bg-green-100 text-green-700 shadow-sm'
-                                : 'text-gray-700'
-                            }`}
-                            onClick={() => field.onChange(1)}
-                        >
-                            <div className='flex justify-center align-center gap-4'>
-                                <Check className={field.value === 1 ? "" : "hidden"}/>
-                                <span>Theo cường độ</span>
-                            </div>
-                        </button>
-                        </div>
+                  <div className="flex items-center justify-center bg-gray-100 rounded-full p-1 w-full">
+                    <button
+                      type="button"
+                      className={`px-4 py-2 flex-1 text-sm font-semibold rounded-full transition-all duration-200 ${
+                      field.value === 0
+                          ? 'bg-green-100 text-green-700 shadow-sm'
+                          : 'text-gray-700'
+                      }`}
+                      onClick={() => field.onChange(0)}
+                    >
+                      <div className='flex justify-center align-center gap-4'>
+                        <Check className={field.value === 0 ? "" : "hidden"}/>
+                        <span>Bật/Tắt</span>
+                      </div>
+                    </button>
+                    <button
+                      type="button"
+                      className={`px-4 py-2 flex-1 text-sm font-semibold rounded-full transition-all duration-200 ${
+                      field.value === 1
+                          ? 'bg-green-100 text-green-700 shadow-sm'
+                          : 'text-gray-700'
+                      }`}
+                      onClick={() => field.onChange(1)}
+                    >
+                      <div className='flex justify-center align-center gap-4'>
+                        <Check className={field.value === 1 ? "" : "hidden"}/>
+                        <span>Theo cường độ</span>
+                      </div>
+                    </button>
+                  </div>
                 )}
-                />
+              />
             </div>
 
             {/* Description Field */}
@@ -263,8 +263,8 @@ const DeviceEditModal: React.FC<DeviceEditModalProps> = (props) => {
         <div className="flex justify-end gap-x-2">
           <button
             className={
-                `px-6 py-2 text-green-800 border-green-800 border-1 rounded-lg  transition-colors shadow-md text-lg font-medium  
-                ${loading ? 'cursor-not-allowed opacity-50' : 'hover:bg-green-50 cursor-pointer'}`
+              `px-6 py-2 text-green-800 border-green-800 border-1 rounded-lg  transition-colors shadow-md text-lg font-medium  
+              ${loading ? 'cursor-not-allowed opacity-50' : 'hover:bg-green-50 cursor-pointer'}`
             }
             onClick={() => reset()}
           >

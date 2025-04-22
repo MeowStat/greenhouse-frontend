@@ -108,7 +108,7 @@ export const deviceHistoryService = {
     if (params.page) queryParams.append('page', params.page.toString());
     if (params.pageSize)
       queryParams.append('pageSize', params.pageSize.toString());
-    if (params.deviceId) queryParams.append('deviceId', params.deviceId);
+    if (params.deviceName) queryParams.append('deviceName', params.deviceName);
     if (params.startDate) queryParams.append('startDate', params.startDate);
     if (params.endDate) queryParams.append('endDate', params.endDate);
     if (params.typeAction) queryParams.append('typeAction', params.typeAction);

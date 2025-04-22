@@ -30,7 +30,7 @@ export default function LichSuQuanTrac() {
       const response = await deviceHistoryService.getDeviceHistory({
         page: currentPage,
         pageSize: rowsPerPage,
-        deviceId: deviceId || undefined,
+        deviceName: deviceId || undefined,
         startDate: startDate || undefined,
         endDate: endDate || undefined,
         typeAction: typeAction !== 'all' ? typeAction : undefined,
@@ -88,8 +88,8 @@ export default function LichSuQuanTrac() {
   const totalPages = Math.ceil(totalRecords / rowsPerPage);
 
   return (
-    <div className="p-6 min-h-screen">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen">
+      <div className="mx-auto">
         <h1 className="text-3xl font-bold text-[#1e472e] mb-6">
           Lịch sử hoạt động
         </h1>
@@ -100,7 +100,7 @@ export default function LichSuQuanTrac() {
               htmlFor="deviceId"
               className="block text-sm font-medium text-[#1e472e] mb-1"
             >
-              Mã thiết bị
+              Tên thiết bị
             </label>
             <input
               id="deviceId"

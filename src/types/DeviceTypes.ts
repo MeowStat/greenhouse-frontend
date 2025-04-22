@@ -127,7 +127,7 @@ export interface DeviceHistoryResponse {
 export interface DeviceHistoryQueryParams {
   page?: number;
   pageSize?: number;
-  deviceId?: string;
+  deviceName?: string;
   startDate?: string;
   endDate?: string;
   typeAction?: string;

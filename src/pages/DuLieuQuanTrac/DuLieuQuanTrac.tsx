@@ -98,7 +98,7 @@ function DuLieuQuanTrac() {
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           {loading ? (
             <Skeleton count={5} height={80} />
           ) : (
