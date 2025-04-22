@@ -79,14 +79,6 @@ function UserHeader() {
               Hồ sơ người dùng
             </a>
           </MenuItem>
-          <MenuItem>
-            <a className="block px-6 py-2 hover:bg-green-200">Tùy chỉnh</a>
-          </MenuItem>
-          <MenuItem>
-            <a className="block px-6 py-2 hover:bg-green-200">
-              Kiểm tra kết nối
-            </a>
-          </MenuItem>
           <MenuSeparator className="my-1 h-px bg-gray-300" />
           <MenuItem>
             <Button

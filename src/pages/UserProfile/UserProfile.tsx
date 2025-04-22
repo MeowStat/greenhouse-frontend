@@ -4,11 +4,8 @@ import { useEffect, useState } from 'react';
 import {
   User,
   Mail,
-  // Key,
-  // Key,
   Eye,
   EyeOff,
-  Edit,
   UserCircle,
   Bell,
 } from 'lucide-react';
@@ -111,87 +108,75 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="flex items-center justify-center min-w-screen bg-gray-50 max-w-7xl mx-auto min-h-screen">
-      <Card className="w-full max-w-4xl overflow-hidden border-0 shadow-lg rounded-2xl">
+    <div className="flex items-center justify-center bg-gray-50 max-w-4xl mx-auto px-4 py-6">
+      <Card className="w-full max-w-3xl overflow-hidden border-0 shadow rounded-xl">
         <CardContent className="p-0">
           <div className="flex flex-col md:flex-row">
-            <div className="flex items-center justify-center p-8 md:p-0 bg-[#e6e0ff] md:w-2/5 relative">
-              <div className="w-full h-full flex items-center justify-center py-16">
-                <div className="relative">
-                  <div className="w-48 h-48 border-[6px] border-white rounded-md overflow-hidden bg-[#4f3d97] flex items-center justify-center">
-                    <UserCircle className="w-32 h-32 text-white" />
-                  </div>
-                </div>
+            {/* Left: Avatar */}
+            <div className="flex items-center justify-center p-6 bg-[#e6e0ff] md:w-2/5">
+              <div className="w-32 h-32 border-4 border-white rounded-md overflow-hidden bg-[#4f3d97] flex items-center justify-center">
+                <UserCircle className="w-20 h-20 text-white" />
               </div>
             </div>
 
-            <div className="p-8 md:p-12 md:w-3/5">
-              <h1 className="text-3xl font-bold text-gray-800 mb-10">
+            {/* Right: Info */}
+            <div className="p-6 md:p-8 md:w-3/5">
+              <h1 className="text-2xl font-bold text-gray-800 mb-6">
                 Thông tin tài khoản
               </h1>
 
-              <div className="space-y-10">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100">
-                    <User className="w-5 h-5 text-[#4f3d97]" />
+              <div className="space-y-6">
+                {/* Username */}
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+                    <User className="w-4 h-4 text-[#4f3d97]" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-500">
-                      Tên người dùng
-                    </p>
-                    <p className="text-xl font-semibold">
+                    <p className="text-sm text-gray-500">Tên người dùng</p>
+                    <p className="text-lg font-medium">
                       {hideInfo ? '••••••••' : userData.name}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100">
-                    <Mail className="w-5 h-5 text-[#4f3d97]" />
+                {/* Email */}
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+                    <Mail className="w-4 h-4 text-[#4f3d97]" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-500">Email</p>
-                    <p className="text-xl font-semibold">
+                    <p className="text-sm text-gray-500">Email</p>
+                    <p className="text-lg font-medium">
                       {hideInfo ? '••••••••' : userData.email}
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100">
-                    <Bell className="w-5 h-5 text-[#4f3d97]" />
+                {/* Notifications */}
+                <div className="flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+                    <Bell className="w-4 h-4 text-[#4f3d97]" />
                   </div>
-                  <div className="flex flex-col">
-                    <p className="text-sm font-medium text-gray-500">
-                      Nhận thông báo
-                    </p>
-                    <div className="mt-1">
-                      <ToggleSwitch
-                        checked={userData.receiveNotification}
-                        onChange={toggleNotificationSetting}
-                        enableText="Bật"
-                        disableText="Tắt"
-                        disabled={updatingNotification}
-                      />
-                    </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Nhận thông báo</p>
+                    <ToggleSwitch
+                      checked={userData.receiveNotification}
+                      onChange={toggleNotificationSetting}
+                      enableText="Bật"
+                      disableText="Tắt"
+                      disabled={updatingNotification}
+                    />
                   </div>
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-4 mt-12">
-                <Button className="bg-[#6baa7f] hover:bg-[#5a9a6e] text-white border-0 rounded-md px-6 py-5 h-auto font-medium text-sm transition-all duration-200 shadow-sm hover:shadow-md">
-                  <Edit className="w-4 h-4 mr-2" />
-                  Chỉnh sửa
-                </Button>
+              {/* Buttons */}
+              <div className="flex flex-wrap gap-3 mt-8">
                 <Button
-                  className="bg-[#6baa7f] hover:bg-[#5a9a6e] text-white border-0 rounded-md px-6 py-5 h-auto font-medium text-sm transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="bg-[#6baa7f] hover:bg-[#5a9a6e] text-white px-4 py-3 h-auto text-sm font-medium"
                   onClick={toggleInfoVisibility}
                 >
-                  {hideInfo ? (
-                    <Eye className="w-4 h-4 mr-2" />
-                  ) : (
-                    <EyeOff className="w-4 h-4 mr-2" />
-                  )}
+                  {hideInfo ? <Eye className="w-4 h-4 mr-2" /> : <EyeOff className="w-4 h-4 mr-2" />}
                   {hideInfo ? 'Hiện thông tin' : 'Ẩn thông tin'}
                 </Button>
               </div>
