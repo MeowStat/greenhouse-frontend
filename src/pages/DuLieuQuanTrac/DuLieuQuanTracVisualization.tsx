@@ -89,8 +89,8 @@ export default function DataMonitoringDashboard() {
         id,
         page,
         pageSize,
-        startDate: startDate ? startDate.toISOString() : undefined,
-        endDate: endDate ? endDate.toISOString() : undefined,
+        startDate: startDate ? format(startDate, 'yyyy-MM-dd') : undefined,
+        endDate: endDate ? format(endDate, 'yyyy-MM-dd') : undefined,
       });
       setSensorData(response.data || []);
       setTotalPages(response.totalOfRecord || 1);
